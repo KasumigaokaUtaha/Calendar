@@ -16,7 +16,8 @@ func appReducer(
 ) -> AnyPublisher<AppAction, Never>? {
     switch action {
     case let .loadYearData(date, range):
-        let calendar = environment.calendar
+//        let calendar = environment.calendar
+        let calendar = state.calendar
         let currentYear = calendar.component(.year, from: date)
 
         for offset in range {
@@ -25,24 +26,24 @@ func appReducer(
 
             for month in 1 ... 12 {
                 let days = Util.allDaysIn(year: year, month: month, calendar: calendar)?
-                    .compactMap { $0 }
-                    .map { DayData(day: $0.0, weekday: $0.1) } ?? []
+                    .map { DayData(date: $0, calendar: calendar) }
+                    .compactMap { $0 } ?? []
                 let lastMonthDays = Util.lastMonthDays(
                     year: year,
                     month: month,
                     startOfWeek: state.startOfWeek,
                     calendar: calendar
                 )?
-                    .compactMap { $0 }
-                    .map { DayData(day: $0.0, weekday: $0.1) } ?? []
+                    .map { DayData(date: $0, calendar: calendar) }
+                    .compactMap { $0 } ?? []
                 let nextMonthDays = Util.nextMonthDays(
                     year: year,
                     month: month,
                     startOfWeek: state.startOfWeek,
                     calendar: calendar
                 )?
-                    .compactMap { $0 }
-                    .map { DayData(day: $0.0, weekday: $0.1) } ?? []
+                    .map { DayData(date: $0, calendar: calendar) }
+                    .compactMap { $0 } ?? []
 
                 months
                     .append(MonthData(

@@ -48,9 +48,9 @@ enum Weekday: String {
             return 1
         case .tuesday:
             return 2
-        case .thursday:
-            return 3
         case .wednesday:
+            return 3
+        case .thursday:
             return 4
         case .friday:
             return 5
@@ -70,9 +70,9 @@ enum Weekday: String {
             offset = 0
         case .tuesday:
             offset = 1
-        case .thursday:
-            offset = 2
         case .wednesday:
+            offset = 2
+        case .thursday:
             offset = 3
         case .friday:
             offset = 4
@@ -120,11 +120,24 @@ struct MonthData: Identifiable {
 struct DayData: Identifiable {
     let id: UUID
     let day: Int
+    let date: Date
     let weekday: Weekday
 
-    init(day: Int, weekday: Weekday) {
+    init(day: Int, date: Date, weekday: Weekday) {
         id = UUID()
         self.day = day
+        self.date = date
+        self.weekday = weekday
+    }
+
+    init?(date: Date, calendar: Calendar) {
+        guard let weekday = Weekday(calendar.component(.weekday, from: date), calendar: calendar) else {
+            return nil
+        }
+
+        id = UUID()
+        day = calendar.component(.day, from: date)
+        self.date = date
         self.weekday = weekday
     }
 }

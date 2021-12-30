@@ -8,7 +8,7 @@
 import Foundation
 
 enum Util {
-    static func allDaysIn(year: Int, month: Int, calendar: Calendar) -> [(Int, Weekday)]? {
+    static func allDaysIn(year: Int, month: Int, calendar: Calendar) -> [Date]? {
         guard
             let firstDay = Util.firstDayIn(year: year, month: month, calendar: calendar),
             let daysRange = calendar.range(of: .day, in: .month, for: firstDay)
@@ -17,15 +17,12 @@ enum Util {
         }
 
         let daysCount = daysRange.count
-        var allDays: [(Int, Weekday)] = []
+        var allDays: [Date] = []
         for dayOffset in 0 ..< daysCount {
-            guard
-                let date = calendar.date(byAdding: .day, value: dayOffset, to: firstDay),
-                let weekday = Weekday(calendar.component(.weekday, from: date), calendar: calendar)
-            else {
+            guard let date = calendar.date(byAdding: .day, value: dayOffset, to: firstDay) else {
                 return nil
             }
-            allDays.append((dayOffset + 1, weekday))
+            allDays.append(date)
         }
 
         return allDays
@@ -54,7 +51,7 @@ enum Util {
         month: Int,
         startOfWeek start: Weekday,
         calendar: Calendar
-    ) -> [(Int, Weekday)]? {
+    ) -> [Date]? {
         guard
             let firstDay = Util.firstDayIn(year: year, month: month, calendar: calendar),
             let weekday = Weekday(calendar.component(.weekday, from: firstDay), calendar: calendar)
@@ -62,22 +59,19 @@ enum Util {
             return nil
         }
 
-        var lastDays: [(Int, Weekday)] = []
+        var lastDays: [Date] = []
         let amount = weekday.value(base: start) - start.value(base: start)
 
         guard amount > 0 else {
-            return nil
+            return []
         }
 
         for offset in (1 ... amount).reversed() {
-            guard
-                let lastDay = calendar.date(byAdding: .day, value: -offset, to: firstDay),
-                let lastWeekday = Weekday(calendar.component(.weekday, from: lastDay), calendar: calendar)
-            else {
+            guard let lastDay = calendar.date(byAdding: .day, value: -offset, to: firstDay) else {
                 return nil
             }
 
-            lastDays.append((calendar.component(.day, from: lastDay), lastWeekday))
+            lastDays.append(lastDay)
         }
 
         return lastDays
@@ -88,7 +82,7 @@ enum Util {
         month: Int,
         startOfWeek start: Weekday,
         calendar: Calendar
-    ) -> [(Int, Weekday)]? {
+    ) -> [Date]? {
         guard
             let lastDay = Util.lastDayIn(year: year, month: month, calendar: calendar),
             let weekday = Weekday(calendar.component(.weekday, from: lastDay), calendar: calendar)
@@ -96,7 +90,7 @@ enum Util {
             return nil
         }
 
-        var nextDays: [(Int, Weekday)] = []
+        var nextDays: [Date] = []
         let endOfWeekValue = start.value(base: start) + 6
         let amount = endOfWeekValue - weekday.value(base: start)
 
@@ -105,14 +99,11 @@ enum Util {
         }
 
         for offset in 1 ... amount {
-            guard
-                let nextDay = calendar.date(byAdding: .day, value: offset, to: lastDay),
-                let nextWeekday = Weekday(calendar.component(.weekday, from: nextDay), calendar: calendar)
-            else {
+            guard let nextDay = calendar.date(byAdding: .day, value: offset, to: lastDay) else {
                 return nil
             }
 
-            nextDays.append((calendar.component(.day, from: nextDay), nextWeekday))
+            nextDays.append(nextDay)
         }
 
         return nextDays
