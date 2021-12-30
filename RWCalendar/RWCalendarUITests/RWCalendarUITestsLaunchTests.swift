@@ -1,13 +1,13 @@
 //
-//  CalendarUITestsLaunchTests.swift
-//  CalendarUITests
+//  RWCalendarUITestsLaunchTests.swift
+//  RWCalendarUITests
 //
-//  Created by Kasumigaoka Utaha on 25.12.21.
+//  Created by Kasumigaoka Utaha on 30.12.21.
 //
 
 import XCTest
 
-class CalendarUITestsLaunchTests: XCTestCase {
+class RWCalendarUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

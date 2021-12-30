@@ -1,6 +1,6 @@
 //
 //  AppStore.swift
-//  Calendar
+//  RWCalendar
 //
 //  Created by Kasumigaoka Utaha on 27.12.21.
 //

@@ -1,6 +1,6 @@
 //
 //  CalendarApp.swift
-//  Calendar
+//  RWCalendar
 //
 //  Created by Kasumigaoka Utaha on 25.12.21.
 //
@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct CalendarApp: App {
+struct RWCalendarApp: App {
     let store: AppStore<AppState, AppAction, AppEnvironment>
 
     init() {

@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  Calendar
+//  RWCalendar
 //
 //  Created by Kasumigaoka Utaha on 25.12.21.
 //

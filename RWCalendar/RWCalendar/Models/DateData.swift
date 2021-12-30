@@ -1,6 +1,6 @@
 //
 //  DateData.swift
-//  Calendar
+//  RWCalendar
 //
 //  Created by Kasumigaoka Utaha on 27.12.21.
 //
@@ -15,6 +15,31 @@ enum Weekday: String {
     case friday
     case saturday
     case sunday
+
+    init?(_ num: Int, calendar: Calendar) {
+        guard calendar.identifier == .gregorian else {
+            return nil
+        }
+
+        switch num {
+        case 1:
+            self = .sunday
+        case 2:
+            self = .monday
+        case 3:
+            self = .tuesday
+        case 4:
+            self = .wednesday
+        case 5:
+            self = .thursday
+        case 6:
+            self = .friday
+        case 7:
+            self = .saturday
+        default:
+            return nil
+        }
+    }
 }
 
 struct YearData: Identifiable {
@@ -34,12 +59,16 @@ struct YearData: Identifiable {
 struct MonthData: Identifiable {
     let id: UUID
     let month: Int
-    var dayData: [DayData?]
+    var dayData: [DayData]
+    var lastMonthDays: [DayData]
+    var nextMonthDays: [DayData]
 
-    init(month: Int, dayData: [DayData?]) {
+    init(month: Int, dayData: [DayData], lastMonthDays: [DayData], nextMonthDays: [DayData]) {
         id = UUID()
         self.month = month
         self.dayData = dayData
+        self.lastMonthDays = lastMonthDays
+        self.nextMonthDays = nextMonthDays
     }
 }
 

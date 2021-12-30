@@ -1,13 +1,13 @@
 //
-//  CalendarUITests.swift
-//  CalendarUITests
+//  RWCalendarUITests.swift
+//  RWCalendarUITests
 //
-//  Created by Kasumigaoka Utaha on 25.12.21.
+//  Created by Kasumigaoka Utaha on 30.12.21.
 //
 
 import XCTest
 
-class CalendarUITests: XCTestCase {
+class RWCalendarUITests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.

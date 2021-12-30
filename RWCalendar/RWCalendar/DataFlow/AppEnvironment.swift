@@ -1,10 +1,12 @@
 //
 //  AppEnvironment.swift
-//  Calendar
+//  RWCalendar
 //
 //  Created by Kasumigaoka Utaha on 27.12.21.
 //
 
 import Foundation
 
-struct AppEnvironment {}
+struct AppEnvironment {
+    let calendar: Calendar = Calendar.current
+}
