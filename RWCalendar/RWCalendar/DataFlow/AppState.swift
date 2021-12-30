@@ -11,10 +11,12 @@ struct AppState {
     var years: [Int: YearData]
     var allYears: [Int]
     var currentDate: Date
+    var startOfWeek: Weekday
 
     init() {
         years = [:]
         allYears = []
         currentDate = Date()
+        startOfWeek = .sunday
     }
 }

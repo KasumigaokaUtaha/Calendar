@@ -40,6 +40,51 @@ enum Weekday: String {
             return nil
         }
     }
+
+    /// Get the weekday unit value with monday as the start of a week
+    func value() -> Int {
+        switch self {
+        case .monday:
+            return 1
+        case .tuesday:
+            return 2
+        case .thursday:
+            return 3
+        case .wednesday:
+            return 4
+        case .friday:
+            return 5
+        case .saturday:
+            return 6
+        case .sunday:
+            return 7
+        }
+    }
+
+    /// Get the weekday unit value with given base as the start of a week
+    func value(base: Weekday) -> Int {
+        var offset: Int = -1
+
+        switch base {
+        case .monday:
+            offset = 0
+        case .tuesday:
+            offset = 1
+        case .thursday:
+            offset = 2
+        case .wednesday:
+            offset = 3
+        case .friday:
+            offset = 4
+        case .saturday:
+            offset = 5
+        case .sunday:
+            offset = 6
+        }
+
+        let value = value() - offset
+        return value < 1 ? value + 7 : value
+    }
 }
 
 struct YearData: Identifiable {
@@ -59,14 +104,14 @@ struct YearData: Identifiable {
 struct MonthData: Identifiable {
     let id: UUID
     let month: Int
-    var dayData: [DayData]
+    var days: [DayData]
     var lastMonthDays: [DayData]
     var nextMonthDays: [DayData]
 
-    init(month: Int, dayData: [DayData], lastMonthDays: [DayData], nextMonthDays: [DayData]) {
+    init(month: Int, days: [DayData], lastMonthDays: [DayData], nextMonthDays: [DayData]) {
         id = UUID()
         self.month = month
-        self.dayData = dayData
+        self.days = days
         self.lastMonthDays = lastMonthDays
         self.nextMonthDays = nextMonthDays
     }
