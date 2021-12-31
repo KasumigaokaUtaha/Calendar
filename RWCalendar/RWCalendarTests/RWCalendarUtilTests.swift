@@ -91,12 +91,6 @@ class RWCalendarUtilTests: XCTestCase {
 
     // swiftlint:disable function_body_length
     func testLastMonthDays() throws {
-        func check(computedDate: Date, expectedYear: Int, expectedMonth: Int, expectedDay: Int, calendar: Calendar) {
-            XCTAssertEqual(calendar.component(.day, from: computedDate), expectedDay)
-            XCTAssertEqual(calendar.component(.month, from: computedDate), expectedMonth)
-            XCTAssertEqual(calendar.component(.year, from: computedDate), expectedYear)
-        }
-
         let calendar = Calendar(identifier: .gregorian)
         let year = 2021, startOfWeek = Weekday.sunday
         let expectedYears = [
@@ -180,5 +174,99 @@ class RWCalendarUtilTests: XCTestCase {
                 )
             }
         }
+    }
+
+    func testNextMonthDays() throws {
+        let calendar = Calendar(identifier: .gregorian)
+        let year = 2021, startOfWeek = Weekday.sunday
+        let expectedYears = [
+            1: 2021,
+            2: 2021,
+            3: 2021,
+            4: 2021,
+            5: 2021,
+            6: 2021,
+            7: 2021,
+            8: 2021,
+            9: 2021,
+            10: 2021,
+            11: 2021,
+            12: 2022
+        ]
+        let expectedMonths = [
+            1: 2,
+            2: 3,
+            3: 4,
+            4: 5,
+            5: 6,
+            6: 7,
+            7: 8,
+            8: 9,
+            9: 10,
+            10: 11,
+            11: 12,
+            12: 1
+        ]
+        let expectedDays = [
+            1: 1 ... 6,
+            2: 1 ... 6,
+            3: 1 ... 3,
+            4: 1 ... 1,
+            5: 1 ... 5,
+            6: 1 ... 3,
+            7: nil,
+            8: 1 ... 4,
+            9: 1 ... 2,
+            10: 1 ... 6,
+            11: 1 ... 4,
+            12: 1 ... 1
+        ]
+
+        for month in 1 ... 12 {
+            let nextMonthDaysOpt = RWCalendar.Util.nextMonthDays(
+                year: year,
+                month: month,
+                startOfWeek: startOfWeek,
+                calendar: calendar
+            )
+
+            XCTAssertNotNil(nextMonthDaysOpt)
+            let nextMonthDays = nextMonthDaysOpt!
+
+            XCTAssertNotNil(expectedDays[month] as Any?)
+            let expectedRangeOpt = expectedDays[month]!
+            if expectedRangeOpt == nil {
+                continue
+            }
+
+            XCTAssertNotNil(expectedRangeOpt)
+            let expectedRange = expectedRangeOpt!
+
+            XCTAssertNotNil(expectedYears[month])
+            let expectedYear = expectedYears[month]!
+
+            XCTAssertNotNil(expectedMonths[month])
+            let expectedMonth = expectedMonths[month]!
+
+            XCTAssertEqual(nextMonthDays.count, expectedRange.count)
+
+            for (nextMonthDay, expectedNextDay) in zip(nextMonthDays, expectedRange) {
+                check(
+                    computedDate: nextMonthDay,
+                    expectedYear: expectedYear,
+                    expectedMonth: expectedMonth,
+                    expectedDay: expectedNextDay,
+                    calendar: calendar
+                )
+            }
+        }
+    }
+
+    // MARK: - Utility
+
+    func check(computedDate: Date, expectedYear: Int, expectedMonth: Int, expectedDay: Int, calendar: Calendar) {
+        XCTAssertEqual(calendar.component(.day, from: computedDate), expectedDay)
+        XCTAssertEqual(calendar.component(.month, from: computedDate), expectedMonth)
+        XCTAssertEqual(calendar.component(.year, from: computedDate), expectedYear)
     }
 }

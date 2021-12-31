@@ -95,7 +95,7 @@ enum Util {
         let amount = endOfWeekValue - weekday.value(base: start)
 
         guard amount > 0 else {
-            return nil
+            return []
         }
 
         for offset in 1 ... amount {
