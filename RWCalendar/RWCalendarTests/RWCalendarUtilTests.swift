@@ -18,8 +18,19 @@ class RWCalendarUtilTests: XCTestCase {
     }
 
     func testAllDaysIn() throws {
-        func testAllDaysIn(year: Int, month: Int, numberOfDays: Int, calendar: Calendar) {
-            guard let allDays = RWCalendar.Util.allDaysIn(year: year, month: month, calendar: calendar) else {
+        func testAllDaysIn(
+            year: Int,
+            month: Int,
+            numberOfDays: Int,
+            calendar: Calendar
+        ) {
+            guard
+                let allDays = RWCalendar.Util.allDaysIn(
+                    year: year,
+                    month: month,
+                    calendar: calendar
+                )
+            else {
                 return
             }
 
@@ -27,9 +38,18 @@ class RWCalendarUtilTests: XCTestCase {
 
             var expectedDay = 1
             for date in allDays {
-                let day = calendar.component(.day, from: date)
-                let month = calendar.component(.month, from: date)
-                let year = calendar.component(.year, from: date)
+                let day = calendar.component(
+                    .day,
+                    from: date
+                )
+                let month = calendar.component(
+                    .month,
+                    from: date
+                )
+                let year = calendar.component(
+                    .year,
+                    from: date
+                )
 
                 XCTAssertEqual(day, expectedDay)
                 XCTAssertEqual(month, month)
@@ -39,31 +59,104 @@ class RWCalendarUtilTests: XCTestCase {
         }
 
         let calendar = Calendar(identifier: .gregorian)
-        testAllDaysIn(year: 2021, month: 1, numberOfDays: 31, calendar: calendar)
-        testAllDaysIn(year: 2021, month: 2, numberOfDays: 28, calendar: calendar)
-        testAllDaysIn(year: 2021, month: 3, numberOfDays: 31, calendar: calendar)
-        testAllDaysIn(year: 2021, month: 4, numberOfDays: 30, calendar: calendar)
-        testAllDaysIn(year: 2021, month: 5, numberOfDays: 31, calendar: calendar)
-        testAllDaysIn(year: 2021, month: 6, numberOfDays: 30, calendar: calendar)
-        testAllDaysIn(year: 2021, month: 7, numberOfDays: 31, calendar: calendar)
-        testAllDaysIn(year: 2021, month: 8, numberOfDays: 31, calendar: calendar)
-        testAllDaysIn(year: 2021, month: 9, numberOfDays: 30, calendar: calendar)
-        testAllDaysIn(year: 2021, month: 10, numberOfDays: 31, calendar: calendar)
-        testAllDaysIn(year: 2021, month: 11, numberOfDays: 30, calendar: calendar)
-        testAllDaysIn(year: 2021, month: 12, numberOfDays: 31, calendar: calendar)
+        testAllDaysIn(
+            year: 2021,
+            month: 1,
+            numberOfDays: 31,
+            calendar: calendar
+        )
+        testAllDaysIn(
+            year: 2021,
+            month: 2,
+            numberOfDays: 28,
+            calendar: calendar
+        )
+        testAllDaysIn(
+            year: 2021,
+            month: 3,
+            numberOfDays: 31,
+            calendar: calendar
+        )
+        testAllDaysIn(
+            year: 2021,
+            month: 4,
+            numberOfDays: 30,
+            calendar: calendar
+        )
+        testAllDaysIn(
+            year: 2021,
+            month: 5,
+            numberOfDays: 31,
+            calendar: calendar
+        )
+        testAllDaysIn(
+            year: 2021,
+            month: 6,
+            numberOfDays: 30,
+            calendar: calendar
+        )
+        testAllDaysIn(
+            year: 2021,
+            month: 7,
+            numberOfDays: 31,
+            calendar: calendar
+        )
+        testAllDaysIn(
+            year: 2021,
+            month: 8,
+            numberOfDays: 31,
+            calendar: calendar
+        )
+        testAllDaysIn(
+            year: 2021,
+            month: 9,
+            numberOfDays: 30,
+            calendar: calendar
+        )
+        testAllDaysIn(
+            year: 2021,
+            month: 10,
+            numberOfDays: 31,
+            calendar: calendar
+        )
+        testAllDaysIn(
+            year: 2021,
+            month: 11,
+            numberOfDays: 30,
+            calendar: calendar
+        )
+        testAllDaysIn(
+            year: 2021,
+            month: 12,
+            numberOfDays: 31,
+            calendar: calendar
+        )
     }
 
     func testFirstDayIn() throws {
         let calendar = Calendar(identifier: .gregorian)
         let year = 2021
         for month in 1 ... 12 {
-            let dateOpt = RWCalendar.Util.firstDayIn(year: year, month: month, calendar: calendar)
+            let dateOpt = RWCalendar.Util.firstDayIn(
+                year: year,
+                month: month,
+                calendar: calendar
+            )
             XCTAssertNotNil(dateOpt)
 
             let date = dateOpt!
-            let firstDay = calendar.component(.day, from: date)
-            let firstDayMonth = calendar.component(.month, from: date)
-            let firstDayYear = calendar.component(.year, from: date)
+            let firstDay = calendar.component(
+                .day,
+                from: date
+            )
+            let firstDayMonth = calendar.component(
+                .month,
+                from: date
+            )
+            let firstDayYear = calendar.component(
+                .year,
+                from: date
+            )
 
             XCTAssertEqual(firstDay, 1)
             XCTAssertEqual(firstDayMonth, month)
@@ -73,15 +166,44 @@ class RWCalendarUtilTests: XCTestCase {
 
     func testLastDayIn() throws {
         let calendar = Calendar(identifier: .gregorian)
-        let expecteYear = 2021, expectedLastDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-        for (expectedMonth, expectedLastDay) in zip(1 ... 12, expectedLastDays) {
-            let dateOpt = RWCalendar.Util.lastDayIn(year: expecteYear, month: expectedMonth, calendar: calendar)
+        let expecteYear = 2021, expectedLastDays = [
+            31,
+            28,
+            31,
+            30,
+            31,
+            30,
+            31,
+            31,
+            30,
+            31,
+            30,
+            31
+        ]
+        for (expectedMonth, expectedLastDay) in zip(
+            1 ... 12,
+            expectedLastDays
+        ) {
+            let dateOpt = RWCalendar.Util.lastDayIn(
+                year: expecteYear,
+                month: expectedMonth,
+                calendar: calendar
+            )
             XCTAssertNotNil(dateOpt)
 
             let date = dateOpt!
-            let lastDay = calendar.component(.day, from: date)
-            let lastDayMonth = calendar.component(.month, from: date)
-            let lastDayYear = calendar.component(.year, from: date)
+            let lastDay = calendar.component(
+                .day,
+                from: date
+            )
+            let lastDayMonth = calendar.component(
+                .month,
+                from: date
+            )
+            let lastDayYear = calendar.component(
+                .year,
+                from: date
+            )
 
             XCTAssertEqual(lastDay, expectedLastDay)
             XCTAssertEqual(lastDayMonth, expectedMonth)
@@ -137,12 +259,13 @@ class RWCalendarUtilTests: XCTestCase {
         ]
 
         for month in 1 ... 12 {
-            let lastMonthDaysOpt = RWCalendar.Util.lastMonthDays(
-                year: year,
-                month: month,
-                startOfWeek: startOfWeek,
-                calendar: calendar
-            )
+            let lastMonthDaysOpt = RWCalendar.Util
+                .lastMonthDays(
+                    year: year,
+                    month: month,
+                    startOfWeek: startOfWeek,
+                    calendar: calendar
+                )
 
             XCTAssertNotNil(lastMonthDaysOpt)
             let lastMonthDays = lastMonthDaysOpt!
@@ -162,9 +285,15 @@ class RWCalendarUtilTests: XCTestCase {
             XCTAssertNotNil(expectedMonths[month])
             let expectedMonth = expectedMonths[month]!
 
-            XCTAssertEqual(lastMonthDays.count, expectedRange.count)
+            XCTAssertEqual(
+                lastMonthDays.count,
+                expectedRange.count
+            )
 
-            for (lastMonthDay, expectedLastDay) in zip(lastMonthDays, expectedRange) {
+            for (lastMonthDay, expectedLastDay) in zip(
+                lastMonthDays,
+                expectedRange
+            ) {
                 check(
                     computedDate: lastMonthDay,
                     expectedYear: expectedYear,
@@ -223,12 +352,13 @@ class RWCalendarUtilTests: XCTestCase {
         ]
 
         for month in 1 ... 12 {
-            let nextMonthDaysOpt = RWCalendar.Util.nextMonthDays(
-                year: year,
-                month: month,
-                startOfWeek: startOfWeek,
-                calendar: calendar
-            )
+            let nextMonthDaysOpt = RWCalendar.Util
+                .nextMonthDays(
+                    year: year,
+                    month: month,
+                    startOfWeek: startOfWeek,
+                    calendar: calendar
+                )
 
             XCTAssertNotNil(nextMonthDaysOpt)
             let nextMonthDays = nextMonthDaysOpt!
@@ -248,9 +378,15 @@ class RWCalendarUtilTests: XCTestCase {
             XCTAssertNotNil(expectedMonths[month])
             let expectedMonth = expectedMonths[month]!
 
-            XCTAssertEqual(nextMonthDays.count, expectedRange.count)
+            XCTAssertEqual(
+                nextMonthDays.count,
+                expectedRange.count
+            )
 
-            for (nextMonthDay, expectedNextDay) in zip(nextMonthDays, expectedRange) {
+            for (nextMonthDay, expectedNextDay) in zip(
+                nextMonthDays,
+                expectedRange
+            ) {
                 check(
                     computedDate: nextMonthDay,
                     expectedYear: expectedYear,
@@ -264,9 +400,24 @@ class RWCalendarUtilTests: XCTestCase {
 
     // MARK: - Utility
 
-    func check(computedDate: Date, expectedYear: Int, expectedMonth: Int, expectedDay: Int, calendar: Calendar) {
-        XCTAssertEqual(calendar.component(.day, from: computedDate), expectedDay)
-        XCTAssertEqual(calendar.component(.month, from: computedDate), expectedMonth)
-        XCTAssertEqual(calendar.component(.year, from: computedDate), expectedYear)
+    func check(
+        computedDate: Date,
+        expectedYear: Int,
+        expectedMonth: Int,
+        expectedDay: Int,
+        calendar: Calendar
+    ) {
+        XCTAssertEqual(
+            calendar.component(.day, from: computedDate),
+            expectedDay
+        )
+        XCTAssertEqual(
+            calendar.component(.month, from: computedDate),
+            expectedMonth
+        )
+        XCTAssertEqual(
+            calendar.component(.year, from: computedDate),
+            expectedYear
+        )
     }
 }

@@ -12,17 +12,25 @@ struct RWCalendarApp: App {
     let store: AppStore<AppState, AppAction, AppEnvironment>
 
     init() {
-        store = AppStore(initialState: AppState(), reducer: appReducer, environment: AppEnvironment())
+        store = AppStore(
+            initialState: AppState(),
+            reducer: appReducer,
+            environment: AppEnvironment()
+        )
     }
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(store)
+                .onAppear(perform: onStartTasks)
         }
     }
 
     func onStartTasks() {
-        store.send(.loadYearData(date: store.state.currentDate, range: -5 ... 5))
+        store.send(.loadYearData(
+            date: store.state.currentDate,
+            range: -5 ... 5
+        ))
     }
 }

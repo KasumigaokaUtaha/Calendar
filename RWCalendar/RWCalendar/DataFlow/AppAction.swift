@@ -8,7 +8,10 @@
 import Foundation
 
 enum AppAction {
-    case loadYearData(date: Date, range: ClosedRange<Int>)
     case setCurrentDate(_ date: Date)
     case setStartOfWeek(_ weekday: Weekday)
+
+    case loadYearData(date: Date, range: ClosedRange<Int>)
+    case setYearData(_ yearData: YearData)
+    case setYearDataCollection(_ yearDataCollection: [YearData])
 }

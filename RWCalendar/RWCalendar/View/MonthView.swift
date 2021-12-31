@@ -15,7 +15,12 @@ struct MonthView: View {
     let month: Int
 
     var body: some View {
-        LazyVGrid(columns: columns, alignment: .center, spacing: 8, pinnedViews: []) {
+        LazyVGrid(
+            columns: columns,
+            alignment: .center,
+            spacing: 8,
+            pinnedViews: []
+        ) {
             Section {
                 ForEach(self.daysData) { dayData in
                     Text("\(dayData.day)")
@@ -34,7 +39,10 @@ struct MonthView: View {
     }
 
     var daysData: [DayData] {
-        if let yearData = store.state.years[year], let monthData = yearData.months[month] {
+        if
+            let yearData = store.state.years[year],
+            let monthData = yearData.months[month]
+        {
             let lastMonthDays = monthData.lastMonthDays
             return lastMonthDays + monthData.days
         }
@@ -49,7 +57,11 @@ struct MonthView: View {
 
 struct MonthView_Previews: PreviewProvider {
     static var previews: some View {
-        let store = AppStore(initialState: AppState(), reducer: appReducer, environment: AppEnvironment())
+        let store = AppStore(
+            initialState: AppState(),
+            reducer: appReducer,
+            environment: AppEnvironment()
+        )
         MonthView(year: 2021, month: 12)
             .environmentObject(store)
             .onAppear {

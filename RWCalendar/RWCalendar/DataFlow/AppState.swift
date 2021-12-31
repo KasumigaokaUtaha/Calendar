@@ -12,7 +12,7 @@ struct AppState {
     var allYears: [Int]
     var currentDate: Date
     var startOfWeek: Weekday
-    var calendar: Calendar // TODO: Consider whether it should be stored here
+    var calendar: Calendar
 
     init() {
         years = [:]

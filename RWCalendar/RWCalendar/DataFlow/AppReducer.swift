@@ -16,50 +16,36 @@ func appReducer(
 ) -> AnyPublisher<AppAction, Never>? {
     switch action {
     case let .loadYearData(date, range):
-//        let calendar = environment.calendar
         let calendar = state.calendar
-        let currentYear = calendar.component(.year, from: date)
+        let startOfWeek = state.startOfWeek
 
-        for offset in range {
-            let year = currentYear + offset
-            var months: [MonthData] = []
-
-            for month in 1 ... 12 {
-                let days = Util.allDaysIn(year: year, month: month, calendar: calendar)?
-                    .map { DayData(date: $0, calendar: calendar) }
-                    .compactMap { $0 } ?? []
-                let lastMonthDays = Util.lastMonthDays(
-                    year: year,
-                    month: month,
-                    startOfWeek: state.startOfWeek,
-                    calendar: calendar
-                )?
-                    .map { DayData(date: $0, calendar: calendar) }
-                    .compactMap { $0 } ?? []
-                let nextMonthDays = Util.nextMonthDays(
-                    year: year,
-                    month: month,
-                    startOfWeek: state.startOfWeek,
-                    calendar: calendar
-                )?
-                    .map { DayData(date: $0, calendar: calendar) }
-                    .compactMap { $0 } ?? []
-
-                months
-                    .append(MonthData(
-                        month: month,
-                        days: days,
-                        lastMonthDays: lastMonthDays,
-                        nextMonthDays: nextMonthDays
-                    ))
-            }
-
-            let yearData = YearData(year: year, monthData: months)
-            state.allYears.append(year)
-            state.years.updateValue(yearData, forKey: year)
+        return environment.year.performCalculation(
+            date: date,
+            range: range,
+            startOfWeek: startOfWeek,
+            calendar: calendar
+        )
+        .subscribe(on: environment.backgroundQueue)
+        .map { allYears in
+            AppAction.setYearDataCollection(allYears)
         }
-
-        state.allYears.sort(by: { $0 < $1 })
+        .eraseToAnyPublisher()
+    case let .setYearData(yearData):
+        state.allYears.append(yearData.year)
+        state.years.updateValue(
+            yearData,
+            forKey: yearData.year
+        )
+        state.allYears.sort(by: <)
+    case let .setYearDataCollection(allYears):
+        for yearData in allYears {
+            state.allYears.append(yearData.year)
+            state.years.updateValue(
+                yearData,
+                forKey: yearData.year
+            )
+        }
+        state.allYears.sort(by: <)
     case let .setCurrentDate(date):
         state.currentDate = date
     case let .setStartOfWeek(weekday):

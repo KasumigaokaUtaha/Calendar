@@ -95,9 +95,10 @@ struct YearData: Identifiable {
     init(year: Int, monthData: [MonthData]) {
         id = UUID()
         self.year = year
-        months = monthData.reduce(into: [:]) { dict, monthData in
-            dict[monthData.month] = monthData
-        }
+        months = monthData
+            .reduce(into: [:]) { dict, monthData in
+                dict[monthData.month] = monthData
+            }
     }
 }
 
@@ -108,7 +109,12 @@ struct MonthData: Identifiable {
     var lastMonthDays: [DayData]
     var nextMonthDays: [DayData]
 
-    init(month: Int, days: [DayData], lastMonthDays: [DayData], nextMonthDays: [DayData]) {
+    init(
+        month: Int,
+        days: [DayData],
+        lastMonthDays: [DayData],
+        nextMonthDays: [DayData]
+    ) {
         id = UUID()
         self.month = month
         self.days = days
@@ -131,7 +137,12 @@ struct DayData: Identifiable {
     }
 
     init?(date: Date, calendar: Calendar) {
-        guard let weekday = Weekday(calendar.component(.weekday, from: date), calendar: calendar) else {
+        guard
+            let weekday = Weekday(
+                calendar.component(.weekday, from: date),
+                calendar: calendar
+            )
+        else {
             return nil
         }
 

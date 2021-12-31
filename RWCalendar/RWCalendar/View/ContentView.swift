@@ -16,10 +16,14 @@ struct ContentView: View {
                 }
             }
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(
+                    placement: .navigationBarTrailing
+                ) {
                     Text("Today")
                 }
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(
+                    placement: .navigationBarLeading
+                ) {
                     Image(systemName: "line.3.horizontal")
                 }
             }
@@ -36,7 +40,14 @@ struct ContentView_Previews: PreviewProvider {
 }
 
 struct CalendarYearView: View {
-    let columns: [GridItem] = Array(repeating: .init(.flexible(), spacing: 32, alignment: nil), count: 2)
+    let columns: [GridItem] = Array(
+        repeating: .init(
+            .flexible(),
+            spacing: 32,
+            alignment: nil
+        ),
+        count: 2
+    )
     let year: Int
 
     var body: some View {
@@ -62,11 +73,23 @@ struct CalendarYearView: View {
 }
 
 struct CalendarMonthView: View {
-    let columns: [GridItem] = Array(repeating: .init(.flexible(minimum: 20), spacing: nil, alignment: nil), count: 7)
+    let columns: [GridItem] = Array(
+        repeating: .init(
+            .flexible(minimum: 20),
+            spacing: nil,
+            alignment: nil
+        ),
+        count: 7
+    )
     let month: Int
 
     var body: some View {
-        LazyVGrid(columns: columns, alignment: .center, spacing: 8, pinnedViews: []) {
+        LazyVGrid(
+            columns: columns,
+            alignment: .center,
+            spacing: 8,
+            pinnedViews: []
+        ) {
             Section {
                 ForEach(1 ... 30, id: \.self) { day in
                     Text("\(day)")
