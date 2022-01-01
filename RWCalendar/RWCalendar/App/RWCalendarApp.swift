@@ -21,7 +21,7 @@ struct RWCalendarApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            YearView(year: 2022, monthColumnCount: 2)
                 .environmentObject(store)
                 .onAppear(perform: onStartTasks)
         }

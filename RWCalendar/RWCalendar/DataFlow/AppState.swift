@@ -20,5 +20,6 @@ struct AppState {
         currentDate = Date()
         startOfWeek = .sunday
         calendar = Calendar.current
+        calendar.locale = Locale.autoupdatingCurrent
     }
 }

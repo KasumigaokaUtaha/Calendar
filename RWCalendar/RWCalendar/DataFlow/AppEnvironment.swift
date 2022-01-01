@@ -31,10 +31,7 @@ struct YearEnvironment {
     ) -> AnyPublisher<[YearData], Never> {
         Deferred {
             Future { promise in
-                let currentYear = calendar.component(
-                    .year,
-                    from: date
-                )
+                let currentYear = calendar.component(.year, from: date)
                 var allYears: [YearData] = []
 
                 for offset in range {
@@ -47,12 +44,7 @@ struct YearEnvironment {
                             month: month,
                             calendar: calendar
                         )?
-                            .map {
-                                DayData(
-                                    date: $0,
-                                    calendar: calendar
-                                )
-                            }
+                            .map { DayData(date: $0, calendar: calendar) }
                             .compactMap { $0 } ?? []
                         let lastMonthDays = Util.lastMonthDays(
                             year: year,
@@ -60,40 +52,27 @@ struct YearEnvironment {
                             startOfWeek: startOfWeek,
                             calendar: calendar
                         )?
-                            .map {
-                                DayData(
-                                    date: $0,
-                                    calendar: calendar
-                                )
-                            }
+                            .map { DayData(date: $0, calendar: calendar) }
                             .compactMap { $0 } ?? []
                         let nextMonthDays = Util.nextMonthDays(
                             year: year,
                             month: month,
                             startOfWeek: startOfWeek,
+                            additionalDays: true,
                             calendar: calendar
                         )?
-                            .map {
-                                DayData(
-                                    date: $0,
-                                    calendar: calendar
-                                )
-                            }
+                            .map { DayData(date: $0, calendar: calendar) }
                             .compactMap { $0 } ?? []
 
-                        months
-                            .append(MonthData(
-                                month: month,
-                                days: days,
-                                lastMonthDays: lastMonthDays,
-                                nextMonthDays: nextMonthDays
-                            ))
+                        months.append(MonthData(
+                            month: month,
+                            days: days,
+                            lastMonthDays: lastMonthDays,
+                            nextMonthDays: nextMonthDays
+                        ))
                     }
 
-                    let yearData = YearData(
-                        year: year,
-                        monthData: months
-                    )
+                    let yearData = YearData(year: year, monthData: months)
                     allYears.append(yearData)
                 }
 

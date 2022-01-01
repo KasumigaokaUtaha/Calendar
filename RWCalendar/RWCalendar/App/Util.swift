@@ -28,6 +28,17 @@ enum Util {
         return allDays
     }
 
+    static func numberOfDaysIn(year: Int, month: Int, calendar: Calendar) -> Int? {
+        guard
+            let firstDay = Util.firstDayIn(year: year, month: month, calendar: calendar),
+            let daysRange = calendar.range(of: .day, in: .month, for: firstDay)
+        else {
+            return nil
+        }
+
+        return daysRange.count
+    }
+
     static func firstDayIn(year: Int, month: Int, calendar: Calendar) -> Date? {
         calendar.date(from: DateComponents(year: year, month: month))
     }
@@ -81,6 +92,7 @@ enum Util {
         year: Int,
         month: Int,
         startOfWeek start: Weekday,
+        additionalDays: Bool,
         calendar: Calendar
     ) -> [Date]? {
         guard
@@ -92,7 +104,25 @@ enum Util {
 
         var nextDays: [Date] = []
         let endOfWeekValue = start.value(base: start) + 6
-        let amount = endOfWeekValue - weekday.value(base: start)
+        var amount = endOfWeekValue - weekday.value(base: start)
+
+        if additionalDays {
+            guard
+                let lastMonthDays = Util.lastMonthDays(
+                    year: year,
+                    month: month,
+                    startOfWeek: start,
+                    calendar: calendar
+                ),
+                let numberOfDays = Util.numberOfDaysIn(year: year, month: month, calendar: calendar)
+            else {
+                return nil
+            }
+
+            let numberOfWeeks = 6
+            let numberOfWeekdays = 7
+            amount = numberOfWeeks * numberOfWeekdays - lastMonthDays.count - numberOfDays
+        }
 
         guard amount > 0 else {
             return []
