@@ -24,14 +24,13 @@ struct AppEnvironment {
 
 struct YearEnvironment {
     func performCalculation(
-        date: Date,
+        currentYear: Int,
         range: ClosedRange<Int>,
         startOfWeek: Weekday,
         calendar: Calendar
     ) -> AnyPublisher<[YearData], Never> {
         Deferred {
             Future { promise in
-                let currentYear = calendar.component(.year, from: date)
                 var allYears: [YearData] = []
 
                 for offset in range {

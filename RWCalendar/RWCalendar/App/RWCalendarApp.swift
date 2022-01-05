@@ -21,16 +21,16 @@ struct RWCalendarApp: App {
 
     var body: some Scene {
         WindowGroup {
-            YearView(year: 2022, monthColumnCount: 2)
+            ContentView()
                 .environmentObject(store)
                 .onAppear(perform: onStartTasks)
         }
     }
 
     func onStartTasks() {
-        store.send(.loadYearData(
-            date: store.state.currentDate,
-            range: -5 ... 5
+        store.send(.loadYearDataRange(
+            base: store.state.currentYear,
+            range: 0 ... 3
         ))
     }
 }

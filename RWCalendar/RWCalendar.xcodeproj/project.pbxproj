@@ -7,10 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		627FA77C27805BFE00E78E01 /* YearView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 627FA77B27805BFE00E78E01 /* YearView.swift */; };
-		628252BB277E432300A8464B /* ShortMonthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628252BA277E432300A8464B /* ShortMonthView.swift */; };
+		6237E06027820BD3009340D2 /* CompactCalendarYearView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6237E05F27820BD3009340D2 /* CompactCalendarYearView.swift */; };
+		628252BB277E432300A8464B /* CompactCalendarMonthViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628252BA277E432300A8464B /* CompactCalendarMonthViewWrapper.swift */; };
 		628252BD277E65FA00A8464B /* RWCalendarUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628252BC277E65FA00A8464B /* RWCalendarUtilTests.swift */; };
 		628252BF277E66B900A8464B /* RWCalendarDateDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628252BE277E66B900A8464B /* RWCalendarDateDataTests.swift */; };
+		629B22F82784EFE300FA2494 /* CompactCalendarMonthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629B22F72784EFE300FA2494 /* CompactCalendarMonthView.swift */; };
 		62E8AB56277DCF70007487E1 /* RWCalendarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E8AB55277DCF70007487E1 /* RWCalendarApp.swift */; };
 		62E8AB5A277DCF72007487E1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 62E8AB59277DCF72007487E1 /* Assets.xcassets */; };
 		62E8AB5D277DCF72007487E1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 62E8AB5C277DCF72007487E1 /* Preview Assets.xcassets */; };
@@ -46,10 +47,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		627FA77B27805BFE00E78E01 /* YearView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearView.swift; sourceTree = "<group>"; };
-		628252BA277E432300A8464B /* ShortMonthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortMonthView.swift; sourceTree = "<group>"; };
+		6237E05F27820BD3009340D2 /* CompactCalendarYearView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactCalendarYearView.swift; sourceTree = "<group>"; };
+		628252BA277E432300A8464B /* CompactCalendarMonthViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactCalendarMonthViewWrapper.swift; sourceTree = "<group>"; };
 		628252BC277E65FA00A8464B /* RWCalendarUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RWCalendarUtilTests.swift; sourceTree = "<group>"; };
 		628252BE277E66B900A8464B /* RWCalendarDateDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RWCalendarDateDataTests.swift; sourceTree = "<group>"; };
+		629B22F72784EFE300FA2494 /* CompactCalendarMonthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactCalendarMonthView.swift; sourceTree = "<group>"; };
 		62E8AB52277DCF70007487E1 /* RWCalendar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RWCalendar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		62E8AB55277DCF70007487E1 /* RWCalendarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RWCalendarApp.swift; sourceTree = "<group>"; };
 		62E8AB59277DCF72007487E1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -205,8 +207,9 @@
 			isa = PBXGroup;
 			children = (
 				62E8ABBD277DD0DE007487E1 /* ContentView.swift */,
-				627FA77B27805BFE00E78E01 /* YearView.swift */,
-				628252BA277E432300A8464B /* ShortMonthView.swift */,
+				6237E05F27820BD3009340D2 /* CompactCalendarYearView.swift */,
+				628252BA277E432300A8464B /* CompactCalendarMonthViewWrapper.swift */,
+				629B22F72784EFE300FA2494 /* CompactCalendarMonthView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -228,6 +231,8 @@
 			dependencies = (
 			);
 			name = RWCalendar;
+			packageProductDependencies = (
+			);
 			productName = RWCalendar;
 			productReference = 62E8AB52277DCF70007487E1 /* RWCalendar.app */;
 			productType = "com.apple.product-type.application";
@@ -300,6 +305,8 @@
 				Base,
 			);
 			mainGroup = 62E8AB49277DCF70007487E1;
+			packageReferences = (
+			);
 			productRefGroup = 62E8AB53277DCF70007487E1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -363,14 +370,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				628252BB277E432300A8464B /* ShortMonthView.swift in Sources */,
-				627FA77C27805BFE00E78E01 /* YearView.swift in Sources */,
+				628252BB277E432300A8464B /* CompactCalendarMonthViewWrapper.swift in Sources */,
 				62E8ABBA277DD0C9007487E1 /* Event.swift in Sources */,
+				6237E06027820BD3009340D2 /* CompactCalendarYearView.swift in Sources */,
 				62E8ABB6277DD0B0007487E1 /* AppReducer.swift in Sources */,
 				62E8ABBC277DD0D0007487E1 /* DateData.swift in Sources */,
 				62E8ABB0277DD099007487E1 /* AppStore.swift in Sources */,
 				62E8ABB8277DD0BE007487E1 /* AppEnvironment.swift in Sources */,
 				62E8AB56277DCF70007487E1 /* RWCalendarApp.swift in Sources */,
+				629B22F82784EFE300FA2494 /* CompactCalendarMonthView.swift in Sources */,
 				62E8ABBE277DD0DE007487E1 /* ContentView.swift in Sources */,
 				62E8ABB4277DD0A9007487E1 /* AppAction.swift in Sources */,
 				62E8ABA9277DD057007487E1 /* Util.swift in Sources */,
