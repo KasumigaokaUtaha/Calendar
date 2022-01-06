@@ -27,13 +27,6 @@ func appReducer(
                 .eraseToAnyPublisher()
         }
 
-//        if baseIndex == state.allYears.startIndex {
-//            return Just((base, 1, .past))
-//                .map { base, count, direction in
-//                    AppAction.loadYearData(base: base, count: count, direction: direction)
-//                }
-//                .eraseToAnyPublisher()
-//        } else
         if baseIndex == state.allYears.endIndex - 1 {
             return Just((base, 1, .future))
                 .map { base, count, direction in
@@ -111,6 +104,11 @@ func appReducer(
         state.currentYear = state.calendar.component(.year, from: date)
     case let .setStartOfWeek(weekday):
         state.startOfWeek = weekday
+    case let .setScrollToToday(withAnimation):
+        state.scrollToToday = true
+        state.isScrollToTodayAnimated = withAnimation
+    case .resetScrollToDay:
+        state.scrollToToday = false
     }
     return nil
 }

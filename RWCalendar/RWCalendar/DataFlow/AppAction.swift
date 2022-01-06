@@ -16,6 +16,9 @@ enum AppAction {
     case loadYearDataRange(base: Int, range: ClosedRange<Int>)
     case setYearData(_ yearData: YearData)
     case setYearDataCollection(_ yearDataCollection: [YearData])
+
+    case setScrollToToday(withAnimation: Bool)
+    case resetScrollToDay
 }
 
 enum Direction {

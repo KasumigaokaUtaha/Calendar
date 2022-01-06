@@ -14,6 +14,8 @@ struct AppState {
     var currentYear: Int
     var startOfWeek: Weekday
     var calendar: Calendar
+    var scrollToToday: Bool
+    var isScrollToTodayAnimated: Bool
 
     var isLoadingYearData: Bool
 
@@ -26,5 +28,7 @@ struct AppState {
         calendar.locale = Locale.autoupdatingCurrent
         currentYear = calendar.component(.year, from: currentDate)
         isLoadingYearData = false
+        scrollToToday = false
+        isScrollToTodayAnimated = false
     }
 }

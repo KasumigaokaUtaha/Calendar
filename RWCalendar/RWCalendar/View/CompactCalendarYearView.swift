@@ -5,6 +5,7 @@
 //  Created by Kasumigaoka Utaha on 02.01.22.
 //
 
+import Combine
 import SwiftUI
 
 struct CompactCalendarYearView: View {
@@ -24,24 +25,48 @@ struct CompactCalendarYearView: View {
     }
 
     var body: some View {
-        LazyVGrid(columns: columns) {
-            ForEach(store.state.allYears, id: \.self) { year in
-                Section {
-                    ForEach(fetchMonthData(for: year)) { monthData in
-                        CompactCalendarMonthViewWrapper(year: year, month: monthData.month, font: .system(.caption2))
-                    }
-                } header: {
-                    VStack {
-                        Text(String(format: "%d", year))
-                            .font(.system(.title))
-                            .padding(.vertical, 8)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        Divider()
+        ScrollViewReader { proxy in
+            ScrollView {
+                LazyVGrid(columns: columns) {
+                    ForEach(store.state.allYears, id: \.self) { year in
+                        yearView(year: year)
+                            .onAppear {
+                                store.send(.loadYearDataIfNeeded(base: year))
+                            }
                     }
                 }
-                .onAppear {
-                    store.send(.loadYearDataIfNeeded(base: year))
+            }
+            .onReceive(store.$state) { state in
+                if state.scrollToToday, state.allYears.contains(state.currentYear) {
+                    if state.isScrollToTodayAnimated {
+                        withAnimation {
+                            proxy.scrollTo(state.currentYear, anchor: .top)
+                        }
+                    } else {
+                        proxy.scrollTo(state.currentYear, anchor: .top)
+                    }
+                    store.send(.resetScrollToDay)
                 }
+            }
+        }
+    }
+
+    func yearView(year: Int) -> some View {
+        Section {
+            ForEach(fetchMonthData(for: year)) { monthData in
+                CompactCalendarMonthViewWrapper(
+                    year: year,
+                    month: monthData.month,
+                    font: .system(.caption2)
+                )
+            }
+        } header: {
+            VStack {
+                Text(String(format: "%d", year))
+                    .font(.system(.title))
+                    .padding(.vertical, 8)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Divider()
             }
         }
     }

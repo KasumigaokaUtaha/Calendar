@@ -13,20 +13,24 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             GeometryReader { proxy in
-                ScrollView(showsIndicators: true) {
-                    CompactCalendarYearView(size: proxy.size, columnsNumber: 3)
-                }
+                CompactCalendarYearView(size: proxy.size, columnsNumber: 3)
             }
             .toolbar {
                 ToolbarItem(
                     placement: .navigationBarTrailing
                 ) {
-                    Text("Today")
+                    Button("Today") {
+                        store.send(.setScrollToToday(withAnimation: true))
+                    }
                 }
                 ToolbarItem(
                     placement: .navigationBarLeading
                 ) {
-                    Image(systemName: "line.3.horizontal")
+                    Button {
+                        // Show context menu
+                    } label: {
+                        Image(systemName: "line.3.horizontal")
+                    }
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
