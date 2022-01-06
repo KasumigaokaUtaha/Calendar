@@ -28,10 +28,11 @@ struct RWCalendarApp: App {
     }
 
     func onStartTasks() {
+        let rangeStart = store.state.currentYear - 1970
         store.send(.setScrollToToday(withAnimation: false))
         store.send(.loadYearDataRange(
             base: store.state.currentYear,
-            range: -50 ... 3
+            range: rangeStart ... 3
         ))
     }
 }
