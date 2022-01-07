@@ -14,4 +14,7 @@ enum AppAction {
     case loadYearData(date: Date, range: ClosedRange<Int>)
     case setYearData(_ yearData: YearData)
     case setYearDataCollection(_ yearDataCollection: [YearData])
+//    case setCurrentEvent(_ event: Event)
+    
+//    case insertNewEvent(_ event: Event)
 }

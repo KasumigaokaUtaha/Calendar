@@ -13,6 +13,10 @@ struct AppState {
     var currentDate: Date
     var startOfWeek: Weekday
     var calendar: Calendar
+    
+//    var currentEvent: Event
+    
+//    var events: [Event]
 
     init() {
         years = [:]
@@ -20,5 +24,7 @@ struct AppState {
         currentDate = Date()
         startOfWeek = .sunday
         calendar = Calendar.current
+//        currentEvent = Event(name: "Test", startDate: Date(), endDate: Date())
+//        events = []
     }
 }
