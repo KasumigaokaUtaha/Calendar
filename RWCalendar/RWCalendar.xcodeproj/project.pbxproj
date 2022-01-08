@@ -9,7 +9,8 @@
 /* Begin PBXBuildFile section */
 		5A023A71278649D8004D74E9 /* RWCalendar.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5A023A6F278649D8004D74E9 /* RWCalendar.xcdatamodeld */; };
 		5A023A7427874C89004D74E9 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A023A7327874C89004D74E9 /* DataController.swift */; };
-		5A35FCFE278097E3006914FB /* EventCreatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A35FCFD278097E3006914FB /* EventCreatingView.swift */; };
+		5A023A762788ECD1004D74E9 /* EventDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A023A752788ECD1004D74E9 /* EventDTO.swift */; };
+		5A35FCFE278097E3006914FB /* EventUpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A35FCFD278097E3006914FB /* EventUpdateView.swift */; };
 		5AF2F72B2783B2D20028C4B1 /* EventsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AF2F72A2783B2D20028C4B1 /* EventsListView.swift */; };
 		628252BB277E432300A8464B /* MonthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628252BA277E432300A8464B /* MonthView.swift */; };
 		628252BD277E65FA00A8464B /* RWCalendarUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628252BC277E65FA00A8464B /* RWCalendarUtilTests.swift */; };
@@ -51,7 +52,8 @@
 /* Begin PBXFileReference section */
 		5A023A70278649D8004D74E9 /* RWCalendar.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = RWCalendar.xcdatamodel; sourceTree = "<group>"; };
 		5A023A7327874C89004D74E9 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
-		5A35FCFD278097E3006914FB /* EventCreatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCreatingView.swift; sourceTree = "<group>"; };
+		5A023A752788ECD1004D74E9 /* EventDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDTO.swift; sourceTree = "<group>"; };
+		5A35FCFD278097E3006914FB /* EventUpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventUpdateView.swift; sourceTree = "<group>"; };
 		5AF2F72A2783B2D20028C4B1 /* EventsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsListView.swift; sourceTree = "<group>"; };
 		628252BA277E432300A8464B /* MonthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthView.swift; sourceTree = "<group>"; };
 		628252BC277E65FA00A8464B /* RWCalendarUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RWCalendarUtilTests.swift; sourceTree = "<group>"; };
@@ -206,6 +208,7 @@
 				62E8ABB9277DD0C9007487E1 /* Event.swift */,
 				62E8ABBB277DD0D0007487E1 /* DateData.swift */,
 				5A023A6F278649D8004D74E9 /* RWCalendar.xcdatamodeld */,
+				5A023A752788ECD1004D74E9 /* EventDTO.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -222,7 +225,7 @@
 			children = (
 				62E8ABBD277DD0DE007487E1 /* ContentView.swift */,
 				628252BA277E432300A8464B /* MonthView.swift */,
-				5A35FCFD278097E3006914FB /* EventCreatingView.swift */,
+				5A35FCFD278097E3006914FB /* EventUpdateView.swift */,
 				5AF2F72A2783B2D20028C4B1 /* EventsListView.swift */,
 			);
 			path = View;
@@ -382,10 +385,11 @@
 			files = (
 				5AF2F72B2783B2D20028C4B1 /* EventsListView.swift in Sources */,
 				628252BB277E432300A8464B /* MonthView.swift in Sources */,
+				5A023A762788ECD1004D74E9 /* EventDTO.swift in Sources */,
 				62E8ABBA277DD0C9007487E1 /* Event.swift in Sources */,
 				62E8ABB6277DD0B0007487E1 /* AppReducer.swift in Sources */,
 				62E8ABBC277DD0D0007487E1 /* DateData.swift in Sources */,
-				5A35FCFE278097E3006914FB /* EventCreatingView.swift in Sources */,
+				5A35FCFE278097E3006914FB /* EventUpdateView.swift in Sources */,
 				5A023A71278649D8004D74E9 /* RWCalendar.xcdatamodeld in Sources */,
 				62E8ABB0277DD099007487E1 /* AppStore.swift in Sources */,
 				62E8ABB8277DD0BE007487E1 /* AppEnvironment.swift in Sources */,

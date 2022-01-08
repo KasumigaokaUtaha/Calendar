@@ -50,10 +50,8 @@ func appReducer(
         state.currentDate = date
     case let .setStartOfWeek(weekday):
         state.startOfWeek = weekday
-//    case let .setCurrentEvent(event):
-//        state.currentEvent = event
-//    case let .insertNewEvent(event):
-//        state.events.append(event)
+    case let .updateEvent(newEvent, id):
+        environment.eventController.dataController.updateEvent(updatedEvent: newEvent, id: id)
     }
 
     return nil

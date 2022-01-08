@@ -13,12 +13,23 @@ struct AppEnvironment {
     var backgroundQueue: DispatchQueue
 
     var year: YearEnvironment
+    
+    var eventController: EventEnvironment
 
     init() {
         mainQueue = DispatchQueue.main
         backgroundQueue = DispatchQueue.global(qos: .background)
 
         year = YearEnvironment()
+        eventController = EventEnvironment()
+    }
+}
+
+struct EventEnvironment {
+    let dataController: DataController = DataController()
+    
+    func createEvent(event: EventDTO) {
+        dataController.saveEvent(newEvent: event)
     }
 }
 
