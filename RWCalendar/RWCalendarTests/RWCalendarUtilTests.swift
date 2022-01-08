@@ -338,17 +338,17 @@ class RWCalendarUtilTests: XCTestCase {
         ]
         let expectedDays = [
             1: 1 ... 6,
-            2: 1 ... 6,
-            3: 1 ... 3,
-            4: 1 ... 1,
+            2: 1 ... 13,
+            3: 1 ... 10,
+            4: 1 ... 8,
             5: 1 ... 5,
-            6: 1 ... 3,
-            7: nil,
-            8: 1 ... 4,
-            9: 1 ... 2,
+            6: 1 ... 10,
+            7: 1 ... 7,
+            8: 1 ... 11,
+            9: 1 ... 9,
             10: 1 ... 6,
-            11: 1 ... 4,
-            12: 1 ... 1
+            11: 1 ... 11,
+            12: 1 ... 8
         ]
 
         for month in 1 ... 12 {
@@ -357,6 +357,7 @@ class RWCalendarUtilTests: XCTestCase {
                     year: year,
                     month: month,
                     startOfWeek: startOfWeek,
+                    additionalDays: true,
                     calendar: calendar
                 )
 
@@ -364,13 +365,7 @@ class RWCalendarUtilTests: XCTestCase {
             let nextMonthDays = nextMonthDaysOpt!
 
             XCTAssertNotNil(expectedDays[month] as Any?)
-            let expectedRangeOpt = expectedDays[month]!
-            if expectedRangeOpt == nil {
-                continue
-            }
-
-            XCTAssertNotNil(expectedRangeOpt)
-            let expectedRange = expectedRangeOpt!
+            let expectedRange = expectedDays[month]!
 
             XCTAssertNotNil(expectedYears[month])
             let expectedYear = expectedYears[month]!

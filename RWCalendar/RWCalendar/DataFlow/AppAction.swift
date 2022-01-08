@@ -11,7 +11,9 @@ enum AppAction {
     case setCurrentDate(_ date: Date)
     case setStartOfWeek(_ weekday: Weekday)
 
-    case loadYearData(date: Date, range: ClosedRange<Int>)
+    case loadYearDataIfNeeded(base: Int)
+    case loadYearData(base: Int, count: Int, direction: Direction)
+    case loadYearDataRange(base: Int, range: ClosedRange<Int>)
     case setYearData(_ yearData: YearData)
     case setYearDataCollection(_ yearDataCollection: [YearData])
     case updateEvent(newEvent: EventDTO, id: UUID)
@@ -20,4 +22,12 @@ enum AppAction {
 //    case setCurrentEvent(_ event: Event)
     
 //    case insertNewEvent(_ event: Event)
+
+    case setScrollToToday(withAnimation: Bool)
+    case resetScrollToDay
+}
+
+enum Direction {
+    case past
+    case future
 }

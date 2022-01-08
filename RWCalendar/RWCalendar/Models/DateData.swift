@@ -88,12 +88,11 @@ enum Weekday: String {
 }
 
 struct YearData: Identifiable {
-    let id: UUID
+    let id = UUID()
     let year: Int
     var months: [Int: MonthData]
 
     init(year: Int, monthData: [MonthData]) {
-        id = UUID()
         self.year = year
         months = monthData
             .reduce(into: [:]) { dict, monthData in
@@ -103,7 +102,7 @@ struct YearData: Identifiable {
 }
 
 struct MonthData: Identifiable {
-    let id: UUID
+    let id = UUID()
     let month: Int
     var days: [DayData]
     var lastMonthDays: [DayData]
@@ -115,7 +114,6 @@ struct MonthData: Identifiable {
         lastMonthDays: [DayData],
         nextMonthDays: [DayData]
     ) {
-        id = UUID()
         self.month = month
         self.days = days
         self.lastMonthDays = lastMonthDays
@@ -124,13 +122,12 @@ struct MonthData: Identifiable {
 }
 
 struct DayData: Identifiable {
-    let id: UUID
+    let id: UUID = UUID()
     let day: Int
     let date: Date
     let weekday: Weekday
 
     init(day: Int, date: Date, weekday: Weekday) {
-        id = UUID()
         self.day = day
         self.date = date
         self.weekday = weekday
@@ -146,7 +143,6 @@ struct DayData: Identifiable {
             return nil
         }
 
-        id = UUID()
         day = calendar.component(.day, from: date)
         self.date = date
         self.weekday = weekday

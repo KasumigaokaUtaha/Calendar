@@ -35,79 +35,60 @@ struct EventEnvironment {
 
 struct YearEnvironment {
     func performCalculation(
-        date: Date,
+        currentYear: Int,
         range: ClosedRange<Int>,
         startOfWeek: Weekday,
         calendar: Calendar
     ) -> AnyPublisher<[YearData], Never> {
-        Future { promise in
-            let currentYear = calendar.component(
-                .year,
-                from: date
-            )
-            var allYears: [YearData] = []
+        Deferred {
+            Future { promise in
+                var allYears: [YearData] = []
 
-            for offset in range {
-                let year = currentYear + offset
-                var months: [MonthData] = []
+                for offset in range {
+                    let year = currentYear + offset
+                    var months: [MonthData] = []
 
-                for month in 1 ... 12 {
-                    let days = Util.allDaysIn(
-                        year: year,
-                        month: month,
-                        calendar: calendar
-                    )?
-                        .map {
-                            DayData(
-                                date: $0,
-                                calendar: calendar
-                            )
-                        }
-                        .compactMap { $0 } ?? []
-                    let lastMonthDays = Util.lastMonthDays(
-                        year: year,
-                        month: month,
-                        startOfWeek: startOfWeek,
-                        calendar: calendar
-                    )?
-                        .map {
-                            DayData(
-                                date: $0,
-                                calendar: calendar
-                            )
-                        }
-                        .compactMap { $0 } ?? []
-                    let nextMonthDays = Util.nextMonthDays(
-                        year: year,
-                        month: month,
-                        startOfWeek: startOfWeek,
-                        calendar: calendar
-                    )?
-                        .map {
-                            DayData(
-                                date: $0,
-                                calendar: calendar
-                            )
-                        }
-                        .compactMap { $0 } ?? []
+                    for month in 1 ... 12 {
+                        let days = Util.allDaysIn(
+                            year: year,
+                            month: month,
+                            calendar: calendar
+                        )?
+                            .map { DayData(date: $0, calendar: calendar) }
+                            .compactMap { $0 } ?? []
+                        let lastMonthDays = Util.lastMonthDays(
+                            year: year,
+                            month: month,
+                            startOfWeek: startOfWeek,
+                            calendar: calendar
+                        )?
+                            .map { DayData(date: $0, calendar: calendar) }
+                            .compactMap { $0 } ?? []
+                        let nextMonthDays = Util.nextMonthDays(
+                            year: year,
+                            month: month,
+                            startOfWeek: startOfWeek,
+                            additionalDays: true,
+                            calendar: calendar
+                        )?
+                            .map { DayData(date: $0, calendar: calendar) }
+                            .compactMap { $0 } ?? []
 
-                    months
-                        .append(MonthData(
+                        months.append(MonthData(
                             month: month,
                             days: days,
                             lastMonthDays: lastMonthDays,
                             nextMonthDays: nextMonthDays
                         ))
+                    }
+
+                    let yearData = YearData(year: year, monthData: months)
+                    allYears.append(yearData)
                 }
 
-                let yearData = YearData(
-                    year: year,
-                    monthData: months
-                )
-                allYears.append(yearData)
+                promise(.success(allYears))
             }
-
-            promise(.success(allYears))
-        }.eraseToAnyPublisher()
+        }
+        .eraseToAnyPublisher()
     }
 }
