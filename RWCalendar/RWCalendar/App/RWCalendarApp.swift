@@ -32,7 +32,7 @@ struct RWCalendarApp: App {
         store.send(.setScrollToToday(withAnimation: false))
         store.send(.loadYearDataRange(
             base: store.state.currentYear,
-            range: rangeStart ... 3
+            range: -rangeStart ... 3
         ))
     }
 }
