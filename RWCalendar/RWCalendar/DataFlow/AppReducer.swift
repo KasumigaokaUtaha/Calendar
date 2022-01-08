@@ -6,7 +6,7 @@
 //
 
 import Combine
-import UIKit
+import Dispatch
 
 typealias Reducer<State, Action, Environment> = (inout State, Action, Environment) -> AnyPublisher<Action, Never>?
 
