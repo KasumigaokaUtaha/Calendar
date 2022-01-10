@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
+    @EnvironmentObject var customizationData: CustomizationData
 
     var body: some View {
         NavigationView {
@@ -32,7 +33,21 @@ struct ContentView: View {
                         Image(systemName: "line.3.horizontal")
                     }
                 }
+                
+                ToolbarItem(
+                    placement: .navigationBarTrailing
+                ) {
+                    NavigationLink(
+                        destination: SettingView()
+                            .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
+                            .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
+                    ) {
+                        SettingButtonView()
+                    }
+                }
             }
+            
+            .background(Color(customizationData.selectedTheme.backgroundColor).edgesIgnoringSafeArea(.all))
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("Calendar")
         }
