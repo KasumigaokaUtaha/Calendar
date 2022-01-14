@@ -133,5 +133,6 @@ func appReducer(
         state.isScrollToTodayAnimated = withAnimation
     case .resetScrollToDay:
         state.scrollToToday = false
+    }
     return nil
 }
