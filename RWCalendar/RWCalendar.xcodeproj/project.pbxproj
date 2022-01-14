@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		12A9279D278EFE20003E9542 /* TrueMonthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A9279C278EFE20003E9542 /* TrueMonthView.swift */; };
 		6237E06027820BD3009340D2 /* CompactCalendarYearView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6237E05F27820BD3009340D2 /* CompactCalendarYearView.swift */; };
 		628252BB277E432300A8464B /* CompactCalendarMonthViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628252BA277E432300A8464B /* CompactCalendarMonthViewWrapper.swift */; };
 		628252BD277E65FA00A8464B /* RWCalendarUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628252BC277E65FA00A8464B /* RWCalendarUtilTests.swift */; };
@@ -47,6 +48,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		12A9279C278EFE20003E9542 /* TrueMonthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrueMonthView.swift; sourceTree = "<group>"; };
 		6237E05F27820BD3009340D2 /* CompactCalendarYearView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactCalendarYearView.swift; sourceTree = "<group>"; };
 		628252BA277E432300A8464B /* CompactCalendarMonthViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactCalendarMonthViewWrapper.swift; sourceTree = "<group>"; };
 		628252BC277E65FA00A8464B /* RWCalendarUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RWCalendarUtilTests.swift; sourceTree = "<group>"; };
@@ -210,6 +212,7 @@
 				6237E05F27820BD3009340D2 /* CompactCalendarYearView.swift */,
 				628252BA277E432300A8464B /* CompactCalendarMonthViewWrapper.swift */,
 				629B22F72784EFE300FA2494 /* CompactCalendarMonthView.swift */,
+				12A9279C278EFE20003E9542 /* TrueMonthView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -381,6 +384,7 @@
 				629B22F82784EFE300FA2494 /* CompactCalendarMonthView.swift in Sources */,
 				62E8ABBE277DD0DE007487E1 /* ContentView.swift in Sources */,
 				62E8ABB4277DD0A9007487E1 /* AppAction.swift in Sources */,
+				12A9279D278EFE20003E9542 /* TrueMonthView.swift in Sources */,
 				62E8ABA9277DD057007487E1 /* Util.swift in Sources */,
 				62E8ABB2277DD0A0007487E1 /* AppState.swift in Sources */,
 			);

@@ -8,14 +8,15 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var curDate: Date = Date()
     var body: some View {
-        MonthView()
+        MonthView(curDate: $curDate)
         //RefreshScrollView()
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView( )
     }
 }
