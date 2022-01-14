@@ -7,7 +7,12 @@
 
 import SwiftUI
 
+
+
 struct WeekTaskFrame: View {
+    @Binding var currentWeek :Int
+    
+    
     var body: some View {
         ForEach(1...7,id:\.self){timeZone in
             
@@ -62,6 +67,6 @@ struct WeekTaskFrame: View {
 
 struct WeekTaskFrame_Previews: PreviewProvider {
     static var previews: some View {
-        WeekTaskFrame()
+        ContentView()
     }
 }

@@ -11,11 +11,12 @@ struct WeekDays: View {
     @State var currentDate : Date = Date()
     @State var currentWeek: Int = 0
     @State var currentMonth: Int = 0
+    @State private var offset = CGSize.zero
     var body: some View {
-        VStack(spacing: 20){
+        ScrollView{
             let weekDays:[String] = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
             // display the year and the weeks number..
-            HStack{
+            HStack(alignment:.top){
                 VStack{
                     Button{
                         
@@ -84,7 +85,30 @@ struct WeekDays: View {
             }
             
             // complate the form
-            WeekTaskFrame()
+            
+            
+            ZStack{
+                
+                WeekTaskFrame(currentWeek: $currentWeek)
+                    .background(Color.red)
+                    .animation(.default)
+                    .offset(x:offset.width * 3)
+                    .gesture(
+                        DragGesture()
+                            .onChanged{
+                                self.offset = $0.translation
+                            }
+                            .onEnded{ _ in
+                                if offset.width > 100 {
+                                    self.currentWeek += 1
+                                }else if offset.width < -100{
+                                    self.currentWeek -= 1
+                                }
+                            }
+                    ).background(Color.red
+                    )
+            }
+            
             
             
             
@@ -157,26 +181,3 @@ struct WeekDays: View {
 
 
 
-// extension Date to get the whole week
-extension Date{
-    
-    func getWeeks(currentWeek:Int)-> [Date]{
-        // the local calendar
-        let calendar = Calendar.current
-        
-        
-        let range = 1...7
-        
-        // getting the start Date
-        
-        var startDay = calendar.date(from: Calendar.current.dateComponents([.weekOfYear,.yearForWeekOfYear], from: self))!
-        startDay = calendar.date(byAdding: .hour, value: 2, to: startDay) ?? Date()
-        startDay = calendar.date(byAdding: .weekOfYear, value: currentWeek, to: startDay)!
-        //get date...
-        //把Int转换成具体的日期
-        
-        return range.compactMap{weekday -> Date in
-            return calendar.date(byAdding: .day, value: weekday - 1 , to: startDay) ?? Date()
-        }
-    }
-}
