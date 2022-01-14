@@ -19,22 +19,28 @@ struct DayTaskTableView: View {
                             HStack {
                                 Text("\(row) : 00 AM")
                                     .font(.footnote)
+                                Spacer()
                             }
-                        }
+                        }.frame(width: geo.size.width/4, alignment: .leading)
 
                         ForEach(13...24, id: \.self) { row in
                             HStack {
                                 Text("\(row) : 00 PM")
                                     .font(.footnote)
+                                Spacer()
+                                
                                 //                            Text("dsadadsadas")
                             }
                         }
-
-                    }.frame(width: geo.frame(in: .local).width/4)
-
-                    Circle()
-                        .fill(Color.red)
-                        .offset(CGSize(width: geo.frame(in: .global).width/4, height: 200))
+                        
+                        .frame(width: geo.size.width/4, alignment: .leading)
+                    }
+                    .frame(width: geo.frame(in: .local).width, alignment: .leading)
+                    
+                    Text("IOS Swift")
+                        .frame(width: 200, height: 100)
+                        .background(Color.green)
+                        .position(x: geo.size.width/2, y: 100)
                 }
             }
 //            }.frame(height:geo.size.height * 4)

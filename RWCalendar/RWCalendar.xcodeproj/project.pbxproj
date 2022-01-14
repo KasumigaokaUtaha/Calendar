@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		17F1BB7A2791F188008E8A56 /* DayTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F1BB792791F188008E8A56 /* DayTask.swift */; };
 		17F281EA2791795D00502213 /* WeekDays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F281E92791795D00502213 /* WeekDays.swift */; };
 		17F281EC2791798200502213 /* WeekTaskFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F281EB2791798200502213 /* WeekTaskFrame.swift */; };
 		17F281EE279193A600502213 /* WeekViewOfYear.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F281ED279193A600502213 /* WeekViewOfYear.swift */; };
@@ -53,6 +54,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		17F1BB792791F188008E8A56 /* DayTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayTask.swift; sourceTree = "<group>"; };
 		17F281E92791795D00502213 /* WeekDays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekDays.swift; sourceTree = "<group>"; };
 		17F281EB2791798200502213 /* WeekTaskFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekTaskFrame.swift; sourceTree = "<group>"; };
 		17F281ED279193A600502213 /* WeekViewOfYear.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekViewOfYear.swift; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 				17F281EF27919C4200502213 /* CalendarDayView.swift */,
 				17F281F12791A16D00502213 /* DayToolbarView.swift */,
 				17F281F32791B55F00502213 /* DayTaskTableView.swift */,
+				17F1BB792791F188008E8A56 /* DayTask.swift */,
 			);
 			path = CalendarWeekDay;
 			sourceTree = "<group>";
@@ -401,6 +404,7 @@
 				6237E06027820BD3009340D2 /* CompactCalendarYearView.swift in Sources */,
 				62E8ABB6277DD0B0007487E1 /* AppReducer.swift in Sources */,
 				62E8ABBC277DD0D0007487E1 /* DateData.swift in Sources */,
+				17F1BB7A2791F188008E8A56 /* DayTask.swift in Sources */,
 				62E8ABB0277DD099007487E1 /* AppStore.swift in Sources */,
 				62E8ABB8277DD0BE007487E1 /* AppEnvironment.swift in Sources */,
 				62E8AB56277DCF70007487E1 /* RWCalendarApp.swift in Sources */,
