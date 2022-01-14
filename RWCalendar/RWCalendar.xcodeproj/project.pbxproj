@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		17F281EA2791795D00502213 /* WeekDays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F281E92791795D00502213 /* WeekDays.swift */; };
+		17F281EC2791798200502213 /* WeekTaskFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F281EB2791798200502213 /* WeekTaskFrame.swift */; };
 		6237E06027820BD3009340D2 /* CompactCalendarYearView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6237E05F27820BD3009340D2 /* CompactCalendarYearView.swift */; };
 		628252BB277E432300A8464B /* CompactCalendarMonthViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628252BA277E432300A8464B /* CompactCalendarMonthViewWrapper.swift */; };
 		628252BD277E65FA00A8464B /* RWCalendarUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628252BC277E65FA00A8464B /* RWCalendarUtilTests.swift */; };
@@ -47,6 +49,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		17F281E92791795D00502213 /* WeekDays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekDays.swift; sourceTree = "<group>"; };
+		17F281EB2791798200502213 /* WeekTaskFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekTaskFrame.swift; sourceTree = "<group>"; };
 		6237E05F27820BD3009340D2 /* CompactCalendarYearView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactCalendarYearView.swift; sourceTree = "<group>"; };
 		628252BA277E432300A8464B /* CompactCalendarMonthViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactCalendarMonthViewWrapper.swift; sourceTree = "<group>"; };
 		628252BC277E65FA00A8464B /* RWCalendarUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RWCalendarUtilTests.swift; sourceTree = "<group>"; };
@@ -97,6 +101,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		17F281E82791794500502213 /* CalendarWeekDay */ = {
+			isa = PBXGroup;
+			children = (
+				17F281E92791795D00502213 /* WeekDays.swift */,
+				17F281EB2791798200502213 /* WeekTaskFrame.swift */,
+			);
+			path = CalendarWeekDay;
+			sourceTree = "<group>";
+		};
 		62E8AB49277DCF70007487E1 = {
 			isa = PBXGroup;
 			children = (
@@ -210,6 +223,7 @@
 				6237E05F27820BD3009340D2 /* CompactCalendarYearView.swift */,
 				628252BA277E432300A8464B /* CompactCalendarMonthViewWrapper.swift */,
 				629B22F72784EFE300FA2494 /* CompactCalendarMonthView.swift */,
+				17F281E82791794500502213 /* CalendarWeekDay */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -382,6 +396,8 @@
 				62E8ABBE277DD0DE007487E1 /* ContentView.swift in Sources */,
 				62E8ABB4277DD0A9007487E1 /* AppAction.swift in Sources */,
 				62E8ABA9277DD057007487E1 /* Util.swift in Sources */,
+				17F281EC2791798200502213 /* WeekTaskFrame.swift in Sources */,
+				17F281EA2791795D00502213 /* WeekDays.swift in Sources */,
 				62E8ABB2277DD0A0007487E1 /* AppState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

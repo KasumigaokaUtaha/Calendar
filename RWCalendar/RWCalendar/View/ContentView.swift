@@ -32,9 +32,20 @@ struct ContentView: View {
                         Image(systemName: "line.3.horizontal")
                     }
                 }
+                
+                ToolbarItem(
+                    placement: .navigation
+                ) {
+                    NavigationLink("weekday", destination: WeekDays())
+                }
+                
+                
+                
             }
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("Calendar")
+            
+            
         }
         // LayoutConstraints error from NavigationView with navigationTitle
         // https://developer.apple.com/forums/thread/673113?answerId=687012022#687012022
