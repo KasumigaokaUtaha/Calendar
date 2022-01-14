@@ -105,14 +105,14 @@ func appReducer(
     case let .setStartOfWeek(weekday):
         state.startOfWeek = weekday
     case let .setCurrentEvent(event):
-        if event != nil {
-            state.currentEvent = event
-        } else {
+        guard let event = event else {
             state.showError = true
+            return nil
         }
+        state.currentEvent = event
     case let .updateEvent(newEvent, id):
         return environment.eventController.updateEvent(event: newEvent, id: id)
-            .catch { _ -> Just<Event?> in Just(nil) }
+            .catch { _ -> Just<Event?> in Just(nil) } // TODO: add proper error handling code
             .subscribe(on: environment.backgroundQueue)
             .map { updatedEvent in
                 AppAction.setCurrentEvent(updatedEvent)
@@ -121,7 +121,6 @@ func appReducer(
     case let .setEventList(eventList):
         state.eventList = eventList
     case .loadAllEvents:
-
         return environment.eventController.getAllEvents()
             .subscribe(on: environment.backgroundQueue)
             .map { allEvents in

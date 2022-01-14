@@ -56,6 +56,5 @@ struct EventsListView_Previews: PreviewProvider {
         EventsListView()
             .environmentObject(store)
             .onAppear(perform: {store.send(.loadAllEvents)})
-//            .environmentObject(DataController.preview)
     }
 }

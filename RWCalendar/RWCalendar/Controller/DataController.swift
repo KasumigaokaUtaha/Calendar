@@ -32,17 +32,16 @@ class DataController: ObservableObject {
 }
 
 extension DataController {
-    func saveEvent(newEvent _: EventDTO) {
+    func saveEvent(_ newEvent: EventDTO) {
         let event = Event(context: container.viewContext)
 
         event.id = UUID()
-        event.name = event.name
-        event.startDate = event.startDate
-        event.endDate = event.endDate
+        event.name = newEvent.name
+        event.startDate = newEvent.startDate
+        event.endDate = newEvent.endDate
 
         do {
             try container.viewContext.save()
-
         } catch {
             print("Failed to save event: \(error)")
         }
@@ -50,10 +49,8 @@ extension DataController {
 }
 
 extension DataController {
-    func updateEvent(updatedEvent event: EventDTO, id: UUID) throws -> Event {
-        let fetchRequest: NSFetchRequest<Event>
-
-        fetchRequest = Event.fetchRequest()
+    func updateEvent(_ event: EventDTO, id: UUID) throws -> Event {
+        let fetchRequest: NSFetchRequest<Event> = Event.fetchRequest()
 
         fetchRequest.predicate = NSPredicate(format: "id like %@", id as CVarArg)
 
@@ -70,13 +67,13 @@ extension DataController {
         
         let newEvents = try context.fetch(fetchRequest)
         if newEvents.count > 1 {
-            throw Event.EventError.idNotIdentical
+            throw Event.EventError.NonUniqueID
         }
         
         if let newEvent = newEvents.first {
             return newEvent
         } else {
-            throw Event.EventError.idNotFound
+            throw Event.EventError.IDNotFound
         }
     }
 }
@@ -87,7 +84,6 @@ extension DataController {
 
         do {
             return try container.viewContext.fetch(fetchRequest)
-
         } catch {
             print("Failed to fetch events \(error)")
         }
@@ -97,7 +93,7 @@ extension DataController {
 }
 
 extension DataController {
-    func getAllEventsOnDay(selectedDate: Date) -> [Event] {
+    func getAllEventsOn(selectedDate: Date) -> [Event] {
         let fetchRequest: NSFetchRequest<Event> = Event.fetchRequest()
         
         fetchRequest.predicate = NSPredicate(format: "startDate <= %@ AND endDate >= %@", selectedDate as NSDate)

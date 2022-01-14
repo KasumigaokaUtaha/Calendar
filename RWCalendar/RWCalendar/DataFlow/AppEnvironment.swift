@@ -6,8 +6,8 @@
 //
 
 import Combine
-import Foundation
 import CoreData
+import Foundation
 
 struct AppEnvironment {
     var mainQueue: DispatchQueue
@@ -27,36 +27,17 @@ struct AppEnvironment {
 }
 
 struct EventEnvironment {
-    let dataController: DataController = {
-        let dataController = DataController(inMemory: true)
-
-        let mockName = "test name"
-        let startDate = Date()
-        let endDate = Date()
-
-        let newEvent = EventDTO(name: mockName, startDate: startDate, endDate: endDate)
-
-        dataController.saveEvent(newEvent: newEvent)
-
-        do {
-            try dataController.container.viewContext.save()
-        } catch {
-            print("Failed to save test event: \(error)")
-        }
-
-        return dataController
-    }()
+    let dataController: DataController = DataController()
 
     func createEvent(event: EventDTO) {
-        dataController.saveEvent(newEvent: event)
+        dataController.saveEvent(event)
     }
 
     func updateEvent(event: EventDTO, id: UUID) -> AnyPublisher<Event?, Error> {
         Deferred {
-            Future {
-                promise in
+            Future { promise in
                 do {
-                    let updatedEvent = try dataController.updateEvent(updatedEvent: event, id: id)
+                    let updatedEvent = try dataController.updateEvent(event, id: id)
                     promise(.success(updatedEvent))
                 } catch {
                     promise(.failure(error))
@@ -65,18 +46,16 @@ struct EventEnvironment {
         }
         .eraseToAnyPublisher()
     }
-    
+
     func getAllEvents() -> AnyPublisher<[Event], Never> {
-        Deferred {
-            Future {
-                promise in
-                let events = dataController.getAllEvents()
-                    promise(.success(events))
-            }
+        Deferred { Future {
+            promise in
+            let events = dataController.getAllEvents()
+            promise(.success(events))
+        }
         }
         .eraseToAnyPublisher()
     }
-
 }
 
 struct YearEnvironment {

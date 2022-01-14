@@ -6,8 +6,6 @@
 //
 
 import Foundation
-import UIKit
-import SwiftUI
 
 struct EventDTO {
     var name: String

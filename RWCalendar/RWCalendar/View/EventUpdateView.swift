@@ -58,29 +58,3 @@ struct EventUpdateView: View {
     }
 }
 
-//struct EventUpdateView_Previews: PreviewProvider {
-//    static let store = AppStore(initialState: AppState(), reducer: appReducer, environment: AppEnvironment())
-    
-//    static var example: Event {
-//
-//        let context =
-//
-//        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-//        fetchRequest.fetchLimit = 1
-//
-//        let results = try? context.fetch(fetchRequest)
-//
-//        return (results?.first!)!
-//    }
-    
-//    static var previews: some View {
-//        EventUpdateView(nil)
-//    }
-
-
-//func ?? <T>(lhs: Binding<T?>, rhs: T) -> Binding<T> {
-//    Binding(
-//        get: { lhs.wrappedValue ?? rhs },
-//        set: { lhs.wrappedValue = $0 }
-//    )
-//}
