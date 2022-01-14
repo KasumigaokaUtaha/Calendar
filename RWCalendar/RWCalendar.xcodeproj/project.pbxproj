@@ -8,9 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		17F1BB7A2791F188008E8A56 /* DayTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F1BB792791F188008E8A56 /* DayTask.swift */; };
-		17F281EA2791795D00502213 /* WeekDays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F281E92791795D00502213 /* WeekDays.swift */; };
-		17F281EC2791798200502213 /* WeekTaskFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F281EB2791798200502213 /* WeekTaskFrame.swift */; };
-		17F281EE279193A600502213 /* WeekViewOfYear.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F281ED279193A600502213 /* WeekViewOfYear.swift */; };
 		17F281F027919C4200502213 /* CalendarDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F281EF27919C4200502213 /* CalendarDayView.swift */; };
 		17F281F22791A16D00502213 /* DayToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F281F12791A16D00502213 /* DayToolbarView.swift */; };
 		17F281F42791B56000502213 /* DayTaskTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F281F32791B55F00502213 /* DayTaskTableView.swift */; };
@@ -55,9 +52,6 @@
 
 /* Begin PBXFileReference section */
 		17F1BB792791F188008E8A56 /* DayTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayTask.swift; sourceTree = "<group>"; };
-		17F281E92791795D00502213 /* WeekDays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekDays.swift; sourceTree = "<group>"; };
-		17F281EB2791798200502213 /* WeekTaskFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekTaskFrame.swift; sourceTree = "<group>"; };
-		17F281ED279193A600502213 /* WeekViewOfYear.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekViewOfYear.swift; sourceTree = "<group>"; };
 		17F281EF27919C4200502213 /* CalendarDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarDayView.swift; sourceTree = "<group>"; };
 		17F281F12791A16D00502213 /* DayToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayToolbarView.swift; sourceTree = "<group>"; };
 		17F281F32791B55F00502213 /* DayTaskTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayTaskTableView.swift; sourceTree = "<group>"; };
@@ -114,9 +108,6 @@
 		17F281E82791794500502213 /* CalendarWeekDay */ = {
 			isa = PBXGroup;
 			children = (
-				17F281E92791795D00502213 /* WeekDays.swift */,
-				17F281EB2791798200502213 /* WeekTaskFrame.swift */,
-				17F281ED279193A600502213 /* WeekViewOfYear.swift */,
 				17F281EF27919C4200502213 /* CalendarDayView.swift */,
 				17F281F12791A16D00502213 /* DayToolbarView.swift */,
 				17F281F32791B55F00502213 /* DayTaskTableView.swift */,
@@ -414,10 +405,7 @@
 				17F281F22791A16D00502213 /* DayToolbarView.swift in Sources */,
 				17F281F027919C4200502213 /* CalendarDayView.swift in Sources */,
 				62E8ABA9277DD057007487E1 /* Util.swift in Sources */,
-				17F281EE279193A600502213 /* WeekViewOfYear.swift in Sources */,
-				17F281EC2791798200502213 /* WeekTaskFrame.swift in Sources */,
 				17F281F42791B56000502213 /* DayTaskTableView.swift in Sources */,
-				17F281EA2791795D00502213 /* WeekDays.swift in Sources */,
 				62E8ABB2277DD0A0007487E1 /* AppState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
