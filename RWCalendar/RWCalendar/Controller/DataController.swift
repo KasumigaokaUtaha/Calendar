@@ -115,3 +115,19 @@ extension DataController {
         return []
     }
 }
+
+extension DataController {
+    func getAllEventsOnDay(selectedDate: Date) -> [Event] {
+        let fetchRequest: NSFetchRequest<Event> = Event.fetchRequest()
+        
+        fetchRequest.predicate = NSPredicate(format: "startDate <= %@ AND endDate >= %@", selectedDate as NSDate)
+        
+        do {
+            return try container.viewContext.fetch(fetchRequest)
+        } catch {
+            print("Failed to fetch events \(error)")
+        }
+        
+        return []
+    }
+}
