@@ -13,26 +13,6 @@ class DataController: ObservableObject {
 
     @Published private(set) var events: [Event] = []
 
-//    static var preview: DataController = {
-//        let dataController = DataController(inMemory: true)
-//
-//        let mockName = "test name"
-//        let startDate = Date()
-//        let endDate = Date()
-//
-//        let newEvent = EventDTO(name: mockName, startDate: startDate, endDate: endDate)
-//
-//        dataController.saveEvent(newEvent: newEvent)
-//
-//        do {
-//            try dataController.container.viewContext.save()
-//        } catch {
-//            print("Failed to save test event: \(error)")
-//        }
-//
-//        return dataController
-//    }()
-
     init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: "RWCalendar")
 

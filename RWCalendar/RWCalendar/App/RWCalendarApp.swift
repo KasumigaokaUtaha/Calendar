@@ -11,8 +11,6 @@ import SwiftUI
 struct RWCalendarApp: App {
     let store: AppStore<AppState, AppAction, AppEnvironment>
     
-//    @StateObject private var dataController = DataController()
-
     init() {
         store = AppStore(
             initialState: AppState(),
@@ -26,7 +24,6 @@ struct RWCalendarApp: App {
             ContentView()
                 .environmentObject(store)
                 .onAppear(perform: onStartTasks)
-//                .environment(\.managedObjectContext, dataController.container.viewContext)
         }
     }
 
