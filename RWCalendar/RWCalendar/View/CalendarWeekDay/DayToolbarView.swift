@@ -14,14 +14,13 @@ struct DayToolbarView: View {
     var body: some View {
         let weekDays: [String] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
         NavigationView {
-            GeometryReader { _ in
-                VStack(spacing: 0) {
-//                    DayTaskTableView()
-                    ScrollView {
-                        Da
-                    }
-                }
+//            GeometryReader { _ in
+            VStack(spacing: 0) {
+                Text(store.state.currentDate, style: .date)
+                    .font(.footnote)
+                DayTaskTableView()
             }
+//            }
             .toolbar(content: {
                 ToolbarItem(placement: .principal) {
                     VStack(spacing: 3) {
@@ -33,10 +32,11 @@ struct DayToolbarView: View {
                                 .fontWeight(.bold)
                             Spacer()
                             Button("Today") {
-                                store.send(.setScrollToToday(withAnimation: true))
+//                                store.send(.setScrollToToday(withAnimation: true))
+                                currentWeek = 0
                             }
                         }
-                        VStack(spacing: 0) {
+                        VStack(spacing: 1) {
                             HStack {
                                 ForEach(0...6, id: \.self) { day in
                                     Text(weekDays[day])
@@ -51,38 +51,30 @@ struct DayToolbarView: View {
                                     let d = extractDate()[$0]
                                     Text(String(d.day))
                                         .background(Circle()
-                                                        .fill(Color.red)
-                                                        .opacity(isSameDay(date1:d.date , date2: store.state.currentDate) ? 1:0)
-                                                        .frame(width: 25, height: 25)
+                                            .fill(Color.red)
+                                            .opacity(isSameDay(date1: d.date, date2: store.state.currentDate) ? 1 : 0)
+                                            .frame(width: 25, height: 25)
                                         )
-                                }
-                                
-                                .frame(maxWidth: .infinity)
-                                .offset(x: offset.width * 3)
-                                .gesture(
-                                    DragGesture()
-                                        .onChanged{
-                                            print("changing")
-                                            self.offset = $0.translation
-                                            if offset.width > 100 {
-                                                self.currentWeek += 1
-                                            } else if offset.width < -100 {
-                                                self.currentWeek -= 1
-                                            }
-                                        }
-                                        .onEnded { _ in
-                                            print("changing")
-                                            if offset.width > 100 {
-                                                self.currentWeek += 1
-                                            } else if offset.width < -100 {
-                                                self.currentWeek -= 1
-                                            }
-                                        }
-                                )
+                                }.frame(maxWidth: .infinity)
+                                    .offset(x: offset.width * 3)
                             }
                         }
-                        Text(store.state.currentDate, style: .date)
-                            .font(.footnote)
+//                        .border(Color.red)
+                        .frame(height: 30, alignment: .bottom)
+                        .gesture(
+                            DragGesture(coordinateSpace: .local)
+                                .onChanged {
+                                    self.offset = $0.translation
+                                }
+                                .onEnded {
+                                    if $0.startLocation.x - 50 > $0.location.x {
+                                        self.currentWeek += 1
+                                    } else if $0.startLocation.x + 50 < $0.location.x {
+                                        self.currentWeek -= 1
+                                    }
+                                    self.offset = .zero
+                                }
+                        )
                     }
                 }
 
@@ -109,14 +101,11 @@ struct DayToolbarView: View {
         return date
     }
     
-    
-    
-    func isSameDay(date1:Date, date2:Date)->Bool{
+    func isSameDay(date1: Date, date2: Date) -> Bool {
         let calendar = Calendar.current
         
-        return calendar.isDate(date1,inSameDayAs: date2)
+        return calendar.isDate(date1, inSameDayAs: date2)
     }
-    
     
     func extractDate() -> [DayData] {
         let days = store.state.currentDate.getWeeks(currentWeek: currentWeek)
@@ -134,8 +123,9 @@ struct DayToolbarView: View {
     func getToolBarData(date: Date) -> [String] {
         let df = DateFormatter()
         df.dateFormat = "yyyy-MMM"
-    
-        return df.string(from: date).components(separatedBy: "-")
+        let calendar = Calendar.current
+        let d = calendar.date(byAdding: .weekOfYear, value: currentWeek, to: date)!
+        return df.string(from: d).components(separatedBy: "-")
     }
 }
 
