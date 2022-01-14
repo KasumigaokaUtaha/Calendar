@@ -10,15 +10,24 @@ import Foundation
 
 extension Event {
     
-    static var example: Event {
-        
-        let context = DataController.preview.container.viewContext
-        
-        let fetchRequest: NSFetchRequest<Event> = Event.fetchRequest()
-        fetchRequest.fetchLimit = 1
-        
-        let results = try? context.fetch(fetchRequest)
-        
-        return (results?.first!)!
+//    static var example: Event {
+//        
+//        let context = 
+//        
+//        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+//        fetchRequest.fetchLimit = 1
+//        
+//        let results = try? context.fetch(fetchRequest)
+//        
+//        return (results?.first!)!
+//    }
+    
+}
+
+extension Event {
+    
+    enum EventError: Error {
+        case idNotIdentical
+        case idNotFound
     }
 }

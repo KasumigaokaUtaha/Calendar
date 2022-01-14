@@ -13,25 +13,25 @@ class DataController: ObservableObject {
 
     @Published private(set) var events: [Event] = []
 
-    static var preview: DataController = {
-        let dataController = DataController(inMemory: true)
-
-        let mockName = "test name"
-        let startDate = Date()
-        let endDate = Date()
-
-        let newEvent = EventDTO(name: mockName, startDate: startDate, endDate: endDate)
-
-        dataController.saveEvent(newEvent: newEvent)
-
-        do {
-            try dataController.container.viewContext.save()
-        } catch {
-            print("Failed to save test event: \(error)")
-        }
-
-        return dataController
-    }()
+//    static var preview: DataController = {
+//        let dataController = DataController(inMemory: true)
+//
+//        let mockName = "test name"
+//        let startDate = Date()
+//        let endDate = Date()
+//
+//        let newEvent = EventDTO(name: mockName, startDate: startDate, endDate: endDate)
+//
+//        dataController.saveEvent(newEvent: newEvent)
+//
+//        do {
+//            try dataController.container.viewContext.save()
+//        } catch {
+//            print("Failed to save test event: \(error)")
+//        }
+//
+//        return dataController
+//    }()
 
     init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: "RWCalendar")
@@ -70,33 +70,39 @@ extension DataController {
 }
 
 extension DataController {
-    func updateEvent(updatedEvent event: EventDTO, id: UUID) {
-        do {
-            let fetchRequest: NSFetchRequest<Event>
+    func updateEvent(updatedEvent event: EventDTO, id: UUID) throws -> Event {
+        let fetchRequest: NSFetchRequest<Event>
 
-            fetchRequest = Event.fetchRequest()
+        fetchRequest = Event.fetchRequest()
 
-            fetchRequest.predicate = NSPredicate(format: "id like %@", id as CVarArg)
+        fetchRequest.predicate = NSPredicate(format: "id like %@", id as CVarArg)
 
-            let context = container.viewContext
+        let context = container.viewContext
 
-            let result = try context.fetch(fetchRequest)
-            if let eventToUpdate = result.first {
-                eventToUpdate.setValue(event.name, forKey: "name")
-                eventToUpdate.setValue(event.startDate, forKey: "startDate")
-                eventToUpdate.setValue(event.endDate, forKey: "endDate")
-                try context.save()
-            }
-            print("Event updated.")
-        } catch {
-            container.viewContext.rollback()
-            print("Failed to save context: \(error)")
+        let result = try context.fetch(fetchRequest)
+        if let eventToUpdate = result.first {
+            eventToUpdate.setValue(event.name, forKey: "name")
+            eventToUpdate.setValue(event.startDate, forKey: "startDate")
+            eventToUpdate.setValue(event.endDate, forKey: "endDate")
+            try context.save()
+        }
+        print("Event updated.")
+        
+        let newEvents = try context.fetch(fetchRequest)
+        if newEvents.count > 1 {
+            throw Event.EventError.idNotIdentical
+        }
+        
+        if let newEvent = newEvents.first {
+            return newEvent
+        } else {
+            throw Event.EventError.idNotFound
         }
     }
 }
 
 extension DataController {
-    private func getAllEvents() -> [Event] {
+    func getAllEvents() -> [Event] {
         let fetchRequest: NSFetchRequest<Event> = Event.fetchRequest()
 
         do {

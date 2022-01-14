@@ -7,13 +7,14 @@
 
 import Combine
 import Foundation
+import CoreData
 
 struct AppEnvironment {
     var mainQueue: DispatchQueue
     var backgroundQueue: DispatchQueue
 
     var year: YearEnvironment
-    
+
     var eventController: EventEnvironment
 
     init() {
@@ -26,11 +27,56 @@ struct AppEnvironment {
 }
 
 struct EventEnvironment {
-    let dataController: DataController = DataController()
-    
+    let dataController: DataController = {
+        let dataController = DataController(inMemory: true)
+
+        let mockName = "test name"
+        let startDate = Date()
+        let endDate = Date()
+
+        let newEvent = EventDTO(name: mockName, startDate: startDate, endDate: endDate)
+
+        dataController.saveEvent(newEvent: newEvent)
+
+        do {
+            try dataController.container.viewContext.save()
+        } catch {
+            print("Failed to save test event: \(error)")
+        }
+
+        return dataController
+    }()
+
     func createEvent(event: EventDTO) {
         dataController.saveEvent(newEvent: event)
     }
+
+    func updateEvent(event: EventDTO, id: UUID) -> AnyPublisher<Event?, Error> {
+        Deferred {
+            Future {
+                promise in
+                do {
+                    let updatedEvent = try dataController.updateEvent(updatedEvent: event, id: id)
+                    promise(.success(updatedEvent))
+                } catch {
+                    promise(.failure(error))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+    
+    func getAllEvents() -> AnyPublisher<[Event], Never> {
+        Deferred {
+            Future {
+                promise in
+                let events = dataController.getAllEvents()
+                    promise(.success(events))
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+
 }
 
 struct YearEnvironment {

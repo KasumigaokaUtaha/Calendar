@@ -30,14 +30,14 @@ struct EventLabel: View {
 struct EventsListView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
     
-    @FetchRequest(entity: Event.entity(), sortDescriptors: []) var events: FetchedResults<Event>
+    
 
     var body: some View {
         ScrollView {
-            if (events.count == 0) {
+            if (store.state.eventList.count == 0) {
                 Text("No events")
             } else {
-                List(events, id:\.name) {
+                List(store.state.eventList, id:\.name) {
                     event in EventLabel(event: event)
                 }
             }
@@ -55,6 +55,7 @@ struct EventsListView_Previews: PreviewProvider {
         )
         EventsListView()
             .environmentObject(store)
+            .onAppear(perform: {store.send(.loadAllEvents)})
 //            .environmentObject(DataController.preview)
     }
 }
