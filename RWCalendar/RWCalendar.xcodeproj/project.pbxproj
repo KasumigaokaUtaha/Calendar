@@ -122,12 +122,12 @@
 		62E8AB54277DCF70007487E1 /* RWCalendar */ = {
 			isa = PBXGroup;
 			children = (
+				62E8ABAE277DD073007487E1 /* View */,
 				62E8ABA7277DD046007487E1 /* App */,
 				62E8ABAA277DD05E007487E1 /* Database */,
 				62E8ABAB277DD063007487E1 /* DataFlow */,
 				62E8ABAC277DD069007487E1 /* Models */,
 				62E8ABAD277DD06E007487E1 /* Network */,
-				62E8ABAE277DD073007487E1 /* View */,
 				62E8AB5B277DCF72007487E1 /* Preview Content */,
 			);
 			path = RWCalendar;
@@ -208,11 +208,11 @@
 		62E8ABAE277DD073007487E1 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				12A9279C278EFE20003E9542 /* TrueMonthView.swift */,
 				62E8ABBD277DD0DE007487E1 /* ContentView.swift */,
 				6237E05F27820BD3009340D2 /* CompactCalendarYearView.swift */,
 				628252BA277E432300A8464B /* CompactCalendarMonthViewWrapper.swift */,
 				629B22F72784EFE300FA2494 /* CompactCalendarMonthView.swift */,
-				12A9279C278EFE20003E9542 /* TrueMonthView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";

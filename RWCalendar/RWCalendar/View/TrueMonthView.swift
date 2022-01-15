@@ -12,11 +12,14 @@ import Foundation
 let days: [String] = ["Sun","Mon","Tue","Wed","Thu","Fri", "Sat"]
 let dateArray = Array(repeating: GridItem(.flexible()), count: 7)
 
+
 struct TrueMonthView: View {
     
     @Binding var curDate: Date
-    @State private var offset: CGFloat = 0
+    @State private var offset: CGSize = .zero
     @State var curMonth: Int = 0
+    // #TODO: add a var to controll light and dark modes
+   
    
     var body: some View {
 
@@ -25,56 +28,36 @@ struct TrueMonthView: View {
                     
                     TitleView
     
-                    //Spacer()
-                    HStack(spacing: 30){
+                    
+                    HStack{
                         ForEach(days, id:\.self){day in
                             Text(day)
                                 .font(.body)
+                                .frame(maxWidth: .infinity)
                                
                         }
                     }
-                   
-                    
-                    ScrollView(.vertical){
-                        
-                      
-                        DateView
-                    
+                         
+                    DateView
+   
                     Spacer()
-                    }
-                    /*
-                    .onPreferenceChange(OffsetPreferenceKey.self, perform: {
-                        value in
-                        offset = value
-                        
-                        if offset >= 15.0 {
-                                    curMonth += 1
-                        }else if offset <= -15.0 {
-                                    curMonth -= 1
-                         }
-                        
-                        //curDate = getCurMonth()
-                        
-                    })
-                         */
+                    
+      
+                         
                 }
-        
-                
-         
+ 
         }
        
         
     }
     
     
+
 struct MonthHome: View {
     @State var curDate:Date = Date()
 
     var body: some View {
        TrueMonthView(curDate: $curDate)
-        
-        
-        
         
         
     }
@@ -83,7 +66,7 @@ struct MonthHome: View {
 struct TrueMonthView_Previews: PreviewProvider {
    
     static var previews: some View {
-       // @State var curdate: Date = Date()
+       
        MonthHome()
     }
 }
@@ -104,44 +87,52 @@ extension Date{
     }
 }
 
+
+
 extension TrueMonthView{
-    //helping functions
     
+    
+    //subviews for title and dates
     var TitleView: some View{
-        VStack{
-            
-            HStack(){
-                Button{
-                    curMonth -= 1
+        
+        
+        NavigationView{
+          
+            HStack{
+                
+                Menu{
+                    // #TODO: add menu that displays a list of other views and setting
+                    Text("add navilinks to other views")
                 } label: {
-                    Image(systemName: "chevron.left")
+                    Label("", systemImage: "pencil")
                 }
                 
                 Button( "Today"){
                     curMonth = 0
                 }
                 // years and months
-            
-                    
-                
-                VStack(alignment: .leading , spacing: 5){
-                    Text(dateToString()[1])
+
+                Text(dateToString()[1])
                         .fontWeight(.bold)
                 
-                    Text(dateToString()[0])
+                Text(dateToString()[0])
                         .fontWeight(.bold)
                 
-                }
-                Button{
-                    curMonth += 1
+                Menu(){
+                    // #TODO: add event menu that collabs with event view
+                    Text("add navilinks to add events")
                 } label: {
-                    Image(systemName: "chevron.right")
+                    Label("", systemImage: "pencil")
                 }
                 
             }
             
+            
+          
         }
-        .padding()
+        .frame(width: .infinity, height: 150, alignment: .topLeading)
+
+
     }
     
     var DateView: some View{
@@ -158,33 +149,48 @@ extension TrueMonthView{
                     }
                  
                 }
+                
             
             }
+            
         
         
         }
+        .gesture(
+            DragGesture(coordinateSpace: .local)
+                .onChanged{
+                    self.offset = $0.translation
+                }
+                .onEnded{
+                    if $0.startLocation.x > $0.location.x + 20 {
+                        withAnimation{
+                            curMonth += 1
+                        }
+                       
+                    }
+                    else if $0.startLocation.x < $0.location.x - 20 {
+                        curMonth -= 1
+                    }
+                    self.offset = .zero
+                }
+        )
         .padding()
         .onChange(of: curMonth){ value in
             curDate = getCurMonth()
         }
     }
     
+    
+    //helping functions
+    
     func dateToString()->[String]{
         let month = Calendar.current.component(.month, from: curDate) - 1
         let year = Calendar.current.component(.year, from: curDate)
         
-        return ["\(year)", Calendar.current.monthSymbols[month]]
+        return ["\(year)", Calendar.current.shortMonthSymbols[month]]
     }
     
-    struct OffsetPreferenceKey: PreferenceKey{
-        static var defaultValue: CGFloat = 0
-        static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-            value = nextValue()
-        }
-        
-        
-    }
-    
+ 
     func getCurMonth()->Date{
         
         return Calendar.current.date(byAdding: .month, value: self.curMonth, to: Date())!
@@ -199,9 +205,9 @@ extension TrueMonthView{
 
     
     func getDate()->[DateData]{
-        
-
+      
         var days = getCurMonth().getMonthDate().compactMap { date -> DateData in
+        
      
             let day = Calendar.current.component(.day, from: date)
             
