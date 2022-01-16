@@ -6,6 +6,7 @@
 //
 
 import Combine
+import CoreData
 import Foundation
 
 struct AppEnvironment {
@@ -14,11 +15,46 @@ struct AppEnvironment {
 
     var year: YearEnvironment
 
+    var eventController: EventEnvironment
+
     init() {
         mainQueue = DispatchQueue.main
         backgroundQueue = DispatchQueue.global(qos: .background)
 
         year = YearEnvironment()
+        eventController = EventEnvironment()
+    }
+}
+
+struct EventEnvironment {
+    let dataController: DataController = DataController()
+
+    func createEvent(event: EventDTO) {
+        dataController.saveEvent(event)
+    }
+
+    func updateEvent(event: EventDTO, id: UUID) -> AnyPublisher<Event?, Error> {
+        Deferred {
+            Future { promise in
+                do {
+                    let updatedEvent = try dataController.updateEvent(event, id: id)
+                    promise(.success(updatedEvent))
+                } catch {
+                    promise(.failure(error))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+
+    func getAllEvents() -> AnyPublisher<[Event], Never> {
+        Deferred { Future {
+            promise in
+            let events = dataController.getAllEvents()
+            promise(.success(events))
+        }
+        }
+        .eraseToAnyPublisher()
     }
 }
 
