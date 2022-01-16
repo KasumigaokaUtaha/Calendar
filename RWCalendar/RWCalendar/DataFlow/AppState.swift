@@ -18,7 +18,12 @@ struct AppState {
     var isScrollToTodayAnimated: Bool
 
     var isLoadingYearData: Bool
-
+    
+    // States about event
+    var currentEvent: Event?
+    var showError: Bool
+    var errorMessage: String
+    var eventList: [Event]
     init() {
         years = [:]
         allYears = []
@@ -30,5 +35,9 @@ struct AppState {
         isLoadingYearData = false
         scrollToToday = false
         isScrollToTodayAnimated = false
+        currentEvent = nil
+        showError = false
+        errorMessage = ""
+        eventList = []
     }
 }
