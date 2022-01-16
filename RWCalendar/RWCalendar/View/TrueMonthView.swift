@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-let days: [String] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+let days: [String] = Calendar.current.shortWeekdaySymbols
 let dateArray = Array(repeating: GridItem(.flexible()), count: 7)
 
 struct TrueMonthView: View {
@@ -50,18 +50,6 @@ struct TrueMonthView_Previews: PreviewProvider {
     }
 }
 
-extension Date {
-    func getMonthDate() -> [Date] {
-        let range = Calendar.current.range(of: .day, in: .month, for: self)!
-
-        let starter = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: self))!
-
-        return range.compactMap { day -> Date in
-            Calendar.current.date(byAdding: .day, value: day - 1, to: starter)!
-        }
-    }
-}
-
 extension TrueMonthView {
     // subviews for title and dates
     var TitleView: some View {
@@ -79,10 +67,10 @@ extension TrueMonthView {
                 }
                 // years and months
 
-                Text(dateToString()[1])
+                Text(RWCalendar.dateToString(date: curDate)[1])
                     .fontWeight(.bold)
 
-                Text(dateToString()[0])
+                Text(RWCalendar.dateToString(date: curDate)[0])
                     .fontWeight(.bold)
 
                 Menu {
@@ -98,7 +86,7 @@ extension TrueMonthView {
 
     var DateView: some View {
         LazyVGrid(columns: dateArray, spacing: 25) {
-            ForEach(getDate()) { value in
+            ForEach(RWCalendar.getDate(value: curMonth)) { value in
 
                 VStack {
                     if value.day != 0 {
@@ -126,42 +114,7 @@ extension TrueMonthView {
         )
         .padding()
         .onChange(of: curMonth) { _ in
-            curDate = getCurMonth()
+            curDate = RWCalendar.getCurMonth(value: curMonth)
         }
-    }
-
-    // helping functions
-
-    func dateToString() -> [String] {
-        let month = Calendar.current.component(.month, from: curDate) - 1
-        let year = Calendar.current.component(.year, from: curDate)
-
-        return ["\(year)", Calendar.current.shortMonthSymbols[month]]
-    }
-
-    func getCurMonth() -> Date {
-        Calendar.current.date(byAdding: .month, value: curMonth, to: Date())!
-    }
-
-    func isToday(date: Date) -> Bool {
-        Calendar.current.isDateInToday(date)
-    }
-
-    func getDate() -> [DateData] {
-        var days = getCurMonth().getMonthDate().compactMap { date -> DateData in
-
-            let day = Calendar.current.component(.day, from: date)
-
-            return DateData(day: day, date: date)
-        }
-
-        let firstWeek = Calendar.current.component(.weekday, from: days.first!.date)
-
-        for _ in 0 ..< firstWeek - 1 {
-            // offset: set extra dates as 0
-            days.insert(DateData(day: 0, date: Date()), at: 0)
-        }
-
-        return days
     }
 }
