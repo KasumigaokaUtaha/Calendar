@@ -8,18 +8,15 @@
 import SwiftUI
 
 struct DayTask: View {
-    @Binding var task :String
+    @Binding var task: String
     @Binding var minWidth: CGFloat
-    @Binding var maxWidth:CGFloat
-    @Binding var minHeight :CGFloat
-    @Binding var maxHeight:CGFloat
-    
-   
-    
+    @Binding var maxWidth: CGFloat
+    @Binding var minHeight: CGFloat
+    @Binding var maxHeight: CGFloat
+
     var body: some View {
-        
         Text("\(task)")
-            .frame(minWidth: minWidth, maxWidth: maxWidth, minHeight:minWidth, maxHeight: maxHeight)
+            .frame(minWidth: minWidth, maxWidth: maxWidth, minHeight: minWidth, maxHeight: maxHeight)
     }
 }
 

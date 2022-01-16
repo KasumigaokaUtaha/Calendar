@@ -28,15 +28,15 @@ struct DayTaskTableView: View {
                                 Text("\(row) : 00 PM")
                                     .font(.footnote)
                                 Spacer()
-                                
+
                                 //                            Text("dsadadsadas")
                             }
                         }
-                        
+
                         .frame(width: geo.size.width/4, alignment: .leading)
                     }
                     .frame(width: geo.frame(in: .local).width, alignment: .leading)
-                    
+
                     Text("IOS Swift")
                         .frame(width: 200, height: 100)
                         .background(Color.green)
