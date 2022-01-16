@@ -122,7 +122,7 @@
 		};
 		62E8AB54277DCF70007487E1 /* RWCalendar */ = {
 			isa = PBXGroup;
-			children = (
+ 009a648473debe02c5819c4a97aa1d96356da226
 
 				62E8ABA7277DD046007487E1 /* App */,
 				62E8ABAA277DD05E007487E1 /* Database */,
