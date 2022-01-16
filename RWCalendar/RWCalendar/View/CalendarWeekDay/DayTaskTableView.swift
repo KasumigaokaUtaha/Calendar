@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct DayTaskTableView: View {
-    @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
     private var threeColumnGrid = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     var body: some View {
         GeometryReader { geo in
@@ -28,8 +27,6 @@ struct DayTaskTableView: View {
                                 Text("\(row) : 00 PM")
                                     .font(.footnote)
                                 Spacer()
-
-                                //                            Text("dsadadsadas")
                             }
                         }
 
@@ -43,8 +40,6 @@ struct DayTaskTableView: View {
                         .position(x: geo.size.width/2, y: 100)
                 }
             }
-//            }.frame(height:geo.size.height * 4)
-//                .border(Color.red)
         }
     }
 }

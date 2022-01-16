@@ -14,13 +14,11 @@ struct DayToolbarView: View {
     var body: some View {
         let weekDays: [String] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
         NavigationView {
-//            GeometryReader { _ in
             VStack(spacing: 0) {
                 Text(store.state.currentDate, style: .date)
                     .font(.footnote)
                 DayTaskTableView()
             }
-//            }
             .toolbar(content: {
                 ToolbarItem(placement: .principal) {
                     VStack(spacing: 3) {
@@ -32,7 +30,6 @@ struct DayToolbarView: View {
                                 .fontWeight(.bold)
                             Spacer()
                             Button("Today") {
-//                                store.send(.setScrollToToday(withAnimation: true))
                                 currentWeek = 0
                             }
                         }
@@ -59,7 +56,6 @@ struct DayToolbarView: View {
                                     .offset(x: offset.width * 3)
                             }
                         }
-//                        .border(Color.red)
                         .frame(height: 30, alignment: .bottom)
                         .gesture(
                             DragGesture(coordinateSpace: .local)
@@ -150,7 +146,6 @@ extension Date {
         startDay = calendar.date(byAdding: .hour, value: 2, to: startDay) ?? Date()
         startDay = calendar.date(byAdding: .weekOfYear, value: currentWeek, to: startDay)!
         // get date...
-        // 把Int转换成具体的日期
         
         return range.compactMap { weekday -> Date in
             calendar.date(byAdding: .day, value: weekday - 1, to: startDay) ?? Date()
