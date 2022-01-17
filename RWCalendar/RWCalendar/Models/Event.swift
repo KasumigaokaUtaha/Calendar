@@ -8,7 +8,12 @@
 import CoreData
 import Foundation
 
-extension Event {
+struct Event {
+    var name: String
+    var dateStart: Date
+    var dateEnd: Date
+    var description: String
+    var remindingOffset: Double
     
     enum EventError: Error {
         case NonUniqueID
