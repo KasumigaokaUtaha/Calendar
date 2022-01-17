@@ -15,21 +15,28 @@ struct CompactCalendarYearView: View {
     let columns: [GridItem]
     let minimum: CGFloat
 
-    init(size: CGSize, columnsNumber: Int) {
+    init(size: CGSize, columnsNumber: Int = 3) {
         self.columnsNumber = columnsNumber
 
         let spacing = 30.0
         let totalSpacing = spacing * CGFloat(columnsNumber - 1)
         minimum = (size.width - totalSpacing) / CGFloat(columnsNumber)
-        columns = Array(repeating: GridItem(.flexible(minimum: CGFloat(minimum))), count: columnsNumber)
+        columns = Array(repeating: GridItem(.flexible(minimum: CGFloat(minimum)), spacing: 0.0), count: columnsNumber)
     }
 
     var body: some View {
+        ContainerView {
+            makeScrollContent()
+        }
+    }
+
+    /// Create a scroll view with all available years
+    func makeScrollContent() -> some View {
         ScrollViewReader { proxy in
             ScrollView {
-                LazyVGrid(columns: columns) {
+                LazyVGrid(columns: columns, pinnedViews: [.sectionHeaders]) {
                     ForEach(store.state.allYears, id: \.self) { year in
-                        yearView(year: year)
+                        makeYear(year)
                             .onAppear {
                                 store.send(.loadYearDataIfNeeded(base: year))
                             }
@@ -51,7 +58,8 @@ struct CompactCalendarYearView: View {
         }
     }
 
-    func yearView(year: Int) -> some View {
+    /// Create the compact year view for the given year
+    func makeYear(_ year: Int) -> some View {
         Section {
             ForEach(fetchMonthData(for: year)) { monthData in
                 CompactCalendarMonthViewWrapper(
@@ -61,13 +69,11 @@ struct CompactCalendarYearView: View {
                 )
             }
         } header: {
-            VStack {
-                Text(String(format: "%d", year))
-                    .font(.system(.title))
-                    .padding(.vertical, 8)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                Divider()
-            }
+            Text(String(format: "%d", year))
+                .font(.system(.title))
+                .fontWeight(Font.Weight.medium)
+                .padding(.leading, 8)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 

@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// A custom view that displays all days in a calendar month in a compact way.
 struct CompactCalendarMonthView: UIViewRepresentable {
     let font: UIFont
     let lastMonthDays: [String]
@@ -74,7 +75,7 @@ struct CompactCalendarMonthView: UIViewRepresentable {
         var itemSizes: [String: CGSize]
         var hSpacing: CGFloat = 4.0
         var vSpacing: CGFloat = 4.0
-        var edgeInsets: UIEdgeInsets = .init(top: 4.0, left: 4.0, bottom: 4.0, right: 4.0)
+        var edgeInsets: UIEdgeInsets = .init(top: 4.0, left: 0.0, bottom: 4.0, right: 0.0)
 
         override var intrinsicContentSize: CGSize {
             let allDaysCount = lastMonthDays.count + currMonthDays.count + nextMonthDays.count
@@ -119,9 +120,14 @@ struct CompactCalendarMonthView: UIViewRepresentable {
         }
 
         private func drawCompactCalendarMonth(_ rect: CGRect) {
+            let intrinsiContentOrigin = CGPoint(
+                x: (rect.width - intrinsicContentSize.width) / 2.0,
+                y: (rect.height - intrinsicContentSize.height) / 2.0
+            )
+            // Draw the content in the center
             let contentRect = CGRect(
-                x: rect.origin.x + edgeInsets.left,
-                y: rect.origin.y + edgeInsets.top,
+                x: intrinsiContentOrigin.x + edgeInsets.left,
+                y: intrinsiContentOrigin.y + edgeInsets.top,
                 width: rect.width - edgeInsets.left - edgeInsets.right,
                 height: rect.height - edgeInsets.top - edgeInsets.bottom
             )

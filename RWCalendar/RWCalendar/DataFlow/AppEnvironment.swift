@@ -9,6 +9,7 @@ import Combine
 import CoreData
 import Foundation
 
+/// The data structure for storing environment values in the redux store
 struct AppEnvironment {
     var mainQueue: DispatchQueue
     var backgroundQueue: DispatchQueue

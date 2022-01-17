@@ -9,9 +9,8 @@ import CoreData
 import Foundation
 
 extension Event {
-    
     enum EventError: Error {
-        case NonUniqueID
-        case IDNotFound
+        case nonUniqueID
+        case idNotFound
     }
 }
