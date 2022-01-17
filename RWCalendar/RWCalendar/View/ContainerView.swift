@@ -21,6 +21,9 @@ struct ContainerView<Content>: View where Content: View {
                     ToolbarItem(placement: .navigationBarLeading) {
                         makeMenu()
                     }
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        makeButton()
+                    }
                 }
         }
         .navigationViewStyle(.stack)
@@ -61,6 +64,14 @@ struct ContainerView<Content>: View where Content: View {
             }
         } label: {
             Image(systemName: "slider.horizontal.3")
+        }
+    }
+
+    func makeButton() -> some View {
+        Button {
+            store.send(.setScrollToToday(withAnimation: true))
+        } label: {
+            Text("Today")
         }
     }
 }
