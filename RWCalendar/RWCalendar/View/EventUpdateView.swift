@@ -47,8 +47,8 @@ struct EventUpdateView: View {
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button("Save") {
-                        let new_Event = EventDTO(name: event.name, startDate: event.startDate, endDate: event.endDate)
-                        store.send(.updateEvent(event: new_Event, id: id))
+                        let newEvent = EventDTO(name: event.name, startDate: event.startDate, endDate: event.endDate)
+                        store.send(.updateEvent(event: newEvent, id: id))
                         // TODO: leave the view
                     }
                     .disabled(endDate < startDate)

@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// A wrapper view of CompactCalendarMonthView
 struct CompactCalendarMonthViewWrapper: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
 
@@ -32,7 +33,7 @@ struct CompactCalendarMonthViewWrapper: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .center, spacing: 0) {
             Text("\(shortMonthSymbol)")
             CompactCalendarMonthView(
                 font: .systemFont(ofSize: 10),

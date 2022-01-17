@@ -67,13 +67,13 @@ extension DataController {
         
         let newEvents = try context.fetch(fetchRequest)
         if newEvents.count > 1 {
-            throw Event.EventError.NonUniqueID
+            throw Event.EventError.nonUniqueID
         }
         
         if let newEvent = newEvents.first {
             return newEvent
         } else {
-            throw Event.EventError.IDNotFound
+            throw Event.EventError.idNotFound
         }
     }
 }
