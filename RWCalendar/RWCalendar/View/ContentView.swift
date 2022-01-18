@@ -13,13 +13,17 @@ struct ContentView: View {
     var body: some View {
         switch store.state.currentTab {
         case .year:
-            GeometryReader { proxy in
-                CompactCalendarYearView(size: proxy.size)
+//            GeometryReader { proxy in
+//                CompactCalendarYearView(size: proxy.size)
+//            }
+            ContainerView {
+                CompactCalendarYearView()
             }
         case .month:
             ContainerView {
             // TODO: replace with actual view
                 Text("Month")
+                    .navigationTitle(String(format: "%d %d", store.state.selectedYear, store.state.selectedMonth))
             }
         case .week:
             ContainerView {

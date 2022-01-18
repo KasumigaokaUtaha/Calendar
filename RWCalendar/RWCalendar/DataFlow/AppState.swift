@@ -41,7 +41,8 @@ struct AppState {
     ///
     /// This value may be used when navigating from year view to other views to provide
     /// additional information
-    var selectedYear: Int?
+    var selectedYear: Int
+    var selectedMonth: Int
 
     // MARK: - Route States
 
@@ -72,5 +73,7 @@ struct AppState {
         showError = false
         errorMessage = ""
         eventList = []
+        selectedYear = currentYear
+        selectedMonth = calendar.component(.month, from: currentDate)
     }
 }
