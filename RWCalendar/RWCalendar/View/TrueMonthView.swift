@@ -11,9 +11,14 @@ let days: [String] = Calendar.current.shortWeekdaySymbols
 let dateArray = Array(repeating: GridItem(.flexible()), count: 7)
 
 struct TrueMonthView: View {
-    @Binding var curDate: Date
+    @Binding var curDate : Date
     @State private var offset: CGSize = .zero
     @State var curMonth = 0
+    @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
+    
+    
+     
+    //@State var curDate =Calendar.current.date(from: components())!
     // #TODO: add a var to controll light and dark modes
     var body: some View {
         VStack {
@@ -36,15 +41,17 @@ struct TrueMonthView: View {
 
 struct MonthHome: View {
     @State var curDate = Date()
-
     var body: some View {
         TrueMonthView(curDate: $curDate)
     }
 }
 
+
 struct TrueMonthView_Previews: PreviewProvider {
+    
     static var previews: some View {
-        MonthHome()
+        
+       MonthHome()
     }
 }
 
@@ -114,5 +121,10 @@ extension TrueMonthView {
             curDate = RWCalendar.getCurMonth(value: curMonth)
         }
     }
+    
+    
+    
+    
+
 }
 
