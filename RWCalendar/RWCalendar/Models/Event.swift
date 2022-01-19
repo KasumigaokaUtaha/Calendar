@@ -5,7 +5,6 @@
 //  Created by Kasumigaoka Utaha on 30.12.21.
 //
 
-import CoreData
 import Foundation
 
 struct Event {
@@ -14,9 +13,4 @@ struct Event {
     var dateEnd: Date
     var description: String
     var remindingOffset: Double
-
-    enum EventError: Error {
-        case NonUniqueID
-        case IDNotFound
-    }
 }

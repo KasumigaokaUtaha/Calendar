@@ -144,12 +144,11 @@
 		62E8AB54277DCF70007487E1 /* RWCalendar */ = {
 			isa = PBXGroup;
 			children = (
-				62E8ABAE277DD073007487E1 /* View */,
-				5A023A7227874C74004D74E9 /* Controller */,
 				62E8ABA7277DD046007487E1 /* App */,
+				5A023A7227874C74004D74E9 /* Controller */,
 				62E8ABAB277DD063007487E1 /* DataFlow */,
 				62E8ABAC277DD069007487E1 /* Models */,
-				62E8ABAD277DD06E007487E1 /* Network */,
+				62E8ABAE277DD073007487E1 /* View */,
 				62E8AB5B277DCF72007487E1 /* Preview Content */,
 			);
 			path = RWCalendar;
@@ -213,13 +212,6 @@
 				5AE8DA8127989F1400BAF5DC /* EventError.swift */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		62E8ABAD277DD06E007487E1 /* Network */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Network;
 			sourceTree = "<group>";
 		};
 		62E8ABAE277DD073007487E1 /* View */ = {
