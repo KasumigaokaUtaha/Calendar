@@ -122,7 +122,7 @@ struct MonthData: Identifiable {
 }
 
 struct DayData: Identifiable {
-    let id: UUID = UUID()
+    let id = UUID()
     let day: Int
     let date: Date
     let weekday: Weekday

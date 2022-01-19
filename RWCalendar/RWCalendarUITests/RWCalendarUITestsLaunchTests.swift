@@ -8,7 +8,6 @@
 import XCTest
 
 class RWCalendarUITestsLaunchTests: XCTestCase {
-
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
     }

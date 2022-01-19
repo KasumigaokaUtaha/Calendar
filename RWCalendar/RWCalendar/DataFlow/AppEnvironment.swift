@@ -14,18 +14,43 @@ struct AppEnvironment {
     var backgroundQueue: DispatchQueue
 
     var year: YearEnvironment
-
+    var event: EventEnvironment
 
     init() {
         mainQueue = DispatchQueue.main
         backgroundQueue = DispatchQueue.global(qos: .background)
 
         year = YearEnvironment()
+        event = EventEnvironment()
     }
 }
 
 struct EventEnvironment {
-    
+    var eventsCalendarManager: EventController = .init()
+
+    func addEventToCalendar(_ newEvent: Event) -> AnyPublisher<String, Never> {
+        Deferred {
+            Future { promise in
+                eventsCalendarManager.addEventToCalendar(event: newEvent) { result in
+                    switch result {
+                    case .success:
+                        promise(.success(""))
+                    case let .failure(error):
+                        switch error {
+                        case .denied,
+                             .restricted:
+                            promise(.success("Calendar access was denied or restricted"))
+                        case .notAdded:
+                            promise(.success("Event was not added to calendar"))
+                        case .alreadyExists:
+                            promise(.success("Event already exists in calendar"))
+                        }
+                    }
+                }
+            }
+        }
+        .eraseToAnyPublisher()
+    }
 }
 
 struct YearEnvironment {

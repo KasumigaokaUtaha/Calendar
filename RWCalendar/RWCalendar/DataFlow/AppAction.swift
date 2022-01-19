@@ -18,7 +18,11 @@ enum AppAction {
     case setYearDataCollection(_ yearDataCollection: [YearData])
     case setScrollToToday(withAnimation: Bool)
     case resetScrollToDay
-    
+
+    // Event relevant actions:
+    case saveEvent(newEvent: Event)
+    case setEventErrorMessage(errorMessage: String)
+    case setShowError(show: Bool)
 }
 
 enum Direction {

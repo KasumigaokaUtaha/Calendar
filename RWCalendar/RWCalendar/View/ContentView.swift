@@ -11,7 +11,14 @@ struct ContentView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
 
     var body: some View {
-        EventsListView()
+        let testEvent = Event(
+            name: "TEst",
+            dateStart: Date(),
+            dateEnd: Date(),
+            description: "Test",
+            remindingOffset: 60
+        )
+        EventUpdateView(testEvent)
     }
 }
 

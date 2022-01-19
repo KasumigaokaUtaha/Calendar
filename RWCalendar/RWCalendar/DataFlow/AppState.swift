@@ -18,7 +18,7 @@ struct AppState {
     var isScrollToTodayAnimated: Bool
 
     var isLoadingYearData: Bool
-    
+
     // States about event
     var currentEvent: Event?
     var showError: Bool

@@ -14,7 +14,7 @@ struct Event {
     var dateEnd: Date
     var description: String
     var remindingOffset: Double
-    
+
     enum EventError: Error {
         case NonUniqueID
         case IDNotFound

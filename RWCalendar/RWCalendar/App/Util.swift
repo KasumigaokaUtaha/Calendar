@@ -139,4 +139,3 @@ enum Util {
         return nextDays
     }
 }
-

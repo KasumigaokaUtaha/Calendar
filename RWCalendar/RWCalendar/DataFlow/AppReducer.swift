@@ -109,6 +109,17 @@ func appReducer(
         state.isScrollToTodayAnimated = withAnimation
     case .resetScrollToDay:
         state.scrollToToday = false
+    case let .setShowError(show):
+        state.showError = show
+    case let .setEventErrorMessage(errorMessage):
+        state.errorMessage = errorMessage
+        state.showError = errorMessage != ""
+    case let .saveEvent(newEvent):
+        return environment.event.addEventToCalendar(newEvent)
+            .map { msg in
+                AppAction.setEventErrorMessage(errorMessage: msg)
+            }
+            .eraseToAnyPublisher()
     }
     return nil
 }
