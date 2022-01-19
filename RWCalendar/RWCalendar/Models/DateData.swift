@@ -148,3 +148,11 @@ struct DayData: Identifiable {
         self.weekday = weekday
     }
 }
+
+
+struct DateData: Identifiable{
+    var day: Int
+    var date: Date
+    var id =  UUID().uuidString
+    
+}

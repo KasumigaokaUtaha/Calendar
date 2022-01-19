@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// The data structure for storing all available actions in the redux store.
 enum AppAction {
     case setCurrentDate(_ date: Date)
     case setStartOfWeek(_ weekday: Weekday)
@@ -17,12 +18,21 @@ enum AppAction {
     case setYearData(_ yearData: YearData)
     case setYearDataCollection(_ yearDataCollection: [YearData])
     case setScrollToToday(withAnimation: Bool)
-    case resetScrollToDay
+    case resetScrollToToDay
 
-    // Event relevant actions:
+    // MARK: - Event Actions
+
     case saveEvent(newEvent: Event)
     case setEventErrorMessage(errorMessage: String)
     case setShowError(show: Bool)
+    // MARK: - Year View Actions
+
+    case setSelectedYear(_ year: Int)
+    case setSelectedMonth(_ month: Int)
+
+    // MARK: - Route Actions
+
+    case open(_ tab: Tab)
 }
 
 enum Direction {
