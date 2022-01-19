@@ -21,6 +21,7 @@
 		628252BD277E65FA00A8464B /* RWCalendarUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628252BC277E65FA00A8464B /* RWCalendarUtilTests.swift */; };
 		628252BF277E66B900A8464B /* RWCalendarDateDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628252BE277E66B900A8464B /* RWCalendarDateDataTests.swift */; };
 		629B22F82784EFE300FA2494 /* CompactCalendarMonthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629B22F72784EFE300FA2494 /* CompactCalendarMonthView.swift */; };
+		62C821D427974CA600B62D60 /* RWPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C821D327974CA600B62D60 /* RWPageView.swift */; };
 		62E707962795B68F00611E7E /* Tab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E707952795B68F00611E7E /* Tab.swift */; };
 		62E707982795BA4600611E7E /* ContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E707972795BA4600611E7E /* ContainerView.swift */; };
 		62E8AB56277DCF70007487E1 /* RWCalendarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E8AB55277DCF70007487E1 /* RWCalendarApp.swift */; };
@@ -72,6 +73,7 @@
 		628252BC277E65FA00A8464B /* RWCalendarUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RWCalendarUtilTests.swift; sourceTree = "<group>"; };
 		628252BE277E66B900A8464B /* RWCalendarDateDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RWCalendarDateDataTests.swift; sourceTree = "<group>"; };
 		629B22F72784EFE300FA2494 /* CompactCalendarMonthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactCalendarMonthView.swift; sourceTree = "<group>"; };
+		62C821D327974CA600B62D60 /* RWPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RWPageView.swift; sourceTree = "<group>"; };
 		62E707952795B68F00611E7E /* Tab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tab.swift; sourceTree = "<group>"; };
 		62E707972795BA4600611E7E /* ContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerView.swift; sourceTree = "<group>"; };
 		62E8AB52277DCF70007487E1 /* RWCalendar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RWCalendar.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -251,6 +253,7 @@
 				6237E05F27820BD3009340D2 /* CompactCalendarYearView.swift */,
 				628252BA277E432300A8464B /* CompactCalendarMonthViewWrapper.swift */,
 				629B22F72784EFE300FA2494 /* CompactCalendarMonthView.swift */,
+				62C821D327974CA600B62D60 /* RWPageView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -432,6 +435,7 @@
 				12A9279D278EFE20003E9542 /* TrueMonthView.swift in Sources */,
 				62E8ABA9277DD057007487E1 /* Util.swift in Sources */,
 				62E8ABB2277DD0A0007487E1 /* AppState.swift in Sources */,
+				62C821D427974CA600B62D60 /* RWPageView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

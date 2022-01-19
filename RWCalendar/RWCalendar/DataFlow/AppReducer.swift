@@ -132,11 +132,15 @@ func appReducer(
     case let .setScrollToToday(withAnimation):
         state.scrollToToday = true
         state.isScrollToTodayAnimated = withAnimation
-    case .resetScrollToDay:
+    case .resetScrollToToDay:
         state.scrollToToday = false
     case let .open(tab):
         // TODO: adapt state according to the new tab if necessary
         state.currentTab = tab
+    case let .setSelectedYear(year):
+        state.selectedYear = year
+    case let .setSelectedMonth(month):
+        state.selectedMonth = month
     }
     return nil
 }

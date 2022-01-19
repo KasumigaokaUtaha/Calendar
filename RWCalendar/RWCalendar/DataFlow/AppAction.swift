@@ -22,9 +22,15 @@ enum AppAction {
     case setEventList(eventList: [Event])
     case loadAllEvents
     case setScrollToToday(withAnimation: Bool)
-    case resetScrollToDay
+    case resetScrollToToDay
 
-    // Route actions
+    // MARK: - Year View Actions
+
+    case setSelectedYear(_ year: Int)
+    case setSelectedMonth(_ month: Int)
+
+    // MARK: - Route Actions
+
     case open(_ tab: Tab)
 }
 

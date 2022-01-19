@@ -33,17 +33,25 @@ struct CompactCalendarMonthViewWrapper: View {
     }
 
     var body: some View {
-        VStack(alignment: .center, spacing: 0) {
-            Text("\(shortMonthSymbol)")
-            CompactCalendarMonthView(
-                font: .systemFont(ofSize: 10),
-                lastMonthDays: lastMonthDays,
-                currMonthDays: currMonthDays,
-                nextMonthDays: nextMonthDays
-            )
+        Button {
+            store.send(.setSelectedMonth(month))
+            store.send(.open(.month))
+        } label: {
+            VStack(alignment: .center, spacing: 0) {
+                Text("\(shortMonthSymbol)")
+                    .font(.title3)
+                CompactCalendarMonthView(
+                    font: .systemFont(ofSize: 15),
+                    lastMonthDays: lastMonthDays,
+                    currMonthDays: currMonthDays,
+                    nextMonthDays: nextMonthDays
+                )
+            }
         }
     }
+}
 
+extension CompactCalendarMonthViewWrapper {
     var lastMonthDays: [String] {
         guard let monthData = getMonthData() else {
             return []
@@ -85,20 +93,5 @@ struct CompactCalendarMonthViewWrapper: View {
             return "Unknown"
         }
         return shortMonthSymbols[index]
-    }
-}
-
-struct MonthView_Previews: PreviewProvider {
-    static var previews: some View {
-        let store = AppStore(
-            initialState: AppState(),
-            reducer: appReducer,
-            environment: AppEnvironment()
-        )
-        CompactCalendarMonthViewWrapper(year: 2021, month: 12, showLastMonthDays: true, showNextMonthDays: true)
-            .environmentObject(store)
-            .onAppear {
-                store.send(.loadYearDataRange(base: 2022, range: 0 ... 0))
-            }
     }
 }
