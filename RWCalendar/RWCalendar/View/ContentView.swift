@@ -33,6 +33,7 @@ struct ContentView: View {
         case .day:
             ContainerView {
                 // TODO: replace with actual view
+                CalendarDayView()
                 Text("day")
             }
         case .settings:
