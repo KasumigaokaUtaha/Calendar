@@ -14,12 +14,6 @@ struct SettingView: View {
     
     var body: some View {
         List {
-            Section(header: Text("Controls")) {
-                Toggle(isOn: customizationData.$savedDarkMode) {
-                    Text("Dark Mode")
-                }
-            }
-            
             Section(header: Text("Customization")) {
                 Picker(selection: customizationData.$savedFontSize, label: Text("Font Size"), content: {
                         Text("Extra Small")
@@ -66,6 +60,18 @@ struct SettingView: View {
                     Text(iconName)
                 }
                 
+            }
+            
+            // REMOVE LATER!!!
+            // For the reference for creating events and synchronize with iCloud
+            Section(header: Text("Synchronization")) {
+                NavigationLink(
+                    destination: SyncView()
+                        .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
+                        .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
+                ) {
+                    Text("Synchronization with iCloud")
+                }
             }
         }
         .background(Color(customizationData.selectedTheme.backgroundColor))

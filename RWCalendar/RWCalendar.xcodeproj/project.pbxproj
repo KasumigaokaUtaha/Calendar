@@ -38,6 +38,7 @@
 		A1B4A5E0278C8EE700D8716F /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B4A5DC278C8EE700D8716F /* SettingView.swift */; };
 		A1B4A5E1278C8EE700D8716F /* IconSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B4A5DD278C8EE700D8716F /* IconSelectionView.swift */; };
 		A1B4A5E2278C8EE700D8716F /* ThemeSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B4A5DE278C8EE700D8716F /* ThemeSelectionView.swift */; };
+		A1B4A5E62791FCE000D8716F /* SyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B4A5E52791FCE000D8716F /* SyncView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,6 +93,7 @@
 		A1B4A5DC278C8EE700D8716F /* SettingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		A1B4A5DD278C8EE700D8716F /* IconSelectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IconSelectionView.swift; sourceTree = "<group>"; };
 		A1B4A5DE278C8EE700D8716F /* ThemeSelectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeSelectionView.swift; sourceTree = "<group>"; };
+		A1B4A5E52791FCE000D8716F /* SyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -265,6 +267,7 @@
 			children = (
 				A1B4A5DD278C8EE700D8716F /* IconSelectionView.swift */,
 				A1B4A5DB278C8EE700D8716F /* SettingButtonView.swift */,
+				A1B4A5E52791FCE000D8716F /* SyncView.swift */,
 				A1B4A5DC278C8EE700D8716F /* SettingView.swift */,
 				A1B4A5DE278C8EE700D8716F /* ThemeSelectionView.swift */,
 			);
@@ -435,6 +438,7 @@
 				6237E06027820BD3009340D2 /* CompactCalendarYearView.swift in Sources */,
 				62E8ABB6277DD0B0007487E1 /* AppReducer.swift in Sources */,
 				62E8ABBC277DD0D0007487E1 /* DateData.swift in Sources */,
+				A1B4A5E62791FCE000D8716F /* SyncView.swift in Sources */,
 				A1B4A5BA278B546200D8716F /* CustomizationData.swift in Sources */,
 				62E8ABB0277DD099007487E1 /* AppStore.swift in Sources */,
 				62E8ABB8277DD0BE007487E1 /* AppEnvironment.swift in Sources */,
@@ -619,6 +623,9 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RWCalendar/Info.plist;
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "Please allow access for Calendar Usage";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Please allow access for Contact Usage";
+				INFOPLIST_KEY_NSRemindersUsageDescription = "Please allow access for Reminder Usage";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -651,6 +658,9 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RWCalendar/Info.plist;
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "Please allow access for Calendar Usage";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Please allow access for Contact Usage";
+				INFOPLIST_KEY_NSRemindersUsageDescription = "Please allow access for Reminder Usage";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

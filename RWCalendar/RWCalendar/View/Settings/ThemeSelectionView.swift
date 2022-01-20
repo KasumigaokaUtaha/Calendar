@@ -40,8 +40,8 @@ struct ThemeSelectionView: View {
                     }
                     .padding()
                 }
-                .buttonStyle(FilledRoundedCornerButtonStyle(minHeight:80, backgroundColor: Color(ThemeManager.themes[theme].backgroundColor), foregroundColor: Color(ThemeManager.themes[theme].foregroundColor), primaryColor: Color(ThemeManager.themes[theme].primaryColor)))
-                .disabled(theme == customizationData.savedThemeChoice)
+                    .buttonStyle(FilledRoundedCornerButtonStyle(minHeight:80, backgroundColor: Color(ThemeManager.themes[theme].backgroundColor), foregroundColor: Color(ThemeManager.themes[theme].foregroundColor), primaryColor: Color(ThemeManager.themes[theme].primaryColor)))
+                    .disabled(theme == customizationData.savedThemeChoice)
             }
         }
         .padding()

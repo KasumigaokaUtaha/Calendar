@@ -27,7 +27,6 @@ struct RWCalendarApp: App {
             WrapperView()
                 .environmentObject(customizationData)
                 .environmentObject(store)
-                //.environmentObject(customizationData)
                 .onAppear(perform: onStartTasks)
         }
     }

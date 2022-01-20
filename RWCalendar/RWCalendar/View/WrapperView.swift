@@ -9,10 +9,10 @@ import SwiftUI
 
 struct WrapperView: View {
     @EnvironmentObject var customizationData: CustomizationData
-    
+    @Environment(\.colorScheme) var colorScheme
     var body: some View {
         ContentView()
-            .preferredColorScheme(customizationData.savedDarkMode ? .dark : .light)
+            .colorScheme(colorScheme)
     }
 }
 

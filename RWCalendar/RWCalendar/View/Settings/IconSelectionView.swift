@@ -34,8 +34,8 @@ struct IconSelectionView: View {
                             }
                         }
                     }
-                    .buttonStyle(FilledRoundedCornerButtonStyle( maxWidth:100, maxHeight:100, backgroundColor: Color(.lightGray), foregroundColor: Color(customizationData.selectedTheme.foregroundColor), primaryColor: Color(customizationData.selectedTheme.primaryColor)))
-                    .disabled(customizationData.savedAppIcon == iconNameList[idx])
+                        .buttonStyle(FilledRoundedCornerButtonStyle( maxWidth:100, maxHeight:100, backgroundColor: Color(.lightGray), foregroundColor: Color(customizationData.selectedTheme.foregroundColor), primaryColor: Color(customizationData.selectedTheme.primaryColor)))
+                        .disabled(customizationData.savedAppIcon == iconNameList[idx])
                 }
             }
             .padding()

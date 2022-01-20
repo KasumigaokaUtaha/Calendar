@@ -16,7 +16,6 @@ class CustomizationData: ObservableObject {
             updateTheme()
         }
     }
-    @AppStorage("savedDarkMode") var savedDarkMode = false
     @AppStorage("savedFontSize") var savedFontSize = 17
     @AppStorage("savedFontStyle") var savedFontStyle = "Times New Roman"
     @AppStorage("savedAppIcon") var savedAppIcon = "Default" {
