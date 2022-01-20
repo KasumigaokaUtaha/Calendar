@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		179AB08D2799EB6300A4AA2A /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E8ABB9277DD0C9007487E1 /* Event.swift */; };
 		17F1BB7A2791F188008E8A56 /* DayTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F1BB792791F188008E8A56 /* DayTask.swift */; };
 		17F281F027919C4200502213 /* CalendarDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F281EF27919C4200502213 /* CalendarDayView.swift */; };
 		17F281F22791A16D00502213 /* DayToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F281F12791A16D00502213 /* DayToolbarView.swift */; };
@@ -414,6 +415,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				179AB08D2799EB6300A4AA2A /* Event.swift in Sources */,
 				628252BF277E66B900A8464B /* RWCalendarDateDataTests.swift in Sources */,
 				628252BD277E65FA00A8464B /* RWCalendarUtilTests.swift in Sources */,
 				62E8AB67277DCF72007487E1 /* RWCalendarTests.swift in Sources */,
