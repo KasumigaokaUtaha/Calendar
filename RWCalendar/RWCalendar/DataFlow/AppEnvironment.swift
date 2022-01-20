@@ -6,7 +6,7 @@
 //
 
 import Combine
-import CoreData
+import EventKit
 import Foundation
 
 /// The data structure for storing environment values in the redux store
@@ -27,30 +27,197 @@ struct AppEnvironment {
 }
 
 struct EventEnvironment {
-    var eventsCalendarManager: EventController = .init()
+    private let eventStore: EKEventStore = .init()
 
-    func addEventToCalendar(_ newEvent: Event) -> AnyPublisher<String, Never> {
+    private func makeActions(with builder: @escaping () -> Future<[AppAction], Never>)
+        -> AnyPublisher<AppAction, Never>
+    {
+        let publisher = authorizationStatus(for: .event)
+        guard publisher == nil else {
+            return publisher!
+        }
+
+        return Deferred {
+            builder()
+                .flatMap { (actions: [AppAction]) -> AnyPublisher<AppAction, Never> in
+                    actions.publisher.flatMap { Just($0) }.eraseToAnyPublisher()
+                }
+        }
+        .eraseToAnyPublisher()
+    }
+
+    /// Request access to the given EKEntityType.
+    func requestAccess(to entityType: EKEntityType) -> AnyPublisher<AppAction, Never> {
         Deferred {
             Future { promise in
-                eventsCalendarManager.addEventToCalendar(event: newEvent) { result in
-                    switch result {
-                    case .success:
-                        promise(.success(""))
-                    case let .failure(error):
-                        switch error {
-                        case .denied,
-                             .restricted:
-                            promise(.success("Calendar access was denied or restricted"))
-                        case .notAdded:
-                            promise(.success("Event was not added to calendar"))
-                        case .alreadyExists:
-                            promise(.success("Event already exists in calendar"))
-                        }
+                eventStore.requestAccess(to: entityType) { granted, error in
+                    guard error == nil else {
+                        let actions = [
+                            AppAction.setAlertTitle("Request Access Failed"),
+                            AppAction
+                                .setEventErrorMessage(
+                                    "Some internal error happened. Please send an email with the log to the support email address."
+                                ),
+                            AppAction.setShowError(true)
+                        ]
+                        promise(.success(actions))
+                        return
                     }
+
+                    let actions: [AppAction]
+                    if !granted {
+                        actions = [
+                            AppAction.setAlertTitle("Access Denied"),
+                            AppAction
+                                .setAlertMessage(
+                                    "This app won't work without access rights to your calendar events. Please grant this app access rights in the system settings and try againt later."
+                                ),
+                            AppAction.setShowAlert(true)
+                        ]
+                    } else {
+                        actions = [AppAction.empty]
+                    }
+
+                    promise(.success(actions))
                 }
+            }
+            .flatMap { (actions: [AppAction]) -> AnyPublisher<AppAction, Never> in
+                actions.publisher.flatMap { Just($0) }.eraseToAnyPublisher()
             }
         }
         .eraseToAnyPublisher()
+    }
+
+    /// Returns the authentication status for the given EKEntityType.
+    ///
+    /// It returns nil, if this app is authorized. Otherwise, it returns a publisher with a series of AppAction to perform.
+    func authorizationStatus(for entityType: EKEntityType = .event) -> AnyPublisher<AppAction, Never>? {
+        let result: AnyPublisher<AppAction, Never>?
+
+        switch EKEventStore.authorizationStatus(for: entityType) {
+        case .authorized:
+            // The app is authorized to access the service.
+            result = nil
+        case .denied:
+            // The user explicitly denied access to the service for the app.
+            result = [
+                AppAction.setAlertTitle("Access denied"),
+                AppAction
+                    .setAlertMessage(
+                        "This app won't work without access rights to your calendar events. Please grant this app access rights in the system settings and try againt later."
+                    ),
+                AppAction.setShowAlert(true)
+            ]
+            .publisher
+            .flatMap { Just($0) }
+            .eraseToAnyPublisher()
+        case .notDetermined:
+            // The user has not yet made a choice regarding whether the app may access the service.
+            result = Just(AppAction.requestAccess(to: entityType))
+                .eraseToAnyPublisher()
+        case .restricted:
+            // The user cannot change this app’s authorization status, possibly due to active restrictions such as parental controls being in place.
+            result = [
+                AppAction.setAlertTitle("Restricted Access"),
+                AppAction
+                    .setAlertMessage(
+                        "You are in restricted mode which means you cannot grant this app access rights to your calendar events. Please try again later."
+                    ),
+                AppAction.setShowAlert(true)
+            ]
+            .publisher
+            .flatMap { Just($0) }
+            .eraseToAnyPublisher()
+        @unknown default:
+            fatalError()
+        }
+
+        return result
+    }
+
+    /// Returns a dictionary from calendar source title to  array of sorted calendar titles.
+    func getSourceTitleToCalendarTitles(for entityType: EKEntityType = .event) -> [String: [String]] {
+        var result: [String: [String]] = [:]
+
+        for source in eventStore.sources {
+            let calendarTitles = source.calendars(for: entityType).map(\.title)
+            result.updateValue(
+                calendarTitles.sorted { $0.localizedStandardCompare($1) == .orderedAscending },
+                forKey: source.title
+            )
+        }
+
+        return result
+    }
+
+    /// Add the given event to the default EventStore and directly commit the changes.
+    func addEvent(_ event: Event) -> AnyPublisher<AppAction, Never> {
+        makeActions {
+            Future { promise in
+                let newEvent = EKEvent(eventStore: eventStore)
+                newEvent.title = event.title
+                newEvent.startDate = event.startDate
+                newEvent.endDate = event.endDate
+                newEvent.calendar = event.calendar
+                newEvent.notes = event.notes
+
+                do {
+                    try eventStore.save(newEvent, span: .thisEvent, commit: true)
+                    let actions: [AppAction] = [.empty]
+                    promise(.success(actions))
+                } catch {
+                    let actions: [AppAction] = [
+                        .setEventErrorMessage("An error occured when saving new event."),
+                        .setShowError(true)
+                    ]
+                    promise(.success(actions))
+                }
+            }
+        }
+    }
+
+    /// Update the given event and directly commit the updated event to the default EventStore.
+    func updateEvent(_ event: EKEvent, with newEvent: Event) -> AnyPublisher<AppAction, Never> {
+        makeActions {
+            Future { promise in
+                event.title = newEvent.title
+                event.startDate = newEvent.startDate
+                event.endDate = newEvent.endDate
+                event.calendar = newEvent.calendar
+                event.notes = newEvent.notes
+
+                do {
+                    try eventStore.save(event, span: .thisEvent, commit: true)
+                    let actions: [AppAction] = [.empty]
+                    promise(.success(actions))
+                } catch {
+                    let actions: [AppAction] = [
+                        .setEventErrorMessage("An error occured when update an existing event."),
+                        .setShowError(true)
+                    ]
+                    promise(.success(actions))
+                }
+            }
+        }
+    }
+    
+    /// Remove the given event and directly commit the change directly to the default EventStore.
+    func removeEvent(_ event: EKEvent) -> AnyPublisher<AppAction, Never> {
+        makeActions {
+            Future { promise in
+                do {
+                    try eventStore.remove(event, span: .thisEvent, commit: true)
+                    let actions: [AppAction] = [.empty]
+                    promise(.success(actions))
+                } catch {
+                    let actions: [AppAction] = [
+                        .setEventErrorMessage("An error occured when remove an existing event."),
+                        .setShowError(true)
+                    ]
+                    promise(.success(actions))
+                }
+            }
+        }
     }
 }
 

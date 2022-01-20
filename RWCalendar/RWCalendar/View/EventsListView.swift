@@ -20,9 +20,9 @@ struct EventLabel: View {
 
     var body: some View {
         HStack {
-            Text(event.name)
+            Text(event.title)
             Spacer()
-            Text(dateFormatter.string(from: event.dateStart))
+            Text(dateFormatter.string(from: event.startDate))
         }
     }
 }
@@ -35,7 +35,7 @@ struct EventsListView: View {
             if store.state.eventList.count == 0 {
                 Text("No events")
             } else {
-                List(store.state.eventList, id: \.name) {
+                List(store.state.eventList, id: \.title) {
                     event in EventLabel(event: event)
                 }
             }

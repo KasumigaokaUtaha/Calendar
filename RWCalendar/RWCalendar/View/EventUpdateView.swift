@@ -10,33 +10,43 @@ import SwiftUI
 struct EventUpdateView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
 
-    var event: Event
-
-    @State var name: String
+    @State var title: String
     @State var startDate: Date
     @State var endDate: Date
     @State var remindingTimeBefore: Double
     @State var description: String
+    @State var showLocationSelectionView = false
 
+    var event: Event
     var offsets: [Double] = [60, 300, 600]
 
     init(_ event: Event) {
         self.event = event
-        _name = State(initialValue: event.name)
-        _startDate = State(initialValue: event.dateStart)
-        _endDate = State(initialValue: event.dateEnd)
+        _title = State(initialValue: event.title)
+        _startDate = State(initialValue: event.startDate)
+        _endDate = State(initialValue: event.endDate)
         _remindingTimeBefore = State(initialValue: event.remindingOffset)
-        _description = State(initialValue: event.description)
+        _description = State(initialValue: event.notes ?? "")
     }
 
     var body: some View {
-        NavigationView {
+//        NavigationView {
             Form {
                 Section {
                     TextField(
-                        "name",
-                        text: $name
+                        "Title",
+                        text: $title
                     )
+                    Button {
+                        showLocationSelectionView = true
+                    } label: {
+                        HStack {
+                            Text("Location")
+                                .foregroundColor(Color.secondary)
+                            Spacer()
+                            Image(systemName: "map")
+                        }
+                    }
                 }
                 Section {
                     DatePicker(
@@ -49,7 +59,7 @@ struct EventUpdateView: View {
                         selection: $endDate,
                         displayedComponents: [.date, .hourAndMinute]
                     )
-                    Picker("remind before", selection: $remindingTimeBefore) {
+                    Picker("Remind before", selection: $remindingTimeBefore) {
                         ForEach(offsets, id: \.self) {
                             Text("\($0 / 60) minutes")
                         }
@@ -63,20 +73,29 @@ struct EventUpdateView: View {
                         .foregroundColor(Color.red)
                 }
             }
-            .navigationTitle("Event")
-            .toolbar {
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    Button("Save") {
-                        let newEvent = Event(
-                            name: name, dateStart: startDate, dateEnd: endDate, description: description,
-                            remindingOffset: remindingTimeBefore
-                        )
-                        store.send(.saveEvent(newEvent: newEvent))
-                        // TODO: leave the view
-                    }
-                    .disabled(endDate < startDate)
+            .sheet(isPresented: $showLocationSelectionView, onDismiss: nil) {
+                // TODO: Location Selection View
+                VStack {
+                    Button("Done", action: { showLocationSelectionView = false })
+                    Spacer()
+                    Text("TODO")
+                    Spacer()
                 }
             }
-        }
+//            .navigationTitle("Event")
+//            .toolbar {
+//                ToolbarItemGroup(placement: .navigationBarTrailing) {
+//                    Button("Save") {
+//                        let newEvent = Event(
+//                            name: title, dateStart: startDate, dateEnd: endDate, description: description,
+//                            remindingOffset: remindingTimeBefore
+//                        )
+//                        store.send(.saveEvent(newEvent: newEvent))
+//                        // TODO: leave the view
+//                    }
+//                    .disabled(endDate < startDate)
+//                }
+//            }
+//        }
     }
 }

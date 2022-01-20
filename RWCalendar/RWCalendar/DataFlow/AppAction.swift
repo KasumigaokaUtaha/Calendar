@@ -6,9 +6,13 @@
 //
 
 import Foundation
+import EventKit
 
 /// The data structure for storing all available actions in the redux store.
 enum AppAction {
+    // MARK: - General Actions
+    case empty
+
     case setCurrentDate(_ date: Date)
     case setStartOfWeek(_ weekday: Weekday)
 
@@ -19,12 +23,23 @@ enum AppAction {
     case setYearDataCollection(_ yearDataCollection: [YearData])
     case setScrollToToday(withAnimation: Bool)
     case resetScrollToToDay
-
+    
+    case setShowAlert(Bool)
+    case setAlertTitle(String)
+    case setAlertMessage(String)
+    
     // MARK: - Event Actions
 
+    case setSelectedEvent(Event)
     case saveEvent(newEvent: Event)
-    case setEventErrorMessage(errorMessage: String)
-    case setShowError(show: Bool)
+    case setEventErrorMessage(String)
+    case setShowError(Bool)
+    
+    case setActivatedCalendars(_ names: [String])
+    case activateCalendar(_ name: String)
+    case deactivateCalendar(_ name: String)
+    
+    case requestAccess(to: EKEntityType)
     // MARK: - Year View Actions
 
     case setSelectedYear(_ year: Int)
@@ -33,6 +48,10 @@ enum AppAction {
     // MARK: - Route Actions
 
     case open(_ tab: Tab)
+    
+    // MARK: - AppStorage Property Actions
+    
+    case loadAppStorageProperties
 }
 
 enum Direction {

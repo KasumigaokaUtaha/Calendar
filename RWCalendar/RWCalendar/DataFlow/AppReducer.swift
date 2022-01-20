@@ -18,6 +18,8 @@ func appReducer(
     environment: AppEnvironment
 ) -> AnyPublisher<AppAction, Never>? {
     switch action {
+    case .empty:
+        return nil
     case let .loadYearDataIfNeeded(base):
         guard let baseIndex = state.allYears.firstIndex(of: base) else {
             return nil
@@ -111,17 +113,19 @@ func appReducer(
         state.isScrollToTodayAnimated = withAnimation
     case .resetScrollToToDay:
         state.scrollToToday = false
+    case let .setShowAlert(showAlert):
+        state.showAlert = showAlert
+    case let.setAlertTitle(title):
+        state.alertTitle = title
+    case let .setAlertMessage(message):
+        state.alertMessage = message
     case let .setShowError(show):
         state.showError = show
     case let .setEventErrorMessage(errorMessage):
         state.errorMessage = errorMessage
         state.showError = errorMessage != ""
     case let .saveEvent(newEvent):
-        return environment.event.addEventToCalendar(newEvent)
-            .map { msg in
-                AppAction.setEventErrorMessage(errorMessage: msg)
-            }
-            .eraseToAnyPublisher()
+        return environment.event.addEvent(newEvent)
     case let .open(tab):
         // TODO: adapt state according to the new tab if necessary
         state.currentTab = tab
@@ -129,6 +133,34 @@ func appReducer(
         state.selectedYear = year
     case let .setSelectedMonth(month):
         state.selectedMonth = month
+    case let .setSelectedEvent(event):
+        state.selectedEvent = event
+    case .loadAppStorageProperties:
+        state.activatedCalendars = state.storedActivatedCalendars.toStringArray() ?? []
+    case let .setActivatedCalendars(names):
+        state.activatedCalendars = names
+        if let data = names.toData() {
+            state.storedActivatedCalendars = data
+        }
+    case let .activateCalendar(name):
+        guard !state.activatedCalendars.contains(name) else {
+            return nil
+        }
+
+        let allActivatedCalendars = state.activatedCalendars + [name]
+        return Just(AppAction.setActivatedCalendars(allActivatedCalendars))
+            .eraseToAnyPublisher()
+    case let .deactivateCalendar(name):
+        guard let index = state.activatedCalendars.firstIndex(of: name) else {
+            return nil
+        }
+
+        var allActivatedCalendars = state.activatedCalendars
+        allActivatedCalendars.remove(at: index)
+        return Just(AppAction.setActivatedCalendars(allActivatedCalendars))
+            .eraseToAnyPublisher()
+    case .requestAccess(let entityType):
+        return environment.event.requestAccess(to: entityType)
     }
     return nil
 }

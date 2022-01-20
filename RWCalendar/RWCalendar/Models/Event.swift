@@ -6,11 +6,13 @@
 //
 
 import Foundation
+import EventKit
 
 struct Event {
-    var name: String
-    var dateStart: Date
-    var dateEnd: Date
-    var description: String
+    var title: String
+    var startDate: Date
+    var endDate: Date
+    var calendar: EKCalendar
+    var notes: String?
     var remindingOffset: Double
 }
