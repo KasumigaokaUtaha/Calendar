@@ -11,14 +11,10 @@ let days: [String] = Calendar.current.shortWeekdaySymbols
 let dateArray = Array(repeating: GridItem(.flexible()), count: 7)
 
 struct TrueMonthView: View {
-    @Binding var curDate : Date
+    @Binding var curDate: Date
     @State private var offset: CGSize = .zero
-    @State var curMonth = 0
-    @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
-    
-    
-     
-    //@State var curDate =Calendar.current.date(from: components())!
+    // @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
+
     // #TODO: add a var to controll light and dark modes
     var body: some View {
         VStack {
@@ -41,17 +37,17 @@ struct TrueMonthView: View {
 
 struct MonthHome: View {
     @State var curDate = Date()
+
     var body: some View {
-        TrueMonthView(curDate: $curDate)
+        VStack {
+            TrueMonthView(curDate: $curDate)
+        }
     }
 }
 
-
 struct TrueMonthView_Previews: PreviewProvider {
-    
     static var previews: some View {
-        
-       MonthHome()
+        MonthHome(curDate: Date())
     }
 }
 
@@ -60,15 +56,8 @@ extension TrueMonthView {
     var TitleView: some View {
         NavigationView {
             HStack {
-                Menu {
-                    // #TODO: add menu that displays a list of other views and setting
-                    Text("add navilinks to other views")
-                } label: {
-                    Label("", systemImage: "pencil")
-                }
-
                 Button("Today") {
-                    curMonth = 0
+                    curDate = Date()
                 }
                 // years and months
                 Text(RWCalendar.dateToString(date: curDate)[1])
@@ -90,7 +79,7 @@ extension TrueMonthView {
 
     var DateView: some View {
         LazyVGrid(columns: dateArray, spacing: 25) {
-            ForEach(RWCalendar.getDate(value: curMonth)) { value in
+            ForEach(RWCalendar.getDate(date: curDate)) { value in
 
                 VStack {
                     if value.day != 0 {
@@ -108,23 +97,16 @@ extension TrueMonthView {
                 .onEnded {
                     if $0.startLocation.x > $0.location.x + 20 {
                         withAnimation {
-                            curMonth += 1
+                            curDate = Calendar.current.date(byAdding: .month, value: 1, to: curDate)!
                         }
                     } else if $0.startLocation.x < $0.location.x - 20 {
-                        curMonth -= 1
+                        curDate = Calendar.current.date(byAdding: .month, value: -1, to: curDate)!
                     }
                     self.offset = .zero
                 }
         )
         .padding()
-        .onChange(of: curMonth) { _ in
-            curDate = RWCalendar.getCurMonth(value: curMonth)
+        .onChange(of: curDate) { _ in
         }
     }
-    
-    
-    
-    
-
 }
-

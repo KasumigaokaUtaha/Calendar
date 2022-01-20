@@ -9,27 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
-    
-   
-    //lazy var comp = components()
-    @State var curDate : Date
-    
-   
-    
-    func components() -> DateComponents{
-        var comp = DateComponents()
-        comp.month = store.state.selectedMonth
-        comp.year = store.state.selectedYear
-        return comp
-    }
-    
-    init(curDate: Date){
-        self.curDate = Calendar.current.date(from: components())!
-    }
-    
+
     var body: some View {
-        
-        
         switch store.state.currentTab {
         case .year:
 //            GeometryReader { proxy in
@@ -39,13 +20,9 @@ struct ContentView: View {
                 CompactCalendarYearView()
             }
         case .month:
-            
+
             ContainerView {
-                // TODO: replace with actual view
-                //Text("Month")
-                
-                TrueMonthView(curDate: $curDate)
-                    .navigationTitle(String(format: "%d %d", store.state.selectedYear, store.state.selectedMonth))
+                MonthHome(curDate: Calendar.current.date(from: components())!)
             }
         case .week:
             ContainerView {
@@ -71,23 +48,26 @@ struct ContentView: View {
     }
 }
 
+extension ContentView {
+    // get the components of the selected date
+    func components() -> DateComponents {
+        var comp = DateComponents()
+        comp.month = store.state.selectedMonth
+        comp.year = store.state.selectedYear
+        return comp
+    }
+}
+
 struct ContentView_Previews: PreviewProvider {
-    
-    
-    
     static let store: AppStore<AppState, AppAction, AppEnvironment> = AppStore(
         initialState: AppState(),
         reducer: appReducer,
         environment: AppEnvironment()
     )
-    
+
     @State var curDate = Date()
     static var previews: some View {
-
-        
-        //var comp = components()
-        
-        ContentView(curDate: Date())
+        ContentView()
             .environmentObject(store)
             .onAppear {
                 let rangeStart = store.state.currentYear - 1970
