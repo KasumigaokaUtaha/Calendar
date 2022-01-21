@@ -10,6 +10,7 @@ import SwiftUI
 /// A container view that consists of a navigation view and a custom content view
 struct ContainerView<Content, T>: View where Content: View, T: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
+    @EnvironmentObject var customizationData: CustomizationData
 
     var content: () -> Content
     var makeNavigationBarButton: () -> T

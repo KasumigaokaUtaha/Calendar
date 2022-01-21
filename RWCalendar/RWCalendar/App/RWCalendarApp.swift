@@ -10,6 +10,7 @@ import SwiftUI
 @main
 struct RWCalendarApp: App {
     let store: AppStore<AppState, AppAction, AppEnvironment>
+    let customizationData: CustomizationData
 
     init() {
         store = AppStore(
@@ -17,11 +18,14 @@ struct RWCalendarApp: App {
             reducer: appReducer,
             environment: AppEnvironment()
         )
+        
+        customizationData = CustomizationData()
     }
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            WrapperView()
+                .environmentObject(customizationData)
                 .environmentObject(store)
                 .onAppear(perform: onStartTasks)
         }
