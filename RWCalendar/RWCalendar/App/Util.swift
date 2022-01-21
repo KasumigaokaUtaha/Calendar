@@ -4,7 +4,6 @@
 //
 //  Created by Kasumigaoka Utaha on 27.12.21.
 //
-
 import Foundation
 
 enum Util {
@@ -41,6 +40,66 @@ enum Util {
 
     static func firstDayIn(year: Int, month: Int, calendar: Calendar) -> Date? {
         calendar.date(from: DateComponents(year: year, month: month))
+    }
+
+    static func startOfDay(_ day: Date, calendar: Calendar) -> Date? {
+        calendar.date(bySettingHour: 0, minute: 0, second: 0, of: day)
+    }
+
+    static func endOfDay(_ day: Date, calendar: Calendar) -> Date? {
+        guard
+            let startOfDay = startOfDay(day, calendar: calendar),
+            let startOfNextDay = calendar.date(byAdding: .day, value: 1, to: startOfDay),
+            let endOfDay = calendar.date(byAdding: .second, value: -1, to: startOfNextDay)
+        else {
+            return nil
+        }
+
+        return endOfDay
+    }
+
+    static func startOfWeek(date: Date, calendar: Calendar) -> Date? {
+        var result = date
+
+        while calendar.component(.weekday, from: result) != calendar.firstWeekday {
+            guard let tempDate = calendar.date(byAdding: .day, value: -1, to: result) else {
+                return nil
+            }
+
+            result = tempDate
+        }
+
+        return calendar.date(bySettingHour: 0, minute: 0, second: 0, of: result)
+    }
+
+    static func endOfWeek(date: Date, calendar: Calendar) -> Date? {
+        guard
+            let startOfWeek = startOfWeek(date: date, calendar: calendar),
+            let startOfNextWeek = calendar.date(byAdding: .day, value: 7, to: startOfWeek),
+            let endOfWeek = calendar.date(byAdding: .second, value: -1, to: startOfNextWeek)
+        else {
+            return nil
+        }
+
+        return endOfWeek
+    }
+
+    static func startOfMonth(date: Date, calendar: Calendar) -> Date? {
+        let monthStartComponents = calendar.dateComponents([.year, .month], from: date)
+
+        return calendar.date(from: monthStartComponents)
+    }
+
+    static func endOfMonth(date: Date, calendar: Calendar) -> Date? {
+        guard
+            let monthStart = startOfMonth(date: date, calendar: calendar),
+            let nextMonthStart = calendar.date(byAdding: .month, value: 1, to: monthStart),
+            let monthEnd = calendar.date(byAdding: .second, value: -1, to: nextMonthStart)
+        else {
+            return nil
+        }
+
+        return monthEnd
     }
 
     static func lastDayIn(year: Int, month: Int, calendar: Calendar) -> Date? {
@@ -139,3 +198,60 @@ enum Util {
         return nextDays
     }
 }
+
+/*
+  Helping functions that used for TrueMonthView
+ ********************************************************************************/
+
+extension Date {
+    func getMonthDate() -> [Date] {
+        let range = Calendar.current.range(of: .day, in: .month, for: self)!
+
+        let starter = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: self))!
+
+        return range.compactMap { day -> Date in
+            Calendar.current.date(byAdding: .day, value: day - 1, to: starter)!
+        }
+    }
+}
+
+// convert year and month to string
+func dateToString(date: Date) -> [String] {
+    let month = Calendar.current.component(.month, from: date) - 1
+    let year = Calendar.current.component(.year, from: date)
+
+    return ["\(year)", Calendar.current.shortMonthSymbols[month]]
+}
+
+// check if the input date is today
+func isToday(date: Date) -> Bool {
+    Calendar.current.isDateInToday(date)
+}
+
+// return current month based on the int value
+func getCurMonth(value: Int) -> Date {
+    Calendar.current.date(byAdding: .month, value: value, to: Date())!
+}
+
+// get all the date in a month for display
+func getDate(value: Int) -> [DateData] {
+    var days = getCurMonth(value: value).getMonthDate().compactMap { date -> DateData in
+
+        let day = Calendar.current.component(.day, from: date)
+
+        return DateData(day: day, date: date)
+    }
+
+    let firstWeek = Calendar.current.component(.weekday, from: days.first!.date)
+
+    for _ in 0 ..< firstWeek - 1 {
+        // offset: set extra dates as 0
+        days.insert(DateData(day: 0, date: Date()), at: 0)
+    }
+
+    return days
+}
+
+/*
+ Helping functions that used for TrueMonthView
+ ******************************************************************************/

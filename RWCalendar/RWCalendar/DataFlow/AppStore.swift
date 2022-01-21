@@ -8,6 +8,7 @@
 import Combine
 import SwiftUI
 
+/// The data structure of the redux store.
 class AppStore<State, Action, Environment>: ObservableObject {
     @Published private(set) var state: State
 

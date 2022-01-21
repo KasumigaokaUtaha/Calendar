@@ -12,8 +12,13 @@ struct SettingView: View {
     
     @State private var iconName: String = "Default"
     
+    // Change background color for setting view
+//    init() {
+//        UITableView.appearance().backgroundColor = .clear
+//    }
+    
     var body: some View {
-        List {
+        Form {
             Section(header: Text("Customization")) {
                 Picker(selection: customizationData.$savedFontSize, label: Text("Font Size"), content: {
                         Text("Extra Small")
@@ -59,26 +64,9 @@ struct SettingView: View {
                     Spacer()
                     Text(iconName)
                 }
-                
-            }
-            
-            // REMOVE LATER!!!
-            // For the reference for creating events and synchronize with iCloud
-            Section(header: Text("Synchronization")) {
-                NavigationLink(
-                    destination: SyncView()
-                        .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
-                        .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
-                ) {
-                    Text("Synchronization with iCloud")
-                }
             }
         }
-        .background(Color(customizationData.selectedTheme.backgroundColor))
-        
-        
-        .navigationTitle(Text("Settings"))
-        .navigationBarTitleDisplayMode(.inline)
+//        .background(Color(customizationData.selectedTheme.backgroundColor))
     }
 }
 
