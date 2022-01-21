@@ -20,9 +20,9 @@ struct EventLabel: View {
 
     var body: some View {
         HStack {
-            Text(event.name ?? "default name")
+            Text(event.title)
             Spacer()
-            Text(dateFormatter.string(from: event.startDate!))
+            Text(dateFormatter.string(from: event.startDate))
         }
     }
 }
@@ -35,7 +35,9 @@ struct EventsListView: View {
             if store.state.eventList.count == 0 {
                 Text("No events")
             } else {
-                List(store.state.eventList, id: \.name) {
+
+                List(store.state.eventList, id: \.title) {
+
                     event in EventLabel(event: event)
                 }
             }
@@ -43,15 +45,4 @@ struct EventsListView: View {
     }
 }
 
-struct EventsListView_Previews: PreviewProvider {
-    static var previews: some View {
-        let store = AppStore(
-            initialState: AppState(),
-            reducer: appReducer,
-            environment: AppEnvironment()
-        )
-        EventsListView()
-            .environmentObject(store)
-            .onAppear(perform: { store.send(.loadAllEvents) })
-    }
-}
+
