@@ -135,7 +135,18 @@ struct EventEnvironment {
         return result
     }
 
-    /// Returns a dictionary from calendar source title to  array of sorted calendar titles.
+    /// Returns a dictionary from calendar source to array of calendar.
+    func getSourceToCalendars(for _: EKEntityType = .event) -> [EKSource: [EKCalendar]] {
+        var result: [EKSource: [EKCalendar]] = [:]
+
+        for source in eventStore.sources {
+            result.updateValue(Array(source.calendars(for: .event)), forKey: source)
+        }
+
+        return result
+    }
+
+    /// Returns a dictionary from calendar source title to array of sorted calendar titles.
     func getSourceTitleToCalendarTitles(for entityType: EKEntityType = .event) -> [String: [String]] {
         var result: [String: [String]] = [:]
 
@@ -150,16 +161,52 @@ struct EventEnvironment {
         return result
     }
 
+    private func eventsMatching(withStart start: Date, end: Date, calendars: [EKCalendar]?) -> [Event] {
+        let predicate = eventStore.predicateForEvents(withStart: start, end: end, calendars: calendars)
+        return eventStore.events(matching: predicate).map { .init(ekEvent: $0) }
+    }
+
+    /// Returns all events in the given EKCalendars that fall in the given date.
+    func getEventsForDay(_ day: Date, calendar: Calendar, with activatedCalendars: [EKCalendar]?) -> [Event] {
+        guard
+            let startOfDay = Util.startOfDay(day, calendar: calendar),
+            let endOfDay = Util.endOfDay(day, calendar: calendar)
+        else {
+            return []
+        }
+
+        return eventsMatching(withStart: startOfDay, end: endOfDay, calendars: activatedCalendars)
+    }
+
+    /// Returns all events in the given EKCalendars that fall in the week of the given date.
+    func getEventsForWeek(date: Date, calendar: Calendar, with activatedCalendars: [EKCalendar]?) -> [Event] {
+        guard
+            let startOfWeek = Util.startOfWeek(date: date, calendar: calendar),
+            let endOfWeek = Util.endOfWeek(date: date, calendar: calendar)
+        else {
+            return []
+        }
+
+        return eventsMatching(withStart: startOfWeek, end: endOfWeek, calendars: activatedCalendars)
+    }
+
+    /// Returns all events in the given EKCalendars that fall in the month of the given date.
+    func getEventsForMonth(date: Date, calendar: Calendar, with activatedCalendars: [EKCalendar]?) -> [Event] {
+        guard
+            let startOfMonth = Util.startOfMonth(date: date, calendar: calendar),
+            let endOfMonth = Util.endOfMonth(date: date, calendar: calendar)
+        else {
+            return []
+        }
+
+        return eventsMatching(withStart: startOfMonth, end: endOfMonth, calendars: activatedCalendars)
+    }
+
     /// Add the given event to the default EventStore and directly commit the changes.
     func addEvent(_ event: Event) -> AnyPublisher<AppAction, Never> {
         makeActions {
             Future { promise in
-                let newEvent = EKEvent(eventStore: eventStore)
-                newEvent.title = event.title
-                newEvent.startDate = event.startDate
-                newEvent.endDate = event.endDate
-                newEvent.calendar = event.calendar
-                newEvent.notes = event.notes
+                let newEvent = EKEvent(event: event, eventStore: eventStore)
 
                 do {
                     try eventStore.save(newEvent, span: .thisEvent, commit: true)
@@ -200,7 +247,7 @@ struct EventEnvironment {
             }
         }
     }
-    
+
     /// Remove the given event and directly commit the change directly to the default EventStore.
     func removeEvent(_ event: EKEvent) -> AnyPublisher<AppAction, Never> {
         makeActions {

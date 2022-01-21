@@ -42,6 +42,66 @@ enum Util {
         calendar.date(from: DateComponents(year: year, month: month))
     }
 
+    static func startOfDay(_ day: Date, calendar: Calendar) -> Date? {
+        calendar.date(bySettingHour: 0, minute: 0, second: 0, of: day)
+    }
+
+    static func endOfDay(_ day: Date, calendar: Calendar) -> Date? {
+        guard
+            let startOfDay = startOfDay(day, calendar: calendar),
+            let startOfNextDay = calendar.date(byAdding: .day, value: 1, to: startOfDay),
+            let endOfDay = calendar.date(byAdding: .second, value: -1, to: startOfNextDay)
+        else {
+            return nil
+        }
+        
+        return endOfDay
+    }
+
+    static func startOfWeek(date: Date, calendar: Calendar) -> Date? {
+        var result = date
+
+        while calendar.component(.weekday, from: result) != calendar.firstWeekday {
+            guard let tempDate = calendar.date(byAdding: .day, value: -1, to: result) else {
+                return nil
+            }
+
+            result = tempDate
+        }
+
+        return calendar.date(bySettingHour: 0, minute: 0, second: 0, of: result)
+    }
+
+    static func endOfWeek(date: Date, calendar: Calendar) -> Date? {
+        guard
+            let startOfWeek = startOfWeek(date: date, calendar: calendar),
+            let startOfNextWeek = calendar.date(byAdding: .day, value: 7, to: startOfWeek),
+            let endOfWeek = calendar.date(byAdding: .second, value: -1, to: startOfNextWeek)
+        else {
+            return nil
+        }
+
+        return endOfWeek
+    }
+
+    static func startOfMonth(date: Date, calendar: Calendar) -> Date? {
+        let monthStartComponents = calendar.dateComponents([.year, .month], from: date)
+
+        return calendar.date(from: monthStartComponents)
+    }
+
+    static func endOfMonth(date: Date, calendar: Calendar) -> Date? {
+        guard
+            let monthStart = startOfMonth(date: date, calendar: calendar),
+            let nextMonthStart = calendar.date(byAdding: .month, value: 1, to: monthStart),
+            let monthEnd = calendar.date(byAdding: .second, value: -1, to: nextMonthStart)
+        else {
+            return nil
+        }
+
+        return monthEnd
+    }
+
     static func lastDayIn(year: Int, month: Int, calendar: Calendar) -> Date? {
         var nextMonth = month + 1
         var year = year
@@ -144,17 +204,16 @@ enum Util {
  ********************************************************************************/
 
 extension Date {
-     func getMonthDate() -> [Date] {
-         let range = Calendar.current.range(of: .day, in: .month, for: self)!
+    func getMonthDate() -> [Date] {
+        let range = Calendar.current.range(of: .day, in: .month, for: self)!
 
-         let starter = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: self))!
+        let starter = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: self))!
 
-         return range.compactMap { day -> Date in
-             Calendar.current.date(byAdding: .day, value: day - 1, to: starter)!
-         }
-     }
- }
-
+        return range.compactMap { day -> Date in
+            Calendar.current.date(byAdding: .day, value: day - 1, to: starter)!
+        }
+    }
+}
 
 // convert year and month to string
 func dateToString(date: Date) -> [String] {

@@ -13,7 +13,7 @@ struct EventUpdateView: View {
     @State var title: String
     @State var startDate: Date
     @State var endDate: Date
-    @State var remindingTimeBefore: Double
+    @State var remindingTimeBefore: Double // TODO: 
     @State var description: String
     @State var showLocationSelectionView = false
 
@@ -25,7 +25,7 @@ struct EventUpdateView: View {
         _title = State(initialValue: event.title)
         _startDate = State(initialValue: event.startDate)
         _endDate = State(initialValue: event.endDate)
-        _remindingTimeBefore = State(initialValue: event.remindingOffset)
+        _remindingTimeBefore = State(initialValue: event.remindingOffset ?? 0.0)
         _description = State(initialValue: event.notes ?? "")
     }
 
