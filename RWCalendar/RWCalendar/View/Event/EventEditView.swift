@@ -118,7 +118,9 @@ struct EventEditView: View {
                 makeToolbar()
             }
             .navigationTitle("Update Event")
+            .navigationBarTitleDisplayMode(.inline)
         }
+        .navigationViewStyle(.stack)
     }
 
     func makeToolbar() -> some ToolbarContent {
