@@ -139,25 +139,21 @@ enum Util {
     }
 }
 
-
-
-
 /*
   Helping functions that used for TrueMonthView
  ********************************************************************************/
 
 extension Date {
-     func getMonthDate() -> [Date] {
-         let range = Calendar.current.range(of: .day, in: .month, for: self)!
+    func getMonthDate() -> [Date] {
+        let range = Calendar.current.range(of: .day, in: .month, for: self)!
 
-         let starter = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: self))!
+        let starter = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: self))!
 
-         return range.compactMap { day -> Date in
-             Calendar.current.date(byAdding: .day, value: day - 1, to: starter)!
-         }
-     }
- }
-
+        return range.compactMap { day -> Date in
+            Calendar.current.date(byAdding: .day, value: day - 1, to: starter)!
+        }
+    }
+}
 
 // convert year and month to string
 func dateToString(date: Date) -> [String] {
@@ -178,8 +174,8 @@ func getCurMonth(value: Int) -> Date {
 }
 
 // get all the date in a month for display
-func getDate(value: Int) -> [DateData] {
-    var days = getCurMonth(value: value).getMonthDate().compactMap { date -> DateData in
+func getDate(date: Date) -> [DateData] {
+    var days = date.getMonthDate().compactMap { date -> DateData in
 
         let day = Calendar.current.component(.day, from: date)
 
@@ -199,4 +195,3 @@ func getDate(value: Int) -> [DateData] {
 /*
  Helping functions that used for TrueMonthView
  ******************************************************************************/
-

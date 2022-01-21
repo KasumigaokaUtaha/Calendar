@@ -13,7 +13,7 @@ let dateArray = Array(repeating: GridItem(.flexible()), count: 7)
 struct TrueMonthView: View {
     @Binding var curDate: Date
     @State private var offset: CGSize = .zero
-    // @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
+    @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
 
     // #TODO: add a var to controll light and dark modes
     var body: some View {
@@ -46,8 +46,22 @@ struct MonthHome: View {
 }
 
 struct TrueMonthView_Previews: PreviewProvider {
+    static let store: AppStore<AppState, AppAction, AppEnvironment> = AppStore(
+        initialState: AppState(),
+        reducer: appReducer,
+        environment: AppEnvironment()
+    )
     static var previews: some View {
         MonthHome(curDate: Date())
+            .environmentObject(store)
+            .onAppear {
+                let rangeStart = store.state.currentYear - 1970
+                store.send(.setScrollToToday(withAnimation: false))
+                store.send(.loadYearDataRange(
+                    base: store.state.currentYear,
+                    range: -rangeStart ... 3
+                ))
+            }
     }
 }
 
@@ -56,6 +70,7 @@ extension TrueMonthView {
     var TitleView: some View {
         NavigationView {
             HStack {
+                makeMenu()
                 Button("Today") {
                     curDate = Date()
                 }
@@ -106,7 +121,45 @@ extension TrueMonthView {
                 }
         )
         .padding()
-        .onChange(of: curDate) { _ in
+        // .onChange(of: curDate) { _ in
+        // }
+    }
+
+    func makeMenu() -> some View {
+        Menu {
+            Button {
+                store.send(.open(.year))
+            } label: {
+                Text("Year")
+                Image(systemName: "calendar")
+            }
+            Button {
+                store.send(.open(.month))
+            } label: {
+                Text("Month")
+                Image(systemName: "calendar")
+            }
+            Button {
+                store.send(.open(.week))
+            } label: {
+                Text("Week")
+                Image(systemName: "calendar")
+            }
+            Button {
+                store.send(.open(.day))
+            } label: {
+                Text("Day")
+                Image(systemName: "calendar")
+            }
+            Divider()
+            Button {
+                store.send(.open(.settings))
+            } label: {
+                Text("Settings")
+                Image(systemName: "gear")
+            }
+        } label: {
+            Image(systemName: "slider.horizontal.3")
         }
     }
 }

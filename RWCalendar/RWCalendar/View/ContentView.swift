@@ -20,10 +20,8 @@ struct ContentView: View {
                 CompactCalendarYearView()
             }
         case .month:
+            MonthHome(curDate: Calendar.current.date(from: components())!)
 
-            ContainerView {
-                MonthHome(curDate: Calendar.current.date(from: components())!)
-            }
         case .week:
             ContainerView {
                 // TODO: replace with actual view
@@ -65,7 +63,6 @@ struct ContentView_Previews: PreviewProvider {
         environment: AppEnvironment()
     )
 
-    @State var curDate = Date()
     static var previews: some View {
         ContentView()
             .environmentObject(store)
