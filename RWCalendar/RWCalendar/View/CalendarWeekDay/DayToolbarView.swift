@@ -11,72 +11,181 @@ struct DayToolbarView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
     @State private var currentWeek: Int = 0
     @State private var offset: CGSize = .zero
+    let weekDays: [String] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
     var body: some View {
-        let weekDays: [String] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
         NavigationView {
-            VStack(spacing: 0) {
-                Text(store.state.currentDate, style: .date)
-                    .font(.footnote)
+            VStack {
+                makeDayBarView()
+                Spacer(minLength: 20)
                 DayTaskTableView()
             }
-            .toolbar(content: {
-                ToolbarItem(placement: .principal) {
-                    VStack(spacing: 3) {
-                        Spacer()
-                        HStack {
-                            Text("\(getToolBarData(date: store.state.currentDate)[0]) \(getToolBarData(date: store.state.currentDate)[1])")
-                                .foregroundColor(Color.red)
-                                .font(.headline)
-                                .fontWeight(.bold)
-                            Spacer()
-                            Button("Today") {
-                                currentWeek = 0
-                            }
-                        }
-                        VStack(spacing: 1) {
-                            HStack {
-                                ForEach(0...6, id: \.self) { day in
-                                    Text(weekDays[day])
-                                        .font(.callout)
-                                        .fontWeight(.semibold)
-                                        .frame(maxWidth: .infinity)
-                                    // *******
-                                }
-                            }.frame(maxWidth: .infinity)
-                            HStack {
-                                ForEach(0...6, id: \.self) {
-                                    let d = extractDate()[$0]
-                                    Text(String(d.day))
-                                        .background(Circle()
-                                            .fill(Color.red)
-                                            .opacity(isSameDay(date1: d.date, date2: store.state.currentDate) ? 1 : 0)
-                                            .frame(width: 25, height: 25)
-                                        )
-                                }.frame(maxWidth: .infinity)
-                                    .offset(x: offset.width * 3)
-                            }
-                        }
-                        .frame(height: 30, alignment: .bottom)
-                        .gesture(
-                            DragGesture(coordinateSpace: .local)
-                                .onChanged {
-                                    self.offset = $0.translation
-                                }
-                                .onEnded {
-                                    if $0.startLocation.x - 50 > $0.location.x {
-                                        self.currentWeek += 1
-                                    } else if $0.startLocation.x + 50 < $0.location.x {
-                                        self.currentWeek -= 1
-                                    }
-                                    self.offset = .zero
-                                }
-                        )
-                    }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    makeMenu()
                 }
-
-            })
-        }.navigationBarTitle(" ", displayMode: .inline)
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    makeButton()
+                }
+            }
+        }
+        .navigationViewStyle(.stack)
     }
+    
+    func makeDayBarView() -> some View {
+        VStack(spacing: 1) {
+            HStack {
+                ForEach(0...6, id: \.self) { day in
+                    Text(weekDays[day])
+                        .font(.callout)
+                        .fontWeight(.semibold)
+                        .frame(maxWidth: .infinity)
+                    // *******
+                }
+            }.frame(maxWidth: .infinity)
+            HStack {
+                ForEach(0...6, id: \.self) {
+                    let d = extractDate()[$0]
+                    Text(String(d.day))
+                        .background(Circle()
+                            .fill(Color.red)
+                            .opacity(isSameDay(date1: d.date, date2: store.state.currentDate) ? 1 : 0)
+                            .frame(width: 25, height: 25)
+                        )
+                }.frame(maxWidth: .infinity)
+                    .offset(x: offset.width * 3)
+            }
+        }
+        .frame(height: 30, alignment: .bottom)
+        .gesture(
+            DragGesture(coordinateSpace: .local)
+                .onChanged {
+                    self.offset = $0.translation
+                }
+                .onEnded {
+                    if $0.startLocation.x - 50 > $0.location.x {
+                        self.currentWeek += 1
+                    } else if $0.startLocation.x + 50 < $0.location.x {
+                        self.currentWeek -= 1
+                    }
+                    self.offset = .zero
+                }
+        )
+        .navigationTitle("\(getToolBarData(date: store.state.currentDate)[0]) \(getToolBarData(date: store.state.currentDate)[1])")
+    }
+
+    func makeMenu() -> some View {
+        Menu {
+            Button {
+                store.send(.open(.year))
+            } label: {
+                Text("Year")
+                Image(systemName: "calendar")
+            }
+            Button {
+                store.send(.open(.month))
+            } label: {
+                Text("Month")
+                Image(systemName: "calendar")
+            }
+            Button {
+                store.send(.open(.week))
+            } label: {
+                Text("Week")
+                Image(systemName: "calendar")
+            }
+            Button {
+                store.send(.open(.day))
+            } label: {
+                Text("Day")
+                Image(systemName: "calendar")
+            }
+            Divider()
+            Button {
+                store.send(.open(.settings))
+            } label: {
+                Text("Settings")
+                Image(systemName: "gear")
+            }
+        } label: {
+            Image(systemName: "slider.horizontal.3")
+        }
+    }
+
+    func makeButton() -> some View {
+        Button {
+            currentWeek = 0
+        } label: {
+            Text("Today")
+        }
+    }
+
+//    var body: some View {
+//        let weekDays: [String] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+//        NavigationView {
+//            VStack(spacing: 0) {
+//                Text(store.state.currentDate, style: .date)
+//                    .font(.footnote)
+//                DayTaskTableView()
+//            }
+//            .toolbar(content: {
+//                ToolbarItem(placement: .principal) {
+//                    VStack(spacing: 3) {
+//                        Spacer()
+//                        HStack {
+//                            Text("\(getToolBarData(date: store.state.currentDate)[0]) \(getToolBarData(date: store.state.currentDate)[1])")
+//                                .foregroundColor(Color.red)
+//                                .font(.headline)
+//                                .fontWeight(.bold)
+//                            Spacer()
+//                            Button("Today") {
+//                                currentWeek = 0
+//                            }
+//                        }
+//                        VStack(spacing: 1) {
+//                            HStack {
+//                                ForEach(0...6, id: \.self) { day in
+//                                    Text(weekDays[day])
+//                                        .font(.callout)
+//                                        .fontWeight(.semibold)
+//                                        .frame(maxWidth: .infinity)
+//                                    // *******
+//                                }
+//                            }.frame(maxWidth: .infinity)
+//                            HStack {
+//                                ForEach(0...6, id: \.self) {
+//                                    let d = extractDate()[$0]
+//                                    Text(String(d.day))
+//                                        .background(Circle()
+//                                            .fill(Color.red)
+//                                            .opacity(isSameDay(date1: d.date, date2: store.state.currentDate) ? 1 : 0)
+//                                            .frame(width: 25, height: 25)
+//                                        )
+//                                }.frame(maxWidth: .infinity)
+//                                    .offset(x: offset.width * 3)
+//                            }
+//                        }
+//                        .frame(height: 30, alignment: .bottom)
+//                        .gesture(
+//                            DragGesture(coordinateSpace: .local)
+//                                .onChanged {
+//                                    self.offset = $0.translation
+//                                }
+//                                .onEnded {
+//                                    if $0.startLocation.x - 50 > $0.location.x {
+//                                        self.currentWeek += 1
+//                                    } else if $0.startLocation.x + 50 < $0.location.x {
+//                                        self.currentWeek -= 1
+//                                    }
+//                                    self.offset = .zero
+//                                }
+//                        )
+//                    }
+//                }
+//
+//            })
+//        }.navigationBarTitle(" ", displayMode: .inline)
+//    }
     
     // get the month, year, week
     func getDate() -> [String] {
@@ -126,8 +235,15 @@ struct DayToolbarView: View {
 }
 
 struct DayToolbarView_Previews: PreviewProvider {
+    static let store: AppStore<AppState, AppAction, AppEnvironment> = AppStore(
+        initialState: AppState(),
+        reducer: appReducer,
+        environment: AppEnvironment()
+    )
+    
     static var previews: some View {
         DayToolbarView()
+            .environmentObject(store)
     }
 }
 

@@ -31,11 +31,11 @@ struct ContentView: View {
                 Text("Week")
             }
         case .day:
-            ContainerView {
-                // TODO: replace with actual view
-                CalendarDayView()
-                Text("day")
-            }
+//            ContainerView {
+            // TODO: replace with actual view
+            CalendarDayView()
+//                Text("day")
+//            }
         case .settings:
             ContainerView {
                 // TODO: replace with actual view

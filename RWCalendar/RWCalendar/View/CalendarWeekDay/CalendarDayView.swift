@@ -14,7 +14,14 @@ struct CalendarDayView: View {
 }
 
 struct CalendarDayView_Previews: PreviewProvider {
+    static let store: AppStore<AppState, AppAction, AppEnvironment> = AppStore(
+        initialState: AppState(),
+        reducer: appReducer,
+        environment: AppEnvironment()
+    )
+
     static var previews: some View {
         CalendarDayView()
+            .environmentObject(store)
     }
 }

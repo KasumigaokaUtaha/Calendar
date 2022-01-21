@@ -45,7 +45,14 @@ struct DayTaskTableView: View {
 }
 
 struct DayTaskTableView_Previews: PreviewProvider {
+    static let store: AppStore<AppState, AppAction, AppEnvironment> = AppStore(
+        initialState: AppState(),
+        reducer: appReducer,
+        environment: AppEnvironment()
+    )
+    
     static var previews: some View {
         DayTaskTableView()
+            .environmentObject(store)
     }
 }
