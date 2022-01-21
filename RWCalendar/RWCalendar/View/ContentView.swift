@@ -87,17 +87,7 @@ struct ContentView: View {
                 }
             }
         case .day:
-            ContainerView {
-                // TODO: replace with actual view
-                Text("day")
-            } makeNavigationBarButton: {
-                Button {
-                    store.send(.setScrollToToday(withAnimation: true))
-                } label: {
-                    Text("Today")
-                }
-            }
-
+            CalendarDayView()
         case .settings:
             ContainerView {
                 // TODO: replace with actual view
