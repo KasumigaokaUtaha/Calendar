@@ -5,6 +5,7 @@
 //  Created by Kasumigaoka Utaha on 27.12.21.
 //
 
+import EventKit
 import Foundation
 import SwiftUI
 
@@ -35,6 +36,12 @@ struct AppState {
     /// Otherwise, there is no ongoing computational work.
     var isLoadingYearData: Bool
 
+    var showError: Bool
+    var showAlert: Bool
+    var alertTitle: String
+    var errorMessage: String
+    var alertMessage: String
+
     // MARK: - Year Specific States
 
     /// The currently selected year
@@ -49,14 +56,21 @@ struct AppState {
     /// Currently displayed tab
     ///
     /// Use this value to determine which tab should be presented.
-    @AppStorage("tab") var currentTab = Tab.year
+    @AppStorage("tab")
+    var currentTab = Tab.year
 
     // MARK: - Event States
 
+    var selectedEvent: Event?
     var currentEvent: Event?
-    var showError: Bool
-    var errorMessage: String
     var eventList: [Event]
+
+    @AppStorage("activatedCalendars")
+    var storedActivatedCalendars = Data([])
+    var activatedCalendars: [String]
+
+    var defaultEventCalendar: EKCalendar!
+    var defaultReminderCalendar: EKCalendar!
 
     init() {
         years = [:]
@@ -66,7 +80,13 @@ struct AppState {
         calendar = Calendar.current
         calendar.locale = Locale.autoupdatingCurrent
         currentYear = calendar.component(.year, from: currentDate)
+
         isLoadingYearData = false
+
+        showAlert = false
+        alertTitle = ""
+        alertMessage = ""
+
         scrollToToday = false
         isScrollToTodayAnimated = false
         currentEvent = nil
@@ -75,5 +95,6 @@ struct AppState {
         eventList = []
         selectedYear = currentYear
         selectedMonth = calendar.component(.month, from: currentDate)
+        activatedCalendars = []
     }
 }

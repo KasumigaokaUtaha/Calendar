@@ -9,44 +9,120 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
+    @Environment(\.openURL) var openURL
+
+    @State var showAlert = false
 
     var body: some View {
+        if #available(iOS 15, *) {
+            makeContent()
+                .alert(store.state.alertTitle, isPresented: $showAlert) {
+                    Button("Settings", action: makeOpenSettingsAction)
+                    Button("OK", role: .cancel) {
+                        store.send(.setShowAlert(false))
+                    }
+                } message: {
+                    Text(store.state.alertMessage)
+                }
+                .onReceive(store.$state) { state in
+                    if showAlert != state.showAlert {
+                        showAlert = state.showAlert
+                    }
+                }
+        } else {
+            makeContent()
+                .alert(isPresented: $showAlert) {
+                    Alert(
+                        title: Text(store.state.alertTitle),
+                        message: Text(store.state.alertMessage),
+                        primaryButton: .default(Text("Settings")) {
+                            makeOpenSettingsAction()
+                        },
+                        secondaryButton: .default(Text("OK")) {
+                            store.send(.setShowAlert(false))
+                        }
+                    )
+                }
+                .onReceive(store.$state) { state in
+                    if showAlert != state.showAlert {
+                        showAlert = state.showAlert
+                    }
+                }
+        }
+    }
+
+    @ViewBuilder func makeContent() -> some View {
         switch store.state.currentTab {
         case .year:
-//            GeometryReader { proxy in
-//                CompactCalendarYearView(size: proxy.size)
-//            }
             ContainerView {
                 CompactCalendarYearView()
+            } makeNavigationBarButton: {
+                Button {
+                    store.send(.setScrollToToday(withAnimation: true))
+                } label: {
+                    Text("Today")
+                }
             }
         case .month:
             ContainerView {
                 // TODO: replace with actual view
                 Text("Month")
                     .navigationTitle(String(format: "%d %d", store.state.selectedYear, store.state.selectedMonth))
+            } makeNavigationBarButton: {
+                Button {
+                    store.send(.setScrollToToday(withAnimation: true))
+                } label: {
+                    Text("Today")
+                }
             }
         case .week:
             ContainerView {
                 // TODO: replace with actual view
                 Text("Week")
+            } makeNavigationBarButton: {
+                Button {
+                    store.send(.setScrollToToday(withAnimation: true))
+                } label: {
+                    Text("Today")
+                }
             }
         case .day:
-//            ContainerView {
-            // TODO: replace with actual view
             CalendarDayView()
-//                Text("day")
-//            }
         case .settings:
             ContainerView {
                 // TODO: replace with actual view
                 Text("settings")
+            } makeNavigationBarButton: {
+                Button {
+                    store.send(.setScrollToToday(withAnimation: true))
+                } label: {
+                    Text("Today")
+                }
             }
+
         case .onboarding:
             ContainerView {
                 // TODO: replace with actual view
                 Text("onboarding")
+            } makeNavigationBarButton: {
+                Button {
+                    store.send(.open(.year))
+                } label: {
+                    Text("Done")
+                }
             }
         }
+    }
+
+    func makeOpenSettingsAction() {
+        guard
+            let settingsURL = URL(string: UIApplication.openSettingsURLString),
+            UIApplication.shared.canOpenURL(settingsURL)
+        else {
+            return
+        }
+
+        openURL(settingsURL)
     }
 }
 
@@ -62,6 +138,8 @@ struct ContentView_Previews: PreviewProvider {
             .environmentObject(store)
             .onAppear {
                 let rangeStart = store.state.currentYear - 1970
+                store.send(.requestAccess(to: .event))
+                store.send(.loadDefaultCalendar(for: .event))
                 store.send(.setScrollToToday(withAnimation: false))
                 store.send(.loadYearDataRange(
                     base: store.state.currentYear,

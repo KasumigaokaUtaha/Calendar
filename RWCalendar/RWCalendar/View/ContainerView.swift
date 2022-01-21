@@ -8,10 +8,16 @@
 import SwiftUI
 
 /// A container view that consists of a navigation view and a custom content view
-struct ContainerView<Content>: View where Content: View {
+struct ContainerView<Content, T>: View where Content: View, T: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
 
-    @ViewBuilder var content: () -> Content
+    var content: () -> Content
+    var makeNavigationBarButton: () -> T
+
+    init(@ViewBuilder content: @escaping () -> Content, @ViewBuilder makeNavigationBarButton: @escaping () -> T) {
+        self.content = content
+        self.makeNavigationBarButton = makeNavigationBarButton
+    }
 
     var body: some View {
         NavigationView {
@@ -22,7 +28,7 @@ struct ContainerView<Content>: View where Content: View {
                         makeMenu()
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        makeButton()
+                        makeNavigationBarButton()
                     }
                 }
         }
@@ -64,14 +70,6 @@ struct ContainerView<Content>: View where Content: View {
             }
         } label: {
             Image(systemName: "slider.horizontal.3")
-        }
-    }
-
-    func makeButton() -> some View {
-        Button {
-            store.send(.setScrollToToday(withAnimation: true))
-        } label: {
-            Text("Today")
         }
     }
 }
