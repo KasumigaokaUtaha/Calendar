@@ -54,7 +54,7 @@ enum Util {
         else {
             return nil
         }
-        
+
         return endOfDay
     }
 

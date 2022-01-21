@@ -13,7 +13,7 @@ struct ContainerView<Content, T>: View where Content: View, T: View {
 
     var content: () -> Content
     var makeNavigationBarButton: () -> T
-    
+
     init(@ViewBuilder content: @escaping () -> Content, @ViewBuilder makeNavigationBarButton: @escaping () -> T) {
         self.content = content
         self.makeNavigationBarButton = makeNavigationBarButton
@@ -66,13 +66,6 @@ struct ContainerView<Content, T>: View where Content: View, T: View {
                 store.send(.open(.settings))
             } label: {
                 Text("Settings")
-                Image(systemName: "gear")
-            }
-            Divider()
-            Button {
-                store.send(.open(.event))
-            } label: {
-                Text("Event")
                 Image(systemName: "gear")
             }
         } label: {

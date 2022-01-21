@@ -392,55 +392,54 @@ class RWCalendarUtilTests: XCTestCase {
             }
         }
     }
-    
+
     func testStartOfDay() throws {
         let calendar = Calendar(identifier: .gregorian)
         let components = calendar.dateComponents([.year, .month, .day], from: Date())
         let expectedDate = calendar.date(from: components)
         XCTAssertNotNil(expectedDate)
-        
+
         guard let expectedDate = expectedDate else {
             return
         }
-        
+
         let targetDate = RWCalendar.Util.startOfDay(Date(), calendar: calendar)
         XCTAssertNotNil(targetDate)
         guard let targetDate = targetDate else {
             return
         }
-       
+
         XCTAssertEqual(expectedDate, targetDate)
     }
-    
+
     func testEndOfDay() throws {
         let calendar = Calendar(identifier: .gregorian)
         let components = calendar.dateComponents([.year, .month, .day], from: Date())
         let date = calendar.date(from: components)
         XCTAssertNotNil(date)
-        
+
         guard let date = date else {
             return
         }
         let nextDate = calendar.date(byAdding: .day, value: 1, to: date)
         XCTAssertNotNil(nextDate)
-        
+
         guard let nextDate = nextDate else {
             return
         }
         let expectedDate = calendar.date(byAdding: .second, value: -1, to: nextDate)
         XCTAssertNotNil(expectedDate)
-        
+
         guard let expectedDate = expectedDate else {
             return
         }
-        
 
         let targetDate = RWCalendar.Util.endOfDay(Date(), calendar: calendar)
         XCTAssertNotNil(targetDate)
         guard let targetDate = targetDate else {
             return
         }
-       
+
         XCTAssertEqual(expectedDate, targetDate)
     }
 

@@ -5,6 +5,7 @@
 //  Created by Kasumigaoka Utaha on 27.12.21.
 //
 
+import EventKit
 import Foundation
 import SwiftUI
 
@@ -35,8 +36,10 @@ struct AppState {
     /// Otherwise, there is no ongoing computational work.
     var isLoadingYearData: Bool
 
+    var showError: Bool
     var showAlert: Bool
     var alertTitle: String
+    var errorMessage: String
     var alertMessage: String
 
     // MARK: - Year Specific States
@@ -60,12 +63,14 @@ struct AppState {
 
     var selectedEvent: Event?
     var currentEvent: Event?
-    var showError: Bool
-    var errorMessage: String
     var eventList: [Event]
+
     @AppStorage("activatedCalendars")
     var storedActivatedCalendars = Data([])
     var activatedCalendars: [String]
+
+    var defaultEventCalendar: EKCalendar!
+    var defaultReminderCalendar: EKCalendar!
 
     init() {
         years = [:]

@@ -121,17 +121,6 @@ struct ContentView: View {
                     Text("Done")
                 }
             }
-        case .event:
-            ContainerView {
-//                let event = Event(title: "", startDate: Date(), endDate: Date(), calendar: ,notes: "", remindingOffset: 60)
-//                EventUpdateView(event)
-            } makeNavigationBarButton: {
-                Button {
-                    //
-                } label: {
-                    Text("Done")
-                }
-            }
         }
     }
 
@@ -159,6 +148,8 @@ struct ContentView_Previews: PreviewProvider {
             .environmentObject(store)
             .onAppear {
                 let rangeStart = store.state.currentYear - 1970
+                store.send(.requestAccess(to: .event))
+                store.send(.loadDefaultCalendar(for: .event))
                 store.send(.setScrollToToday(withAnimation: false))
                 store.send(.loadYearDataRange(
                     base: store.state.currentYear,

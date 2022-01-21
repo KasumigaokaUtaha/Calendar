@@ -149,10 +149,8 @@ struct DayData: Identifiable {
     }
 }
 
-
-struct DateData: Identifiable{
+struct DateData: Identifiable {
     var day: Int
     var date: Date
-    var id =  UUID().uuidString
-    
+    var id = UUID().uuidString
 }

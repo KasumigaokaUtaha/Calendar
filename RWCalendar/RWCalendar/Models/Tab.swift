@@ -15,5 +15,4 @@ enum Tab: String {
     case day
     case settings
     case onboarding
-    case event
 }

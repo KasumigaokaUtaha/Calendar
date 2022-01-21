@@ -5,18 +5,18 @@
 //  Created by Kasumigaoka Utaha on 20.01.22.
 //
 
-import Foundation
 import EventKit
+import Foundation
 
 extension Sequence where Element == String {
     func toData() -> Data? {
-        return try? JSONSerialization.data(withJSONObject: self, options: [])
+        try? JSONSerialization.data(withJSONObject: self, options: [])
     }
 }
 
 extension Data {
     func toStringArray() -> [String]? {
-        return (try? JSONSerialization.jsonObject(with: self, options: []) as? [String])
+        try? JSONSerialization.jsonObject(with: self, options: []) as? [String]
     }
 }
 
@@ -24,11 +24,22 @@ extension EKEvent {
     convenience init(event: Event, eventStore: EKEventStore) {
         self.init(eventStore: eventStore)
 
-        self.title = event.title
-        self.startDate = event.startDate
-        self.endDate = event.endDate
-        self.calendar = event.calendar
-        self.notes = event.notes
-        self.alarms = event.alarms
+        title = event.title
+        startDate = event.startDate
+        endDate = event.endDate
+        calendar = event.calendar
+        url = event.url != nil ? URL(string: event.url!) : nil
+        notes = event.notes
+        alarms = event.alarms
+    }
+
+    func update(with event: Event) {
+        title = event.title
+        startDate = event.startDate
+        endDate = event.endDate
+        calendar = event.calendar
+        url = event.url != nil ? URL(string: event.url!) : nil
+        notes = event.notes
+        alarms = event.alarms
     }
 }

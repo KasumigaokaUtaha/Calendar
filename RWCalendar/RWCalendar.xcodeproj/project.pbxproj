@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		12A9279D278EFE20003E9542 /* TrueMonthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A9279C278EFE20003E9542 /* TrueMonthView.swift */; };
-		5A35FCFE278097E3006914FB /* EventUpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A35FCFD278097E3006914FB /* EventUpdateView.swift */; };
+		5A35FCFE278097E3006914FB /* EventEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A35FCFD278097E3006914FB /* EventEditView.swift */; };
 		5AE8DA8227989F1400BAF5DC /* EventError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE8DA8127989F1400BAF5DC /* EventError.swift */; };
 		5AF2F72B2783B2D20028C4B1 /* EventsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AF2F72A2783B2D20028C4B1 /* EventsListView.swift */; };
 		6237E06027820BD3009340D2 /* CompactCalendarYearView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6237E05F27820BD3009340D2 /* CompactCalendarYearView.swift */; };
@@ -56,7 +56,7 @@
 
 /* Begin PBXFileReference section */
 		12A9279C278EFE20003E9542 /* TrueMonthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrueMonthView.swift; sourceTree = "<group>"; };
-		5A35FCFD278097E3006914FB /* EventUpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventUpdateView.swift; sourceTree = "<group>"; };
+		5A35FCFD278097E3006914FB /* EventEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventEditView.swift; sourceTree = "<group>"; };
 		5AE8DA8127989F1400BAF5DC /* EventError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventError.swift; sourceTree = "<group>"; };
 		5AF2F72A2783B2D20028C4B1 /* EventsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsListView.swift; sourceTree = "<group>"; };
 		6237E05F27820BD3009340D2 /* CompactCalendarYearView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactCalendarYearView.swift; sourceTree = "<group>"; };
@@ -113,6 +113,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6275A21B279B0752008F52FB /* Event */ = {
+			isa = PBXGroup;
+			children = (
+				5A35FCFD278097E3006914FB /* EventEditView.swift */,
+				5AF2F72A2783B2D20028C4B1 /* EventsListView.swift */,
+			);
+			path = Event;
+			sourceTree = "<group>";
+		};
 		62E8AB49277DCF70007487E1 = {
 			isa = PBXGroup;
 			children = (
@@ -209,11 +218,10 @@
 		62E8ABAE277DD073007487E1 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				6275A21B279B0752008F52FB /* Event */,
 				12A9279C278EFE20003E9542 /* TrueMonthView.swift */,
 				62E8ABBD277DD0DE007487E1 /* ContentView.swift */,
 				62E707972795BA4600611E7E /* ContainerView.swift */,
-				5A35FCFD278097E3006914FB /* EventUpdateView.swift */,
-				5AF2F72A2783B2D20028C4B1 /* EventsListView.swift */,
 				6237E05F27820BD3009340D2 /* CompactCalendarYearView.swift */,
 				628252BA277E432300A8464B /* CompactCalendarMonthViewWrapper.swift */,
 				629B22F72784EFE300FA2494 /* CompactCalendarMonthView.swift */,
@@ -387,7 +395,7 @@
 				5AE8DA8227989F1400BAF5DC /* EventError.swift in Sources */,
 				62E8ABB6277DD0B0007487E1 /* AppReducer.swift in Sources */,
 				62E8ABBC277DD0D0007487E1 /* DateData.swift in Sources */,
-				5A35FCFE278097E3006914FB /* EventUpdateView.swift in Sources */,
+				5A35FCFE278097E3006914FB /* EventEditView.swift in Sources */,
 				623F28D52799A98700557F39 /* Extensions.swift in Sources */,
 				62E8ABB0277DD099007487E1 /* AppStore.swift in Sources */,
 				62E8ABB8277DD0BE007487E1 /* AppEnvironment.swift in Sources */,

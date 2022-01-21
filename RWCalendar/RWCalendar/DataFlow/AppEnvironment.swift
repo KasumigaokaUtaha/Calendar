@@ -29,6 +29,11 @@ struct AppEnvironment {
 struct EventEnvironment {
     private let eventStore: EKEventStore = .init()
 
+    /// A wrapper function that first determines the authorization status
+    /// and then produces a publisher containing the AppActions to perform with regard to the given closure.
+    ///
+    /// If it is authorized, then this function evaluated the given closure to produce the desired AppAction publisher.
+    /// Otherwise, this function produces a publisher with a series of AppAction to handle the corresponding cases.
     private func makeActions(with builder: @escaping () -> Future<[AppAction], Never>)
         -> AnyPublisher<AppAction, Never>
     {
@@ -56,7 +61,7 @@ struct EventEnvironment {
                             AppAction.setAlertTitle("Request Access Failed"),
                             AppAction
                                 .setEventErrorMessage(
-                                    "Some internal error happened. Please send an email with the log to the support email address."
+                                    "Some internal errors happened. Please send an email with the log to our support email address."
                                 ),
                             AppAction.setShowError(true)
                         ]
@@ -75,6 +80,7 @@ struct EventEnvironment {
                             AppAction.setShowAlert(true)
                         ]
                     } else {
+                        // Access granted
                         actions = [AppAction.empty]
                     }
 
@@ -90,7 +96,7 @@ struct EventEnvironment {
 
     /// Returns the authentication status for the given EKEntityType.
     ///
-    /// It returns nil, if this app is authorized. Otherwise, it returns a publisher with a series of AppAction to perform.
+    /// If this app is authorized, it returns nil. Otherwise, it returns a publisher with a series of AppAction to perform.
     func authorizationStatus(for entityType: EKEntityType = .event) -> AnyPublisher<AppAction, Never>? {
         let result: AnyPublisher<AppAction, Never>?
 
@@ -133,6 +139,28 @@ struct EventEnvironment {
         }
 
         return result
+    }
+
+    func getDefaultCalendar(for entityType: EKEntityType = .event) -> AnyPublisher<AppAction, Never> {
+        makeActions {
+            Future { promise in
+                var defaultCalendar: EKCalendar
+                switch entityType {
+                case .event:
+                    defaultCalendar = eventStore.defaultCalendarForNewEvents ?? EKCalendar(
+                        for: entityType,
+                        eventStore: eventStore
+                    )
+                case .reminder:
+                    defaultCalendar = eventStore
+                        .defaultCalendarForNewReminders() ?? EKCalendar(for: entityType, eventStore: eventStore)
+                @unknown default:
+                    fatalError()
+                }
+
+                promise(.success([.setDefaultCalendar(defaultCalendar, for: entityType)]))
+            }
+        }
     }
 
     /// Returns a dictionary from calendar source to array of calendar.
@@ -214,7 +242,7 @@ struct EventEnvironment {
                     promise(.success(actions))
                 } catch {
                     let actions: [AppAction] = [
-                        .setEventErrorMessage("An error occured when saving new event."),
+                        .setEventErrorMessage("An error occurred while saving a new event."),
                         .setShowError(true)
                     ]
                     promise(.success(actions))
@@ -224,14 +252,17 @@ struct EventEnvironment {
     }
 
     /// Update the given event and directly commit the updated event to the default EventStore.
-    func updateEvent(_ event: EKEvent, with newEvent: Event) -> AnyPublisher<AppAction, Never> {
+    func updateEvent(with newEvent: Event) -> AnyPublisher<AppAction, Never> {
         makeActions {
             Future { promise in
-                event.title = newEvent.title
-                event.startDate = newEvent.startDate
-                event.endDate = newEvent.endDate
-                event.calendar = newEvent.calendar
-                event.notes = newEvent.notes
+                guard
+                    let identifier = newEvent.eventIdentifier,
+                    let event = eventStore.event(withIdentifier: identifier)
+                else {
+                    promise(.success([.empty]))
+                    return
+                }
+                event.update(with: newEvent)
 
                 do {
                     try eventStore.save(event, span: .thisEvent, commit: true)
@@ -239,7 +270,7 @@ struct EventEnvironment {
                     promise(.success(actions))
                 } catch {
                     let actions: [AppAction] = [
-                        .setEventErrorMessage("An error occured when update an existing event."),
+                        .setEventErrorMessage("An error occurred while updating an existing event."),
                         .setShowError(true)
                     ]
                     promise(.success(actions))
@@ -249,16 +280,24 @@ struct EventEnvironment {
     }
 
     /// Remove the given event and directly commit the change directly to the default EventStore.
-    func removeEvent(_ event: EKEvent) -> AnyPublisher<AppAction, Never> {
+    func removeEvent(_ event: Event) -> AnyPublisher<AppAction, Never> {
         makeActions {
             Future { promise in
+                guard
+                    let identifier = event.eventIdentifier,
+                    let targetEvent = eventStore.event(withIdentifier: identifier)
+                else {
+                    promise(.success([.empty]))
+                    return
+                }
+
                 do {
-                    try eventStore.remove(event, span: .thisEvent, commit: true)
+                    try eventStore.remove(targetEvent, span: .thisEvent, commit: true)
                     let actions: [AppAction] = [.empty]
                     promise(.success(actions))
                 } catch {
                     let actions: [AppAction] = [
-                        .setEventErrorMessage("An error occured when remove an existing event."),
+                        .setEventErrorMessage("An error occurred while deleting an existing event."),
                         .setShowError(true)
                     ]
                     promise(.success(actions))

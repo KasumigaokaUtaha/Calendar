@@ -115,7 +115,7 @@ func appReducer(
         state.scrollToToday = false
     case let .setShowAlert(showAlert):
         state.showAlert = showAlert
-    case let.setAlertTitle(title):
+    case let .setAlertTitle(title):
         state.alertTitle = title
     case let .setAlertMessage(message):
         state.alertMessage = message
@@ -124,8 +124,6 @@ func appReducer(
     case let .setEventErrorMessage(errorMessage):
         state.errorMessage = errorMessage
         state.showError = errorMessage != ""
-    case let .saveEvent(newEvent):
-        return environment.event.addEvent(newEvent)
     case let .open(tab):
         // TODO: adapt state according to the new tab if necessary
         state.currentTab = tab
@@ -135,6 +133,12 @@ func appReducer(
         state.selectedMonth = month
     case let .setSelectedEvent(event):
         state.selectedEvent = event
+    case let .addEvent(newEvent):
+        return environment.event.addEvent(newEvent)
+    case let .updateEvent(newEvent):
+        return environment.event.updateEvent(with: newEvent)
+    case let .removeEvent(event):
+        return environment.event.removeEvent(event)
     case .loadAppStorageProperties:
         state.activatedCalendars = state.storedActivatedCalendars.toStringArray() ?? []
     case let .setActivatedCalendars(names):
@@ -159,7 +163,18 @@ func appReducer(
         allActivatedCalendars.remove(at: index)
         return Just(AppAction.setActivatedCalendars(allActivatedCalendars))
             .eraseToAnyPublisher()
-    case .requestAccess(let entityType):
+    case let .loadDefaultCalendar(entityType):
+        return environment.event.getDefaultCalendar(for: entityType)
+    case let .setDefaultCalendar(calendar, entityType):
+        switch entityType {
+        case .event:
+            state.defaultEventCalendar = calendar
+        case .reminder:
+            state.defaultReminderCalendar = calendar
+        @unknown default:
+            fatalError()
+        }
+    case let .requestAccess(entityType):
         return environment.event.requestAccess(to: entityType)
     }
     return nil
