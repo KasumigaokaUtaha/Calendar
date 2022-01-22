@@ -71,6 +71,10 @@ struct AppState {
 
     var defaultEventCalendar: EKCalendar!
     var defaultReminderCalendar: EKCalendar!
+    
+    var allSources: [EKSource]
+    var sourceToCalendars: [EKSource: [EKCalendar]]
+    var sourceTitleToCalendarTitles: [String: [String]]
 
     init() {
         years = [:]
@@ -96,5 +100,9 @@ struct AppState {
         selectedYear = currentYear
         selectedMonth = calendar.component(.month, from: currentDate)
         activatedCalendars = []
+        
+        allSources = []
+        sourceToCalendars = [:]
+        sourceTitleToCalendarTitles = [:]
     }
 }

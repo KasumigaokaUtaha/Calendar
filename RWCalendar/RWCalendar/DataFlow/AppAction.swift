@@ -47,6 +47,15 @@ enum AppAction {
 
     case loadDefaultCalendar(for: EKEntityType)
     case setDefaultCalendar(EKCalendar, for: EKEntityType)
+    
+    case loadAllSources
+    case setAllSources([EKSource])
+    
+    case loadSourceToCalendars(for: EKEntityType)
+    case setSourceToCalendars([EKSource: [EKCalendar]])
+    
+    case loadSourceTitleToCalendarTitles(for: EKEntityType)
+    case setSourceTitleToCalendarTitles([String: [String]])
 
     // MARK: - Year View Actions
 

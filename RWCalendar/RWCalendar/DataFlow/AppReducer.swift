@@ -176,6 +176,18 @@ func appReducer(
         }
     case let .requestAccess(entityType):
         return environment.event.requestAccess(to: entityType)
+    case .loadAllSources:
+        return environment.event.getAllSources()
+    case let .setAllSources(sources):
+        state.allSources = sources
+    case let .loadSourceToCalendars(entityType):
+        return environment.event.getSourceToCalendars(for: entityType)
+    case let .setSourceToCalendars(values):
+        state.sourceToCalendars = values
+    case let .loadSourceTitleToCalendarTitles(entityType):
+        return environment.event.getSourceTitleToCalendarTitles(for: entityType)
+    case let .setSourceTitleToCalendarTitles(values):
+        state.sourceTitleToCalendarTitles = values
     }
     return nil
 }
