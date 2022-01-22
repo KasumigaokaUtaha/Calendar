@@ -63,7 +63,7 @@ struct EventEnvironment {
                                 .setEventErrorMessage(
                                     "Some internal errors happened. Please send an email with the log to our support email address."
                                 ),
-                            AppAction.setShowError(true)
+                            AppAction.setShowError(true),
                         ]
                         promise(.success(actions))
                         return
@@ -77,7 +77,7 @@ struct EventEnvironment {
                                 .setAlertMessage(
                                     "This app won't work without access rights to your calendar events. Please grant this app access rights in the system settings and try againt later."
                                 ),
-                            AppAction.setShowAlert(true)
+                            AppAction.setShowAlert(true),
                         ]
                     } else {
                         // Access granted
@@ -112,7 +112,7 @@ struct EventEnvironment {
                     .setAlertMessage(
                         "This app won't work without access rights to your calendar events. Please grant this app access rights in the system settings and try againt later."
                     ),
-                AppAction.setShowAlert(true)
+                AppAction.setShowAlert(true),
             ]
             .publisher
             .flatMap { Just($0) }
@@ -129,7 +129,7 @@ struct EventEnvironment {
                     .setAlertMessage(
                         "You are in restricted mode which means you cannot grant this app access rights to your calendar events. Please try again later."
                     ),
-                AppAction.setShowAlert(true)
+                AppAction.setShowAlert(true),
             ]
             .publisher
             .flatMap { Just($0) }
@@ -230,6 +230,38 @@ struct EventEnvironment {
         return eventsMatching(withStart: startOfMonth, end: endOfMonth, calendars: activatedCalendars)
     }
 
+    func getEventsForYear(date: Date, with activaedCalendars: [EKCalendar]?) -> [Event] {
+        let year = Calendar.current.component(.year, from: date)
+
+        let firstOfThisYear = Calendar.current.date(from: DateComponents(year: year + 1, month: 1, day: 1))
+        if let firstOfNextYear = Calendar.current.date(from: DateComponents(year: year + 1, month: 1, day: 1)) {
+            let lastOfYear = Calendar.current.date(byAdding: .day, value: -1, to: firstOfNextYear)
+            return eventsMatching(withStart: firstOfThisYear!, end: lastOfYear!, calendars: activaedCalendars)
+        }
+        return []
+    }
+
+    func getEventsWithSearchTwoYearsBeforeAndAfter(str: String, date: Date, calendars activatedCalendars: [EKCalendar]?) -> [Event] {
+        var keyArray = str.components(separatedBy: " ")
+        for i in keyArray.indices {
+            keyArray[i] = keyArray[i].trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        let year = Calendar.current.component(.year, from: date)
+        let day_1 = Calendar.current.date(from: DateComponents(year: year - 2, month: 1, day: 1))
+        let day_2 = Calendar.current.date(from: DateComponents(year: year - 1, month: 1, day: 1))
+        let day_3 = Calendar.current.date(from: DateComponents(year: year + 1, month: 1, day: 1))
+        let day_4 = Calendar.current.date(from: DateComponents(year: year + 2, month: 1, day: 1))
+        var raw_events = getEventsForYear(date: date, with: activatedCalendars)
+        raw_events += getEventsForYear(date: day_1!, with: activatedCalendars)
+        raw_events += getEventsForYear(date: day_2!, with: activatedCalendars)
+        raw_events += getEventsForYear(date: day_3!, with: activatedCalendars)
+        raw_events += getEventsForYear(date: day_4!, with: activatedCalendars)
+        for key in keyArray {
+            raw_events = raw_events.filter { $0.title.contains(key) }
+        }
+        return raw_events
+    }
+
     /// Add the given event to the default EventStore and directly commit the changes.
     func addEvent(_ event: Event) -> AnyPublisher<AppAction, Never> {
         makeActions {
@@ -243,7 +275,7 @@ struct EventEnvironment {
                 } catch {
                     let actions: [AppAction] = [
                         .setEventErrorMessage("An error occurred while saving a new event."),
-                        .setShowError(true)
+                        .setShowError(true),
                     ]
                     promise(.success(actions))
                 }
@@ -271,7 +303,7 @@ struct EventEnvironment {
                 } catch {
                     let actions: [AppAction] = [
                         .setEventErrorMessage("An error occurred while updating an existing event."),
-                        .setShowError(true)
+                        .setShowError(true),
                     ]
                     promise(.success(actions))
                 }
@@ -298,7 +330,7 @@ struct EventEnvironment {
                 } catch {
                     let actions: [AppAction] = [
                         .setEventErrorMessage("An error occurred while deleting an existing event."),
-                        .setShowError(true)
+                        .setShowError(true),
                     ]
                     promise(.success(actions))
                 }
