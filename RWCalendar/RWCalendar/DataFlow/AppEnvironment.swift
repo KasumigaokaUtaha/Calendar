@@ -241,11 +241,7 @@ struct EventEnvironment {
         return []
     }
 
-    func getEventsWithSearchTwoYearsBeforeAndAfter(str: String, date: Date, calendars activatedCalendars: [EKCalendar]?) -> [Event] {
-        var keyArray = str.components(separatedBy: " ")
-        for i in keyArray.indices {
-            keyArray[i] = keyArray[i].trimmingCharacters(in: .whitespacesAndNewlines)
-        }
+    func getEventsWithSearchTwoYearsBeforeAndAfter(date: Date, calendars activatedCalendars: [EKCalendar]?) -> [Event] {
         let year = Calendar.current.component(.year, from: date)
         let day_1 = Calendar.current.date(from: DateComponents(year: year - 2, month: 1, day: 1))
         let day_2 = Calendar.current.date(from: DateComponents(year: year - 1, month: 1, day: 1))
@@ -256,6 +252,16 @@ struct EventEnvironment {
         raw_events += getEventsForYear(date: day_2!, with: activatedCalendars)
         raw_events += getEventsForYear(date: day_3!, with: activatedCalendars)
         raw_events += getEventsForYear(date: day_4!, with: activatedCalendars)
+
+        return raw_events
+    }
+
+    func searchEventsByName(str: String, events: [Event]) -> [Event] {
+        var keyArray = str.components(separatedBy: " ")
+        for i in keyArray.indices {
+            keyArray[i] = keyArray[i].trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        var raw_events = events
         for key in keyArray {
             raw_events = raw_events.filter { $0.title.contains(key) }
         }

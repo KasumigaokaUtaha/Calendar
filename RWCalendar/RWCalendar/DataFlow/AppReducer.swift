@@ -176,6 +176,8 @@ func appReducer(
         }
     case let .requestAccess(entityType):
         return environment.event.requestAccess(to: entityType)
+    case let .setSearchRange(events):
+         state.searchRange = events
     }
     return nil
 }
