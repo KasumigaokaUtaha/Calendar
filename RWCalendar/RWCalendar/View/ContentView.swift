@@ -9,9 +9,12 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
+    @EnvironmentObject var customizationData: CustomizationData
+
     @Environment(\.openURL) var openURL
 
     @State var showAlert = false
+
 
     var body: some View {
         if #available(iOS 15, *) {
@@ -48,8 +51,9 @@ struct ContentView: View {
                         showAlert = state.showAlert
                     }
                 }
-        }
+            }
     }
+
 
     @ViewBuilder func makeContent() -> some View {
         switch store.state.currentTab {
@@ -83,14 +87,13 @@ struct ContentView: View {
             CalendarDayView()
         case .settings:
             ContainerView {
-                // TODO: replace with actual view
-                Text("settings")
+                SettingView()
+                    .navigationTitle(Text("Settings"))
+//                    .background(Color(customizationData.selectedTheme.backgroundColor).edgesIgnoringSafeArea(.all))
+                    .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
+                    .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
             } makeNavigationBarButton: {
-                Button {
-                    store.send(.setScrollToToday(withAnimation: true))
-                } label: {
-                    Text("Today")
-                }
+                Text("")
             }
 
         case .onboarding:
