@@ -149,8 +149,7 @@ func appReducer(
             return nil
         }
 
-        let dateCount = state.calendar.component(.day, from: event.endDate) - state.calendar
-            .component(.day, from: event.startDate)
+        let dateCount = state.calendar.numberOfDaysBetween(from: event.startDate, to: event.endDate)
         let dates = (0 ... dateCount)
             .compactMap { offset in state.calendar.date(byAdding: .day, value: offset, to: startDate) }
         let keys: [RWDate] = dates.map { .init(date: $0, calendar: state.calendar) }
