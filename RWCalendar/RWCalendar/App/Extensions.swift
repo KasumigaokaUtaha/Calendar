@@ -20,6 +20,16 @@ extension Data {
     }
 }
 
+extension Calendar {
+    func numberOfDaysBetween(from start: Date, to end: Date) -> Int {
+        let startDate = startOfDay(for: start)
+        let endDate = startOfDay(for: end)
+        let numberOfDays = dateComponents([.day], from: startDate, to: endDate)
+        
+        return numberOfDays.day!
+    }
+}
+
 extension EKEvent {
     convenience init(event: Event, eventStore: EKEventStore) {
         self.init(eventStore: eventStore)

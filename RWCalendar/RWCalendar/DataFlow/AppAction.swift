@@ -35,7 +35,14 @@ enum AppAction {
     case addEvent(Event)
     case updateEvent(with: Event)
     case removeEvent(Event)
-
+    
+    /// Add event to the state dateToEventIDs
+    case addEventToLocalStore(Event)
+    /// Update event stored in the state dateToEventIDs
+    case updateEvenInLocalStore(Event)
+    /// Remove event stored in the state dateToEventIDs
+    case removeEventFromLocalStore(Event)
+    
     case setSelectedEvent(Event)
     case setEventErrorMessage(String)
     case setActivatedCalendars(_ names: [String])
