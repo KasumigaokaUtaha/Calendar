@@ -30,15 +30,58 @@ struct EventLabel: View {
 struct EventsListView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
 
+    var eventIDs: [String]? {
+        guard let selectedDate = store.state.selectedDate else {
+            return nil
+        }
+
+        return store.state.dateToEventIDs[
+            .init(date: selectedDate, calendar: store.state.calendar)
+        ]
+    }
+
     var body: some View {
         ScrollView {
-            if store.state.eventList.count == 0 {
-                Text("No events")
+            if let eventIDs = eventIDs {
+                if eventIDs.count > 0 {
+                    List(events(with: eventIDs), id: \.eventIdentifier) { event in
+                        EventLabel(event: event)
+                    }
+                } else {
+                    Text("No events")
+                }
             } else {
-                List(store.state.eventList, id: \.title) {
-                    event in EventLabel(event: event)
+                Text("No events")
+            }
+        }
+    }
+
+    func events(with eventIDs: [String]) -> [Event] {
+        var events: [Event] = []
+
+        for eventID in eventIDs {
+            if let event = store.state.eventIDToEvent[eventID] {
+                if store.state.recurringEventIDs.contains(eventID) {
+                    guard
+                        let selectedDate = store.state.selectedDate,
+                        let recurrenceRule = event.recurrenceRule,
+                        let nextRecurringEvent = Util.nextRecurringEvent(
+                            for: event,
+                            at: selectedDate,
+                            with: recurrenceRule,
+                            calendar: store.state.calendar
+                        )
+                    else {
+                        continue
+                    }
+
+                    events.append(nextRecurringEvent)
+                } else {
+                    events.append(event)
                 }
             }
         }
+
+        return events
     }
 }
