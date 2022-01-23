@@ -49,8 +49,20 @@ struct AppState {
     ///
     /// This value may be used when navigating from year view to other views to provide
     /// additional information
-    var selectedYear: Int
-    var selectedMonth: Int
+    @AppStorage("selectedYear")
+    var selectedYear: Int = Calendar.current.component(.year, from: Date())
+    /// The currently selected month
+    ///
+    /// This value may be used when navigating from year view to other views to provide
+    /// additional information
+    @AppStorage("selectedMonth")
+    var selectedMonth: Int = Calendar.current.component(.month, from: Date())
+    /// The currently selected day
+    ///
+    /// This value may be used when navigating from year view to other views to provide
+    /// additional information
+    @AppStorage("selectedDay")
+    var selectedDay: Int = Calendar.current.component(.day, from: Date())
 
     // MARK: - Route States
 
@@ -69,9 +81,10 @@ struct AppState {
     var allEventIDs: [String]
     var recurringEventIDs: [String]
 
-    @AppStorage("activatedCalendars")
-    var storedActivatedCalendars = Data([])
-    var activatedCalendars: [String]
+    @AppStorage("activatedCalendarNames")
+    var storedActivatedCalendarNames = Data([])
+    var activatedCalendarNames: [String]
+    var activatedCalendars: [EKCalendar]
 
     var defaultEventCalendar: EKCalendar!
     var defaultReminderCalendar: EKCalendar!
@@ -100,8 +113,7 @@ struct AppState {
         allEventIDs = []
         recurringEventIDs = []
         
-        selectedYear = currentYear
-        selectedMonth = calendar.component(.month, from: currentDate)
+        activatedCalendarNames = []
         activatedCalendars = []
     }
 }
