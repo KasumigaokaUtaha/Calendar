@@ -85,5 +85,3 @@ struct EventsListView: View {
         return events
     }
 }
-
-

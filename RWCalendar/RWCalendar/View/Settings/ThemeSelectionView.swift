@@ -9,10 +9,10 @@ import SwiftUI
 
 struct ThemeSelectionView: View {
     @EnvironmentObject var customizationData: CustomizationData
-    
+
     var body: some View {
         ScrollView {
-            ForEach(0..<ThemeManager.themes.count, id: \.self) { theme in
+            ForEach(0 ..< ThemeManager.themes.count, id: \.self) { theme in
                 Button(action: {
                     customizationData.savedThemeChoice = theme
                 }) {
@@ -20,12 +20,11 @@ struct ThemeSelectionView: View {
                         HStack {
                             Text(ThemeManager.themes[theme].themeName)
                                 .font(.title)
-                            if (theme == customizationData.savedThemeChoice) {
+                            if theme == customizationData.savedThemeChoice {
                                 Image(systemName: "checkmark.seal.fill")
                                     .foregroundColor(Color(ThemeManager.themes[theme].foregroundColor))
                             }
                             Spacer()
-                            
                         }
                         Spacer()
                         HStack {
@@ -40,12 +39,17 @@ struct ThemeSelectionView: View {
                     }
                     .padding()
                 }
-                    .buttonStyle(FilledRoundedCornerButtonStyle(minHeight:80, backgroundColor: Color(ThemeManager.themes[theme].backgroundColor), foregroundColor: Color(ThemeManager.themes[theme].foregroundColor), primaryColor: Color(ThemeManager.themes[theme].primaryColor)))
-                    .disabled(theme == customizationData.savedThemeChoice)
+                .buttonStyle(FilledRoundedCornerButtonStyle(
+                    minHeight: 80,
+                    backgroundColor: Color(ThemeManager.themes[theme].backgroundColor),
+                    foregroundColor: Color(ThemeManager.themes[theme].foregroundColor),
+                    primaryColor: Color(ThemeManager.themes[theme].primaryColor)
+                ))
+                .disabled(theme == customizationData.savedThemeChoice)
             }
         }
         .padding()
-        
+
         .navigationBarTitle(Text("Themes"), displayMode: .inline)
     }
 }

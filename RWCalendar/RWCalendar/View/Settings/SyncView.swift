@@ -7,34 +7,32 @@
 
 // For the reference for creating events and synchronize with iCloud
 
-import SwiftUI
 import EventKit
+import SwiftUI
 
 struct SyncView: View {
     @EnvironmentObject var customizationData: CustomizationData
-    
+
     var eventStore: EKEventStore
     @State private var remoteSource: EKSource
     @State private var remoteCalendar: EKCalendar
-    
-    @State private var eventName: String = ""
-    @State private var startDate: Date = Date()
-    @State private var endDate: Date = Date() + 60
-    
-    @State private var disable: Bool = false
-    
-    init()
-    {
-        var addRWCalendar: Bool = true
-        
+
+    @State private var eventName = ""
+    @State private var startDate = Date()
+    @State private var endDate = Date() + 60
+
+    @State private var disable = false
+
+    init() {
+        var addRWCalendar = true
+
         eventStore = EKEventStore()
-        
+
         // Request access to events.
         eventStore.requestAccess(to: .event) { granted, error in
             if granted, error == nil {
                 print("Grant access for Event succeeded!")
-            }
-            else {
+            } else {
                 print("Grant access for Event failed!")
             }
         }
@@ -42,32 +40,30 @@ struct SyncView: View {
         eventStore.requestAccess(to: .reminder) { granted, error in
             if granted, error == nil {
                 print("Grant access for Reminder succeeded!")
-            }
-            else {
+            } else {
                 print("Grant access for Reminder failed!")
             }
         }
-        
+
         _remoteSource = State(initialValue: EKSource())
         _remoteCalendar = State(initialValue: EKCalendar(for: EKEntityType.event, eventStore: eventStore))
-        
+
         for source in eventStore.sources {
-            if source.sourceType == EKSourceType.calDAV && source.title == "iCloud" {
+            if source.sourceType == EKSourceType.calDAV, source.title == "iCloud" {
                 _remoteSource = State(initialValue: source)
                 break
             }
         }
-        
-        
+
         for calendar in eventStore.calendars(for: EKEntityType.event) {
-            if calendar.type == EKCalendarType.calDAV && calendar.title == "RWCalendar" {
+            if calendar.type == EKCalendarType.calDAV, calendar.title == "RWCalendar" {
                 _remoteCalendar = State(initialValue: calendar)
                 addRWCalendar = false
                 break
             }
         }
-        
-        if (addRWCalendar) {
+
+        if addRWCalendar {
             let calendar = EKCalendar(for: EKEntityType.event, eventStore: eventStore)
             calendar.source = remoteSource
             calendar.title = "RWCalendar"
@@ -78,10 +74,10 @@ struct SyncView: View {
                 print("Create RWCalendar failed")
             }
         }
-        
+
         _disable = State(initialValue: eventName == "" || startDate >= endDate)
     }
-    
+
     var body: some View {
         Form {
             Section {
@@ -91,16 +87,16 @@ struct SyncView: View {
                     Text(remoteSource.title)
                         .foregroundColor(.gray)
                 }
-                
+
                 Picker(selection: $remoteCalendar, label: Text("Calendar Name"), content: {
-                    ForEach (0..<eventStore.calendars(for: EKEntityType.event).count, id: \.self) { idx in
-                        if (eventStore.calendars(for: EKEntityType.event)[idx].source == remoteSource) {
+                    ForEach(0 ..< eventStore.calendars(for: EKEntityType.event).count, id: \.self) { idx in
+                        if eventStore.calendars(for: EKEntityType.event)[idx].source == remoteSource {
                             Text(eventStore.calendars(for: EKEntityType.event)[idx].title)
                                 .tag(eventStore.calendars(for: EKEntityType.event)[idx])
                         }
                     }
                 })
-                
+
                 HStack {
                     Text("Event Name")
                     Spacer()
@@ -111,7 +107,7 @@ struct SyncView: View {
                             disable = eventName == "" || startDate >= endDate
                         }
                 }
-                
+
                 DatePicker("Start Date", selection: $startDate, displayedComponents: [.date, .hourAndMinute])
                     .onChange(of: startDate) { _ in
                         disable = eventName == "" || startDate >= endDate
@@ -121,11 +117,11 @@ struct SyncView: View {
                         disable = eventName == "" || startDate >= endDate
                     }
             }
-            
+
             Section {
                 HStack {
                     Spacer()
-                    Button ("Add Event") {
+                    Button("Add Event") {
                         let event = EKEvent(eventStore: eventStore)
                         event.calendar = remoteCalendar
                         event.title = eventName
@@ -138,12 +134,11 @@ struct SyncView: View {
                         }
                     }
                     .disabled(disable == true)
-                    
+
                     Spacer()
                 }
             }
         }
-        
     }
 }
 
@@ -152,4 +147,3 @@ struct SyncView_Previews: PreviewProvider {
         SyncView()
     }
 }
-

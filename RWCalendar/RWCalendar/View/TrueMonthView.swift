@@ -126,7 +126,6 @@ extension TrueMonthView {
 
                 Menu {
                     // #TODO: add event menu that collabs with event view
-                    // Text("add navilinks to add events")
                     if store.state.defaultEventCalendar != nil {
                         EventEditView(nil, defaultEventCalendar: store.state.defaultEventCalendar)
 
@@ -190,8 +189,13 @@ extension TrueMonthView {
         }
     }
 
-    func checkEvent(eventDate: Date, date: Date) -> Bool {
-        Calendar.current.isDate(eventDate, inSameDayAs: date)
+    func checkEvent(date: Date) -> Bool {
+        for EventList in store.state.eventIDToEvent {
+            return Calendar.current.isDate(EventList.value.startDate, inSameDayAs: date) ? true : false
+        }
+
+        return false
+        // Calendar.current.isDate(eventDate, inSameDayAs: date)
     }
 
     @ViewBuilder
@@ -202,21 +206,17 @@ extension TrueMonthView {
                     .frame(maxWidth: .infinity)
                     .foregroundColor(isToday(date: value.date) ? .blue : .primary)
 
-                if store.state.currentEvent != nil {
-                    Circle()
-                        .fill(
-                            checkEvent(eventDate: store.state.currentEvent!.startDate, date: value.date) ?
-                                Color.red : Color.white
-                        )
-                        .frame(width: 7, height: 7)
-                }
+                Circle()
+                    .fill(
+                        checkEvent(date: value.date) ?
+                            Color.red : Color.white
+                    )
+                    .frame(width: 7, height: 7)
             }
         }
         .frame(alignment: .top)
         .padding(.vertical, -15)
 
         .padding()
-        // .onChange(of: curDate) { _ in
-        // }
     }
 }
