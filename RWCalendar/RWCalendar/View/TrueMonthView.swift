@@ -48,6 +48,8 @@ struct TrueMonthView: View {
                         )
                         .onTapGesture {
                             curDate = value.date
+                            store.send(.setSelectedDay(Calendar.current.component(.day, from: value.date)))
+                            
                         }
                 }
 
@@ -116,6 +118,7 @@ extension TrueMonthView {
                 makeMenu()
                 Button("Today") {
                     curDate = Date()
+                    store.send(.setSelectedDay(Calendar.current.component(.day, from: Date())))
                 }
                 // years and months
                 Text(RWCalendar.dateToString(date: curDate)[1])
@@ -145,8 +148,11 @@ extension TrueMonthView {
         VStack {
             Text("Events")
                 .font(.title.bold())
-
-            EventsListView()
+            if checkEvent(date: curDate) {
+                EventsListView()
+                
+            }
+           
         }
         // .navigationBarTitle(Text("Task"))
     }

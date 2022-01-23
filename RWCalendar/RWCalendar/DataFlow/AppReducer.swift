@@ -131,6 +131,8 @@ func appReducer(
         state.selectedYear = year
     case let .setSelectedMonth(month):
         state.selectedMonth = month
+    case let .setSelectedDay(day):
+        state.selectedDay = day
     case let .setSelectedEvent(event):
         state.selectedEvent = event
     case let .loadEventsForYear(date):
