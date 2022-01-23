@@ -164,7 +164,8 @@ struct EventEditView: View {
                         url: url,
                         notes: notes,
                         reminderTime: reminderTime,
-                        eventIdentifier: event?.eventIdentifier
+                        eventIdentifier: event?.eventIdentifier,
+                        recurrenceRule: event?.recurrenceRule
                     )
 
                     if event != nil {

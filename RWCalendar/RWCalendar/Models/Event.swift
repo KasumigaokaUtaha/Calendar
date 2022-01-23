@@ -17,7 +17,11 @@ struct Event {
     var notes: String?
     var alarms: [EKAlarm]?
     var eventIdentifier: String?
+    var recurrenceRule: EKRecurrenceRule?
 
+    var hasRecurrenceRule: Bool {
+        recurrenceRule != nil
+    }
     var reminderTime: ReminderTime? {
         get {
             guard
@@ -46,7 +50,8 @@ struct Event {
         url: String?,
         notes: String?,
         reminderTime: ReminderTime?,
-        eventIdentifier: String?
+        eventIdentifier: String?,
+        recurrenceRule: EKRecurrenceRule?
     ) {
         self.title = title
         self.startDate = startDate
@@ -55,6 +60,7 @@ struct Event {
         self.url = url
         self.notes = notes
         self.eventIdentifier = eventIdentifier
+        self.recurrenceRule = recurrenceRule
 
         if let time = reminderTime {
             alarms = [.init(relativeOffset: time.rawValue)]

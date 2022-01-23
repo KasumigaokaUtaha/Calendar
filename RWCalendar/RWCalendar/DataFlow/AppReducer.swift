@@ -139,6 +139,81 @@ func appReducer(
         return environment.event.updateEvent(with: newEvent)
     case let .removeEvent(event):
         return environment.event.removeEvent(event)
+    case let .addEventToLocalStore(event), let .removeEventFromLocalStore(event):
+        guard
+            event.endDate >= event.startDate,
+            let eventIdentifier = event.eventIdentifier,
+            let startDate = state.calendar
+                .date(from: state.calendar.dateComponents([.year, .month, .day], from: event.startDate))
+        else {
+            return nil
+        }
+
+        let dateCount = state.calendar.component(.day, from: event.endDate) - state.calendar
+            .component(.day, from: event.startDate)
+        let dates = (0 ... dateCount)
+            .compactMap { offset in state.calendar.date(byAdding: .day, value: offset, to: startDate) }
+        let keys: [RWDate] = dates.map { .init(date: $0, calendar: state.calendar) }
+        
+        switch action {
+        case .addEventToLocalStore(_):
+            for key in keys {
+                if !state.dateToEventIDs.keys.contains(key) {
+                    state.dateToEventIDs[key] = []
+                }
+
+                var values = state.dateToEventIDs[key]!
+                values.append(eventIdentifier)
+                state.dateToEventIDs.updateValue(values, forKey: key)
+            }
+
+            if !state.eventIDToEvent.keys.contains(eventIdentifier) {
+                state.eventIDToEvent.updateValue(event, forKey: eventIdentifier)
+            } else {
+                // Log non unique event identifier
+            }
+
+            if !state.allEventIDs.contains(eventIdentifier) {
+                state.allEventIDs.append(eventIdentifier)
+            } else {
+                // Log non unique event identifier
+            }
+
+            if event.hasRecurrenceRule, !state.recurringEventIDs.contains(eventIdentifier) {
+                state.recurringEventIDs.append(eventIdentifier)
+            }
+        case .removeEventFromLocalStore(_):
+            for key in keys {
+                guard
+                    state.dateToEventIDs.keys.contains(key),
+                    let index = state.dateToEventIDs[key]!.firstIndex(of: eventIdentifier)
+                else {
+                    continue
+                }
+                
+                var values = state.dateToEventIDs[key]!
+                values.remove(at: index)
+                state.dateToEventIDs.updateValue(values, forKey: key)
+            }
+            
+            state.eventIDToEvent.removeValue(forKey: eventIdentifier)
+            if let index = state.allEventIDs.firstIndex(of: eventIdentifier) {
+                state.allEventIDs.remove(at: index)
+            }
+            if event.hasRecurrenceRule, let index = state.recurringEventIDs.firstIndex(of: eventIdentifier) {
+                state.recurringEventIDs.remove(at: index)
+            }
+        default:
+            fatalError()
+        }
+    case let .updateEvenInLocalStore(event):
+        return [
+            AppAction.removeEventFromLocalStore(event),
+            AppAction.addEventToLocalStore(event)
+        ]
+        .publisher
+        .flatMap { action in Just(action) }
+        .eraseToAnyPublisher()
     case .loadAppStorageProperties:
         state.activatedCalendars = state.storedActivatedCalendars.toStringArray() ?? []
     case let .setActivatedCalendars(names):
