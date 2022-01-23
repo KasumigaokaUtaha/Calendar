@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 struct TextBoxStyle {
-    var padding: UIEdgeInsets = .init(top: 1, left: 1, bottom: 1, right: 1)
-    var cornerRadius: CGFloat = 8
-    var foregroundColor: UIColor = .systemRed
+    var cornerRadius: CGFloat = 4
+    var foregroundColor: UIColor = .white
+    var backgroundColor: UIColor = .systemRed
 }

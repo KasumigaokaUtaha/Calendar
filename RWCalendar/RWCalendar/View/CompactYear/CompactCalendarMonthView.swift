@@ -165,18 +165,18 @@ struct CompactCalendarMonthView: UIViewRepresentable {
                         NSString(string: day).draw(at: itemOrigin, withAttributes: attributes)
                     }
                 case .current:
-//                    if pos < currMonthDayStyles.count, let style = currMonthDayStyles[pos] {
-//                        print("draw style")
-//                        let path = UIBezierPath(roundedRect: CGRect(x: itemOrigin.x, y: itemOrigin.y, width: size.width, height: size.height), cornerRadius: style.cornerRadius)
-//                        let ctx = UIGraphicsGetCurrentContext()!
-//                        ctx.saveGState()
-//                        defer { ctx.restoreGState() }
-//                        ctx.addPath(path.cgPath)
-//                        ctx.setFillColor(style.foregroundColor.cgColor)
-//                        ctx.closePath()
-//                        ctx.fillPath()
-//                        attributes.updateValue(style.foregroundColor, forKey: .foregroundColor)
-//                    }
+                    if pos < currMonthDayStyles.count, let style = currMonthDayStyles[pos] {
+                        let dimension = max(size.width, size.height)
+                        let path = UIBezierPath(roundedRect: CGRect(x: maxItemOrigin.x, y: maxItemOrigin.y, width: dimension, height: dimension), cornerRadius: style.cornerRadius)
+                        let context = UIGraphicsGetCurrentContext()!
+                        context.saveGState()
+                        defer { context.restoreGState() }
+                        context.addPath(path.cgPath)
+                        context.setFillColor(style.backgroundColor.cgColor)
+                        context.closePath()
+                        context.fillPath()
+                        attributes.updateValue(style.foregroundColor, forKey: .foregroundColor)
+                    }
                     NSString(string: day).draw(at: itemOrigin, withAttributes: attributes)
                 case .future:
                     if showNextMonthDays {
