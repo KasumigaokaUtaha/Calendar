@@ -4,6 +4,7 @@
 //
 //  Created by Kasumigaoka Utaha on 27.12.21.
 //
+import EventKit
 import Foundation
 
 enum Util {
@@ -102,6 +103,24 @@ enum Util {
         return monthEnd
     }
 
+    static func startOfYear(date: Date, calendar: Calendar) -> Date? {
+        let yearStartComponents = calendar.dateComponents([.year], from: date)
+
+        return calendar.date(from: yearStartComponents)
+    }
+
+    static func endOfYear(date: Date, calendar: Calendar) -> Date? {
+        guard
+            let yearStart = startOfYear(date: date, calendar: calendar),
+            let nextYearStart = calendar.date(byAdding: .year, value: 1, to: yearStart),
+            let yearEnd = calendar.date(byAdding: .second, value: -1, to: nextYearStart)
+        else {
+            return nil
+        }
+
+        return yearEnd
+    }
+
     static func lastDayIn(year: Int, month: Int, calendar: Calendar) -> Date? {
         var nextMonth = month + 1
         var year = year
@@ -196,6 +215,84 @@ enum Util {
         }
 
         return nextDays
+    }
+}
+
+extension Util {
+    /// Only implements the basic recurrence rule
+    static func nextRecurringEvent(
+        for startEvent: Event,
+        at nextStartDate: Date,
+        with rule: EKRecurrenceRule,
+        calendar: Calendar
+    ) -> Event? {
+        guard
+            let nextStartDate = calendar
+                .date(from: calendar.dateComponents([.year, .month, .day], from: nextStartDate)),
+            let startDate = calendar
+                .date(from: calendar.dateComponents([.year, .month, .day], from: startEvent.startDate)),
+            startDate <= nextStartDate,
+            rule.interval > 0
+        else {
+            return nil
+        }
+
+        let daysBetweenStartAndNextStartDate = calendar.numberOfDaysBetween(
+            from: startEvent.startDate,
+            to: nextStartDate
+        )
+        let daysBetweenStartAndEndDate = calendar.numberOfDaysBetween(
+            from: startEvent.startDate,
+            to: startEvent.endDate
+        )
+
+        var nextDate = startDate
+        while nextDate <= nextStartDate {
+            if calendar.isDate(nextStartDate, inSameDayAs: nextDate) {
+                guard
+                    let nextStartDateTime = calendar.date(
+                        byAdding: .day,
+                        value: daysBetweenStartAndNextStartDate,
+                        to: startEvent.startDate
+                    ),
+                    let nextEndDate = calendar.date(byAdding: .day, value: daysBetweenStartAndEndDate, to: nextDate),
+                    let nextEndDateTime = calendar.date(
+                        byAdding: .day,
+                        value: calendar.numberOfDaysBetween(from: startEvent.endDate, to: nextEndDate),
+                        to: startEvent.endDate
+                    )
+                else {
+                    return nil
+                }
+
+                var nextEvent = startEvent
+                nextEvent.startDate = nextStartDateTime
+                nextEvent.endDate = nextEndDateTime
+
+                return nextEvent
+            }
+
+            // apply the basic recurrence rule to compute next date
+            var nextDateOpt: Date?
+            switch rule.frequency {
+            case .daily:
+                nextDateOpt = calendar.date(byAdding: .day, value: rule.interval, to: nextDate)
+            case .weekly:
+                nextDateOpt = calendar.date(byAdding: .day, value: rule.interval * 7, to: nextDate)
+            case .monthly:
+                nextDateOpt = calendar.date(byAdding: .month, value: rule.interval, to: nextDate)
+            case .yearly:
+                nextDateOpt = calendar.date(byAdding: .year, value: rule.interval, to: nextDate)
+            @unknown default:
+                fatalError()
+            }
+
+            guard nextDateOpt != nil else {
+                return nil
+            }
+            nextDate = nextDateOpt!
+        }
+        return nil
     }
 }
 

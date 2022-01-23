@@ -42,6 +42,7 @@ struct AppState {
     var errorMessage: String
     var alertMessage: String
 
+    var selectedDate: Date?
     // MARK: - Year Specific States
 
     /// The currently selected year
@@ -62,8 +63,11 @@ struct AppState {
     // MARK: - Event States
 
     var selectedEvent: Event?
-    var currentEvent: Event?
-    var eventList: [Event]
+    
+    var dateToEventIDs: [RWDate: [String]]
+    var eventIDToEvent: [String: Event]
+    var allEventIDs: [String]
+    var recurringEventIDs: [String]
 
     @AppStorage("activatedCalendars")
     var storedActivatedCalendars = Data([])
@@ -90,10 +94,13 @@ struct AppState {
 
         scrollToToday = false
         isScrollToTodayAnimated = false
-        currentEvent = nil
         showError = false
         errorMessage = ""
-        eventList = []
+        dateToEventIDs = [:]
+        eventIDToEvent = [:]
+        allEventIDs = []
+        recurringEventIDs = []
+        
         selectedYear = currentYear
         selectedMonth = calendar.component(.month, from: currentDate)
         activatedCalendars = []

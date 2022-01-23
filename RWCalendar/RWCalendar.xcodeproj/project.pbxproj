@@ -176,9 +176,9 @@
 		62E8AB54277DCF70007487E1 /* RWCalendar */ = {
 			isa = PBXGroup;
 			children = (
-				A1B4A5B3278B535400D8716F /* Helpers */,
 				62E8ABA7277DD046007487E1 /* App */,
 				62E8ABAB277DD063007487E1 /* DataFlow */,
+				A1B4A5B3278B535400D8716F /* Helpers */,
 				62E8ABAC277DD069007487E1 /* Models */,
 				62E8ABAE277DD073007487E1 /* View */,
 				62E8AB5B277DCF72007487E1 /* Preview Content */,
@@ -239,10 +239,10 @@
 		62E8ABAC277DD069007487E1 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				7082EAADED849AD5806FB8CF /* Tab.swift */,
 				62E8ABB9277DD0C9007487E1 /* Event.swift */,
 				62E8ABBB277DD0D0007487E1 /* DateData.swift */,
 				A1B4A5B9278B546100D8716F /* CustomizationData.swift */,
-				7082EAADED849AD5806FB8CF /* Tab.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -250,14 +250,14 @@
 		62E8ABAE277DD073007487E1 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				A1B4A5E4278C8F0500D8716F /* Settings */,
+				3B77E46978FAAA183DEEA701 /* CalendarWeekDay */,
+				AC037D78C80BBCBD0ECBEFB6 /* Event */,
 				62E8ABBD277DD0DE007487E1 /* ContentView.swift */,
 				6237E05F27820BD3009340D2 /* CompactCalendarYearView.swift */,
 				628252BA277E432300A8464B /* CompactCalendarMonthViewWrapper.swift */,
 				629B22F72784EFE300FA2494 /* CompactCalendarMonthView.swift */,
 				A1B4A5D0278C81D300D8716F /* WrapperView.swift */,
-				A1B4A5E4278C8F0500D8716F /* Settings */,
-				3B77E46978FAAA183DEEA701 /* CalendarWeekDay */,
-				AC037D78C80BBCBD0ECBEFB6 /* Event */,
 				1206E93BAF656AB759D4A668 /* TrueMonthView.swift */,
 				916F1E6D89E6D6F197D15CF9 /* ContainerView.swift */,
 				364D0D1C6A047E7A2D5F253F /* RWPageView.swift */,

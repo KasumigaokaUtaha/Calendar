@@ -189,45 +189,64 @@ struct EventEnvironment {
         return result
     }
 
-    private func eventsMatching(withStart start: Date, end: Date, calendars: [EKCalendar]?) -> [Event] {
-        let predicate = eventStore.predicateForEvents(withStart: start, end: end, calendars: calendars)
-        return eventStore.events(matching: predicate).map { .init(ekEvent: $0) }
+    private func addEventsMatching(withStart start: Date, end: Date, calendars: [EKCalendar]?) -> AnyPublisher<AppAction, Never> {
+        makeActions {
+            Future { promise in
+                let predicate = eventStore.predicateForEvents(withStart: start, end: end, calendars: calendars)
+                let events: [Event] = eventStore.events(matching: predicate).map { .init(ekEvent: $0) }
+                let actions: [AppAction] = events.map { event in .addEventToLocalStore(event)}
+                
+                promise(.success(actions))
+            }
+        }
     }
 
-    /// Returns all events in the given EKCalendars that fall in the given date.
-    func getEventsForDay(_ day: Date, calendar: Calendar, with activatedCalendars: [EKCalendar]?) -> [Event] {
+    /// Adds all events in the given EKCalendars that fall in the given date.
+    func addEventsForDay(_ day: Date, calendar: Calendar, with activatedCalendars: [EKCalendar]?) -> AnyPublisher<AppAction, Never> {
         guard
             let startOfDay = Util.startOfDay(day, calendar: calendar),
             let endOfDay = Util.endOfDay(day, calendar: calendar)
         else {
-            return []
+            return Just(AppAction.empty).eraseToAnyPublisher()
         }
 
-        return eventsMatching(withStart: startOfDay, end: endOfDay, calendars: activatedCalendars)
+        return addEventsMatching(withStart: startOfDay, end: endOfDay, calendars: activatedCalendars)
     }
 
-    /// Returns all events in the given EKCalendars that fall in the week of the given date.
-    func getEventsForWeek(date: Date, calendar: Calendar, with activatedCalendars: [EKCalendar]?) -> [Event] {
+    /// Adds all events in the given EKCalendars that fall in the week of the given date.
+    func addEventsForWeek(date: Date, calendar: Calendar, with activatedCalendars: [EKCalendar]?) -> AnyPublisher<AppAction, Never> {
         guard
             let startOfWeek = Util.startOfWeek(date: date, calendar: calendar),
             let endOfWeek = Util.endOfWeek(date: date, calendar: calendar)
         else {
-            return []
+            return Just(AppAction.empty).eraseToAnyPublisher()
         }
 
-        return eventsMatching(withStart: startOfWeek, end: endOfWeek, calendars: activatedCalendars)
+        return addEventsMatching(withStart: startOfWeek, end: endOfWeek, calendars: activatedCalendars)
     }
 
-    /// Returns all events in the given EKCalendars that fall in the month of the given date.
-    func getEventsForMonth(date: Date, calendar: Calendar, with activatedCalendars: [EKCalendar]?) -> [Event] {
+    /// Adds all events in the given EKCalendars that fall in the month of the given date.
+    func addEventsForMonth(date: Date, calendar: Calendar, with activatedCalendars: [EKCalendar]?) -> AnyPublisher<AppAction, Never> {
         guard
             let startOfMonth = Util.startOfMonth(date: date, calendar: calendar),
             let endOfMonth = Util.endOfMonth(date: date, calendar: calendar)
         else {
-            return []
+            return Just(AppAction.empty).eraseToAnyPublisher()
         }
 
-        return eventsMatching(withStart: startOfMonth, end: endOfMonth, calendars: activatedCalendars)
+        return addEventsMatching(withStart: startOfMonth, end: endOfMonth, calendars: activatedCalendars)
+    }
+
+    /// Adds all events in the given EKCalendars that fall in the year of the given date.
+    func addEventsForYear(date: Date, calendar: Calendar, with activatedCalendars: [EKCalendar]?) -> AnyPublisher<AppAction, Never> {
+        guard
+            let startOfYear = Util.startOfYear(date: date, calendar: calendar),
+            let endOfYear = Util.endOfYear(date: date, calendar: calendar)
+        else {
+            return Just(AppAction.empty).eraseToAnyPublisher()
+        }
+
+        return addEventsMatching(withStart: startOfYear, end: endOfYear, calendars: activatedCalendars)
     }
 
     func getEventsForYear(date: Date, with activaedCalendars: [EKCalendar]?) -> [Event] {
