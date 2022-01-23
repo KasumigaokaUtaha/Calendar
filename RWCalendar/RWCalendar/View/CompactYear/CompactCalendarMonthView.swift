@@ -13,6 +13,8 @@ struct CompactCalendarMonthView: UIViewRepresentable {
     let lastMonthDays: [String]
     let currMonthDays: [String]
     let nextMonthDays: [String]
+    let currMonthDayStyles: [TextBoxStyle?]
+
     let showLastMonthDays = false
     let showNextMonthDays = false
 
@@ -22,6 +24,7 @@ struct CompactCalendarMonthView: UIViewRepresentable {
         view.lastMonthDays = lastMonthDays
         view.currMonthDays = currMonthDays
         view.nextMonthDays = nextMonthDays
+        view.currMonthDayStyles = currMonthDayStyles
         view.showLastMonthDays = showLastMonthDays
         view.showNextMonthDays = showNextMonthDays
 
@@ -68,6 +71,7 @@ struct CompactCalendarMonthView: UIViewRepresentable {
                 self.maxItemSize = CGSize(width: maxWidth, height: maxHeight)
             }
         }
+        var currMonthDayStyles: [TextBoxStyle?]
 
         var showLastMonthDays = false
         var showNextMonthDays = false
@@ -93,6 +97,7 @@ struct CompactCalendarMonthView: UIViewRepresentable {
             lastMonthDays = []
             currMonthDays = []
             nextMonthDays = []
+            currMonthDayStyles = []
             itemSizes = [:]
             super.init(frame: frame)
             isOpaque = false
@@ -144,12 +149,12 @@ struct CompactCalendarMonthView: UIViewRepresentable {
                 allDays.append((nextMonthDay, .future))
             }
 
-            for (day, tense) in allDays {
+            for (pos, (day, tense)) in allDays.enumerated() {
                 let size = itemSizes[day]!
                 let xOffset = (maxItemSize.width - size.width) / 2.0
                 let yOffset = (maxItemSize.height - size.height) / 2.0
                 let itemOrigin = CGPoint(x: maxItemOrigin.x + xOffset, y: maxItemOrigin.y + yOffset)
-                let attributes: [NSAttributedString.Key: Any] = [
+                var attributes: [NSAttributedString.Key: Any] = [
                     .font: font,
                     .foregroundColor: tense == .current ? UIColor.label : UIColor.secondaryLabel
                 ]
@@ -160,6 +165,18 @@ struct CompactCalendarMonthView: UIViewRepresentable {
                         NSString(string: day).draw(at: itemOrigin, withAttributes: attributes)
                     }
                 case .current:
+//                    if pos < currMonthDayStyles.count, let style = currMonthDayStyles[pos] {
+//                        print("draw style")
+//                        let path = UIBezierPath(roundedRect: CGRect(x: itemOrigin.x, y: itemOrigin.y, width: size.width, height: size.height), cornerRadius: style.cornerRadius)
+//                        let ctx = UIGraphicsGetCurrentContext()!
+//                        ctx.saveGState()
+//                        defer { ctx.restoreGState() }
+//                        ctx.addPath(path.cgPath)
+//                        ctx.setFillColor(style.foregroundColor.cgColor)
+//                        ctx.closePath()
+//                        ctx.fillPath()
+//                        attributes.updateValue(style.foregroundColor, forKey: .foregroundColor)
+//                    }
                     NSString(string: day).draw(at: itemOrigin, withAttributes: attributes)
                 case .future:
                     if showNextMonthDays {
@@ -187,7 +204,8 @@ struct CompactCalendarMonthView_Previews: PreviewProvider {
             font: .systemFont(ofSize: 10),
             lastMonthDays: (25 ... 30).map { "\($0)" },
             currMonthDays: (1 ... 31).map { "\($0)" },
-            nextMonthDays: (1 ... 7).map { "\($0)" }
+            nextMonthDays: (1 ... 7).map { "\($0)" },
+            currMonthDayStyles: (1 ... 31).map { $0 == 6 ? TextBoxStyle() : nil }
         )
     }
 }
