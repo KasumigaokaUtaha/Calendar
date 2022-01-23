@@ -15,7 +15,6 @@ struct ContentView: View {
 
     @State var showAlert = false
 
-
     var body: some View {
         if #available(iOS 15, *) {
             makeContent()
@@ -51,9 +50,8 @@ struct ContentView: View {
                         showAlert = state.showAlert
                     }
                 }
-            }
+        }
     }
-
 
     @ViewBuilder func makeContent() -> some View {
         switch store.state.currentTab {
@@ -71,7 +69,6 @@ struct ContentView: View {
 
             MonthHome(curDate: Calendar.current.date(from: components())!)
 
-
         case .week:
             ContainerView {
                 // TODO: replace with actual view
@@ -85,13 +82,18 @@ struct ContentView: View {
             }
         case .day:
             CalendarDayView()
+
         case .settings:
+
             ContainerView {
+                Text("setting")
+
                 SettingView()
                     .navigationTitle(Text("Settings"))
-//                    .background(Color(customizationData.selectedTheme.backgroundColor).edgesIgnoringSafeArea(.all))
+                    .background(Color(customizationData.selectedTheme.backgroundColor).edgesIgnoringSafeArea(.all))
                     .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
                     .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
+
             } makeNavigationBarButton: {
                 Text("")
             }

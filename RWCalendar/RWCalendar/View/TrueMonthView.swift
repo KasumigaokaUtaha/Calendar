@@ -4,6 +4,7 @@
 //
 //  Created by Liangkun He on 04.01.22.
 //
+import EventKit
 import Foundation
 import SwiftUI
 
@@ -14,10 +15,11 @@ struct TrueMonthView: View {
     @Binding var curDate: Date
     @State private var offset: CGSize = .zero
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
+    @EnvironmentObject var customizationData: CustomizationData
 
     // #TODO: add a var to controll light and dark modes
     var body: some View {
-        VStack {
+        ScrollView {
             TitleView
 
             HStack {
@@ -28,19 +30,60 @@ struct TrueMonthView: View {
                 }
             }
 
-            DateView
+            // DateView
+            LazyVGrid(columns: dateArray, spacing: 25) {
+                ForEach(RWCalendar.getDate(date: curDate)) { value in
 
-            Spacer()
+                    DateView(value: value)
+
+                        .background(
+                            Circle()
+                                .strokeBorder(lineWidth: 0.5)
+                                .background(Color.purple)
+                                .opacity(
+                                    Calendar.current.isDate(value.date, inSameDayAs: curDate) && value
+                                        .day != 0 ? 0.5 : 0
+                                )
+                                .padding(.horizontal, 8)
+                        )
+                        .onTapGesture {
+                            curDate = value.date
+                        }
+                }
+
+                Spacer()
+            }
+
+            .gesture(
+                DragGesture(coordinateSpace: .local)
+                    .onChanged {
+                        self.offset = $0.translation
+                    }
+                    .onEnded {
+                        if $0.startLocation.x > $0.location.x + 20 {
+                            withAnimation {
+                                curDate = Calendar.current.date(byAdding: .month, value: 1, to: curDate)!
+                            }
+                        } else if $0.startLocation.x < $0.location.x - 20 {
+                            curDate = Calendar.current.date(byAdding: .month, value: -1, to: curDate)!
+                        }
+                        self.offset = .zero
+                    }
+            )
+
+            EventView
         }
     }
 }
 
 struct MonthHome: View {
     @State var curDate = Date()
+    // @EnvironmentObject var customizationData =  CustomizationData()
 
     var body: some View {
         VStack {
             TrueMonthView(curDate: $curDate)
+            // .background(Color(CustomizationData().selectedTheme.backgroundColor))
         }
     }
 }
@@ -83,46 +126,30 @@ extension TrueMonthView {
 
                 Menu {
                     // #TODO: add event menu that collabs with event view
-                    Text("add navilinks to add events")
+                    // Text("add navilinks to add events")
+                    if store.state.defaultEventCalendar != nil {
+                        EventEditView(nil, defaultEventCalendar: store.state.defaultEventCalendar)
+
+                    } else {
+                        Text("add navilinks to add events")
+                    }
+
                 } label: {
-                    Label("", systemImage: "pencil")
+                    Label("", systemImage: "plus")
                 }
             }
         }
-        .frame(width: .infinity, height: 150, alignment: .topLeading)
+        .frame(width: .infinity, height: 135, alignment: .topLeading)
     }
 
-    var DateView: some View {
-        LazyVGrid(columns: dateArray, spacing: 25) {
-            ForEach(RWCalendar.getDate(date: curDate)) { value in
+    var EventView: some View {
+        VStack {
+            Text("Events")
+                .font(.title.bold())
 
-                VStack {
-                    if value.day != 0 {
-                        Text("\(value.day)")
-                            .foregroundColor(isToday(date: value.date) ? .blue : .none)
-                    }
-                }
-            }
+            EventsListView()
         }
-        .gesture(
-            DragGesture(coordinateSpace: .local)
-                .onChanged {
-                    self.offset = $0.translation
-                }
-                .onEnded {
-                    if $0.startLocation.x > $0.location.x + 20 {
-                        withAnimation {
-                            curDate = Calendar.current.date(byAdding: .month, value: 1, to: curDate)!
-                        }
-                    } else if $0.startLocation.x < $0.location.x - 20 {
-                        curDate = Calendar.current.date(byAdding: .month, value: -1, to: curDate)!
-                    }
-                    self.offset = .zero
-                }
-        )
-        .padding()
-        // .onChange(of: curDate) { _ in
-        // }
+        // .navigationBarTitle(Text("Task"))
     }
 
     func makeMenu() -> some View {
@@ -161,5 +188,35 @@ extension TrueMonthView {
         } label: {
             Image(systemName: "slider.horizontal.3")
         }
+    }
+
+    func checkEvent(eventDate: Date, date: Date) -> Bool {
+        Calendar.current.isDate(eventDate, inSameDayAs: date)
+    }
+
+    @ViewBuilder
+    func DateView(value: DateData) -> some View {
+        VStack {
+            if value.day != 0 {
+                Text("\(value.day)")
+                    .frame(maxWidth: .infinity)
+                    .foregroundColor(isToday(date: value.date) ? .blue : .primary)
+
+                if store.state.currentEvent != nil {
+                    Circle()
+                        .fill(
+                            checkEvent(eventDate: store.state.currentEvent!.startDate, date: value.date) ?
+                                Color.red : Color.white
+                        )
+                        .frame(width: 7, height: 7)
+                }
+            }
+        }
+        .frame(alignment: .top)
+        .padding(.vertical, -15)
+
+        .padding()
+        // .onChange(of: curDate) { _ in
+        // }
     }
 }
