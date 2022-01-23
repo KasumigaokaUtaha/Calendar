@@ -23,6 +23,9 @@ struct EventEditView: View {
 
     @State private var showLocationSelectionView = false
 
+    @State private var showActionSheetForCancel = false
+    @State private var showConfirmationForDelete = false
+
     private let event: Event?
     private let navigationTitle: String
 
@@ -94,13 +97,21 @@ struct EventEditView: View {
                 }
                 if event != nil {
                     Section {
-                        Button {
-                            // TODO: present an action sheet to confirm this action
-                            store.send(.removeEvent(event!))
-                        } label: {
+                        Button {} label: {
                             Text("Delete")
                                 .foregroundColor(Color.red)
                                 .frame(maxWidth: .infinity, alignment: .center)
+                        }
+                        .actionSheet(isPresented: $showConfirmationForDelete) {
+                            ActionSheet(title: Text("Delete this event"),
+                                        message: Text("This event will be remove"),
+                                        buttons: [
+                                            .cancel(),
+                                            .destructive(Text("Delete"),
+                                                         action: {
+                                                             store.send(.removeEvent(event!))
+                                                         }),
+                                        ])
                         }
                     }
                 }
@@ -127,7 +138,20 @@ struct EventEditView: View {
         Group {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button("Cancel") {
-                    // TODO: Present action sheet to confirm this action before dismissing this view
+                    showActionSheetForCancel = true
+                }
+                .actionSheet(isPresented: $showActionSheetForCancel) {
+                    ActionSheet(title: Text("Cancel your changes on this event"),
+                                message: Text("Your changes will be aborted"),
+                                buttons: [
+                                    .cancel(),
+                                    .destructive(
+                                        Text("Abort changes"),
+                                        action: {
+                                            // TODO: leave the view
+                                        }
+                                    ),
+                                ])
                 }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
