@@ -25,6 +25,13 @@ struct CompactCalendarYearView: View {
             if store.state.selectedYear != currentYear {
                 currentYear = store.state.selectedYear
             }
+            var dateComponent = store.state.calendar.dateComponents([.year], from: Date())
+            dateComponent.year = currentYear
+            dateComponent.month = 6
+            dateComponent.day = 6
+            let someDateInCurrentYear = store.state.calendar.date(from: dateComponent)!
+            
+            store.send(.loadEventsForYear(at: someDateInCurrentYear))
         }
     }
 
