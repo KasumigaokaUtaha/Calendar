@@ -52,7 +52,7 @@ struct TrueMonthView: View {
                     }
                 }
                 .onAppear {
-                    store.send(.loadEventsForMonth(at: curDate))
+                    updateMonth()
                     curDate = Date()
                 }
 
@@ -65,16 +65,22 @@ struct TrueMonthView: View {
                             if $0.startLocation.x > $0.location.x + 20 {
                                 withAnimation {
                                     curDate = Calendar.current.date(byAdding: .month, value: 1, to: curDate)!
+                                    updateMonth()
+                                    
                                 }
                             } else if $0.startLocation.x < $0.location.x - 20 {
                                 curDate = Calendar.current.date(byAdding: .month, value: -1, to: curDate)!
-                            }
+                                updateMonth()                            }
                             self.offset = .zero
                         }
                 )
 
                 // EventView
                 EventsListView()
+                    .onAppear{
+                        updateMonth()
+                        curDate = Date()
+                    }
             }
             .navigationTitle(
                 Text("\(RWCalendar.dateToString(date: curDate)[1]) \(RWCalendar.dateToString(date: curDate)[0])")
@@ -180,6 +186,12 @@ extension TrueMonthView {
                 )
             }
         }
+    }
+    
+    func updateMonth(){
+        store.send(.setSelectedDate(curDate))
+        store.send(.loadEventsForMonth(at: curDate))
+        
     }
 
     func makeMenu() -> some View {
