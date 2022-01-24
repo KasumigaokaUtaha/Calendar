@@ -249,43 +249,31 @@ struct EventEnvironment {
         return addEventsMatching(withStart: startOfYear, end: endOfYear, calendars: activatedCalendars)
     }
 
-    func getEventsForYear(date: Date, with activaedCalendars: [EKCalendar]?) -> [Event] {
-        let year = Calendar.current.component(.year, from: date)
+    func searchEventsByName(str: String, events: [Event]) -> AnyPublisher<AppAction, Never> {
+         makeActions{
+             Future { promise in
+                 var keyArray = str.components(separatedBy: " ")
+                 for i in keyArray.indices {
+                     keyArray[i] = keyArray[i].trimmingCharacters(in: .whitespacesAndNewlines)
+                 }
 
-        let firstOfThisYear = Calendar.current.date(from: DateComponents(year: year + 1, month: 1, day: 1))
-        if let firstOfNextYear = Calendar.current.date(from: DateComponents(year: year + 1, month: 1, day: 1)) {
-            let lastOfYear = Calendar.current.date(byAdding: .day, value: -1, to: firstOfNextYear)
-            return eventsMatching(withStart: firstOfThisYear!, end: lastOfYear!, calendars: activaedCalendars)
-        }
-        return []
-    }
+                 let predicates = keyArray.map { (key: String) -> NSPredicate in
+                     NSPredicate(format: "title CONTAINS[c] %@", key)
+                 }
+                 let predicateForAllKeys = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+                 let result = NSArray(array: events).filtered(using: predicateForAllKeys)
 
-    func getEventsWithSearchTwoYearsBeforeAndAfter(date: Date, calendars activatedCalendars: [EKCalendar]?) -> [Event] {
-        let year = Calendar.current.component(.year, from: date)
-        let day_1 = Calendar.current.date(from: DateComponents(year: year - 2, month: 1, day: 1))
-        let day_2 = Calendar.current.date(from: DateComponents(year: year - 1, month: 1, day: 1))
-        let day_3 = Calendar.current.date(from: DateComponents(year: year + 1, month: 1, day: 1))
-        let day_4 = Calendar.current.date(from: DateComponents(year: year + 2, month: 1, day: 1))
-        var raw_events = getEventsForYear(date: date, with: activatedCalendars)
-        raw_events += getEventsForYear(date: day_1!, with: activatedCalendars)
-        raw_events += getEventsForYear(date: day_2!, with: activatedCalendars)
-        raw_events += getEventsForYear(date: day_3!, with: activatedCalendars)
-        raw_events += getEventsForYear(date: day_4!, with: activatedCalendars)
-
-        return raw_events
-    }
-
-    func searchEventsByName(str: String, events: [Event]) -> [Event] {
-        var keyArray = str.components(separatedBy: " ")
-        for i in keyArray.indices {
-            keyArray[i] = keyArray[i].trimmingCharacters(in: .whitespacesAndNewlines)
-        }
-        var raw_events = events
-        for key in keyArray {
-            raw_events = raw_events.filter { $0.title.contains(key) }
-        }
-        return raw_events
-    }
+                 if let filteredEvents = result as NSArray as? [Event] {
+                     let actions: [AppAction] = [.setSearchResult(filteredEvents)]
+                     promise(.success(actions))
+                 } else {
+                     print("search events by name type convertion failed")
+                     let actions: [AppAction] = [.setSearchResult([])]
+                     promise(.success(actions))
+                 }
+             }
+         }
+     }
 
     /// Add the given event to the default EventStore and directly commit the changes.
     func addEvent(_ event: Event) -> AnyPublisher<AppAction, Never> {
