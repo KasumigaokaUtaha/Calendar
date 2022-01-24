@@ -263,6 +263,8 @@ func appReducer(
         return environment.event.requestAccess(to: entityType)
     case let .setSearchResult(searchResult):
         state.searchResult = searchResult
+    case let .loadSearchResult(str):
+        return environment.event.searchEventsByName(str: str, events: Array(state.eventIDToEvent.values))
     }
     return nil
 }
