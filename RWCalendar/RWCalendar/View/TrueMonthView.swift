@@ -50,6 +50,7 @@ struct TrueMonthView: View {
                         .onTapGesture {
                             curDate = value.date
                             store.send(.setSelectedDay(Calendar.current.component(.day, from: value.date)))
+                            store.send(.setSelectedDate(value.date))
                         }
                 }
 
@@ -73,7 +74,8 @@ struct TrueMonthView: View {
                     }
             )
 
-            EventView
+            //EventView
+            EventsListView(store: _store)
         }
     }
 }
@@ -140,24 +142,25 @@ extension TrueMonthView {
         }
         .frame(width: .infinity, height: 135, alignment: .topLeading)
     }
-
+/*
     var EventView: some View {
+        //@EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
         VStack {
             Text("Events")
                 .font(.title.bold())
-            if checkEvent(date: curDate) {
-                EventsListView()
-            }
+            //if checkEvent(date: curDate) {
+            EventsListView(store: store)
+            //}
         }
         // .navigationBarTitle(Text("Task"))
     }
-
+*/
     struct AddEventsSheetView: View {
         @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
         // @State private var showEventMenu = false
         var body: some View {
             if store.state.defaultEventCalendar != nil {
-                EventEditView(nil, defaultEventCalendar: store.state.defaultEventCalendar)
+                EventEditView(nil, defaultEventCalendar: store.state.defaultEventCalendar, date: store.state.selectedDate)
             }
         }
     }

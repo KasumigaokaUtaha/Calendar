@@ -66,6 +66,9 @@ enum AppAction {
     case setSelectedYear(_ year: Int)
     case setSelectedMonth(_ month: Int)
     case setSelectedDay(_ day: Int)
+    
+    // MARK: Month View Actions
+    case setSelectedDate(_ date: Date)
 
     // MARK: - Route Actions
 
