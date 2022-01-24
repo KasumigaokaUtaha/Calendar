@@ -44,7 +44,8 @@ struct CompactCalendarMonthViewWrapper: View {
                     font: .systemFont(ofSize: 15),
                     lastMonthDays: lastMonthDays,
                     currMonthDays: currMonthDays,
-                    nextMonthDays: nextMonthDays
+                    nextMonthDays: nextMonthDays,
+                    currMonthDayStyles: currMonthDayStyles
                 )
             }
         }
@@ -74,6 +75,14 @@ extension CompactCalendarMonthViewWrapper {
         }
 
         return monthData.nextMonthDays.map { "\($0.day)" }
+    }
+
+    var currMonthDayStyles: [TextBoxStyle?] {
+        guard let monthData = getMonthData() else {
+            return []
+        }
+
+        return monthData.days.map { day in store.state.calendar.isDate(day.date, inSameDayAs: store.state.currentDate) ? TextBoxStyle() : nil }
     }
 
     func getMonthData() -> MonthData? {

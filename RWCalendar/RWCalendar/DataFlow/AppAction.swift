@@ -31,6 +31,11 @@ enum AppAction {
     case setAlertMessage(String)
 
     // MARK: - Event Actions
+    
+    case loadEventsForYear(at: Date)
+    case loadEventsForMonth(at: Date)
+    case loadEventsForWeek(at: Date)
+    case loadEventsForDay(at: Date)
 
     case addEvent(Event)
     case updateEvent(with: Event)
@@ -45,7 +50,8 @@ enum AppAction {
     
     case setSelectedEvent(Event)
     case setEventErrorMessage(String)
-    case setActivatedCalendars(_ names: [String])
+    case setActivatedCalendars([EKCalendar])
+    case setActivatedCalendarNames([String])
 
     case activateCalendar(_ name: String)
     case deactivateCalendar(_ name: String)

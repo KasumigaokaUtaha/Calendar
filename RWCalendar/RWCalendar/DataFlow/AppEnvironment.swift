@@ -162,6 +162,19 @@ struct EventEnvironment {
             }
         }
     }
+    
+    func getCalendars(with names: [String], for entityType: EKEntityType = .event) -> AnyPublisher<AppAction, Never> {
+        makeActions {
+            Future { promise in
+                let calendars = eventStore.calendars(for: entityType).filter { calendar in
+                    names.contains(calendar.title)
+                }
+                let actions: [AppAction] = [.setActivatedCalendars(calendars)]
+                
+                promise(.success(actions))
+            }
+        }
+    }
 
     /// Returns a dictionary from calendar source to array of calendar.
     func getSourceToCalendars(for _: EKEntityType = .event) -> [EKSource: [EKCalendar]] {

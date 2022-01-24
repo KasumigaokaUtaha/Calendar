@@ -15,6 +15,7 @@
 		628252BD277E65FA00A8464B /* RWCalendarUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628252BC277E65FA00A8464B /* RWCalendarUtilTests.swift */; };
 		628252BF277E66B900A8464B /* RWCalendarDateDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628252BE277E66B900A8464B /* RWCalendarDateDataTests.swift */; };
 		629B22F82784EFE300FA2494 /* CompactCalendarMonthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629B22F72784EFE300FA2494 /* CompactCalendarMonthView.swift */; };
+		62E86744279DC62500ADE1C2 /* TextBoxStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E86743279DC62500ADE1C2 /* TextBoxStyle.swift */; };
 		62E8AB56277DCF70007487E1 /* RWCalendarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E8AB55277DCF70007487E1 /* RWCalendarApp.swift */; };
 		62E8AB5A277DCF72007487E1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 62E8AB59277DCF72007487E1 /* Assets.xcassets */; };
 		62E8AB5D277DCF72007487E1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 62E8AB5C277DCF72007487E1 /* Preview Assets.xcassets */; };
@@ -82,6 +83,7 @@
 		628252BC277E65FA00A8464B /* RWCalendarUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RWCalendarUtilTests.swift; sourceTree = "<group>"; };
 		628252BE277E66B900A8464B /* RWCalendarDateDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RWCalendarDateDataTests.swift; sourceTree = "<group>"; };
 		629B22F72784EFE300FA2494 /* CompactCalendarMonthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactCalendarMonthView.swift; sourceTree = "<group>"; };
+		62E86743279DC62500ADE1C2 /* TextBoxStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextBoxStyle.swift; sourceTree = "<group>"; };
 		62E8AB52277DCF70007487E1 /* RWCalendar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RWCalendar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		62E8AB55277DCF70007487E1 /* RWCalendarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RWCalendarApp.swift; sourceTree = "<group>"; };
 		62E8AB59277DCF72007487E1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = RWCalendar/App/Assets.xcassets; sourceTree = SOURCE_ROOT; };
@@ -151,6 +153,16 @@
 				C582D542847DCAA4D09131F8 /* DayTask.swift */,
 			);
 			path = CalendarWeekDay;
+			sourceTree = "<group>";
+		};
+		62E86742279DAFF400ADE1C2 /* CompactYear */ = {
+			isa = PBXGroup;
+			children = (
+				6237E05F27820BD3009340D2 /* CompactCalendarYearView.swift */,
+				628252BA277E432300A8464B /* CompactCalendarMonthViewWrapper.swift */,
+				629B22F72784EFE300FA2494 /* CompactCalendarMonthView.swift */,
+			);
+			path = CompactYear;
 			sourceTree = "<group>";
 		};
 		62E8AB49277DCF70007487E1 = {
@@ -250,16 +262,14 @@
 		62E8ABAE277DD073007487E1 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				A1B4A5E4278C8F0500D8716F /* Settings */,
-				3B77E46978FAAA183DEEA701 /* CalendarWeekDay */,
 				AC037D78C80BBCBD0ECBEFB6 /* Event */,
+				A1B4A5E4278C8F0500D8716F /* Settings */,
+				62E86742279DAFF400ADE1C2 /* CompactYear */,
+				3B77E46978FAAA183DEEA701 /* CalendarWeekDay */,
 				62E8ABBD277DD0DE007487E1 /* ContentView.swift */,
-				6237E05F27820BD3009340D2 /* CompactCalendarYearView.swift */,
-				628252BA277E432300A8464B /* CompactCalendarMonthViewWrapper.swift */,
-				629B22F72784EFE300FA2494 /* CompactCalendarMonthView.swift */,
+				916F1E6D89E6D6F197D15CF9 /* ContainerView.swift */,
 				A1B4A5D0278C81D300D8716F /* WrapperView.swift */,
 				1206E93BAF656AB759D4A668 /* TrueMonthView.swift */,
-				916F1E6D89E6D6F197D15CF9 /* ContainerView.swift */,
 				364D0D1C6A047E7A2D5F253F /* RWPageView.swift */,
 			);
 			path = View;
@@ -268,8 +278,9 @@
 		A1B4A5B3278B535400D8716F /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				A1B4A5B4278B53C400D8716F /* ButtonModifier.swift */,
 				A1B4A5BB278B555500D8716F /* Themes */,
+				A1B4A5B4278B53C400D8716F /* ButtonModifier.swift */,
+				62E86743279DC62500ADE1C2 /* TextBoxStyle.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -474,6 +485,7 @@
 				A1B4A5E1278C8EE700D8716F /* IconSelectionView.swift in Sources */,
 				62E8AB56277DCF70007487E1 /* RWCalendarApp.swift in Sources */,
 				A1B4A5B5278B53C400D8716F /* ButtonModifier.swift in Sources */,
+				62E86744279DC62500ADE1C2 /* TextBoxStyle.swift in Sources */,
 				A1B4A5C0278B555500D8716F /* ThemeManager.swift in Sources */,
 				629B22F82784EFE300FA2494 /* CompactCalendarMonthView.swift in Sources */,
 				A1B4A5C3278B555500D8716F /* Theme.swift in Sources */,
