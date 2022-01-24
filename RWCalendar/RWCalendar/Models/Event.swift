@@ -8,7 +8,7 @@
 import EventKit
 import Foundation
 
-struct Event {
+struct Event: Hashable {
     var title: String
     var startDate: Date
     var endDate: Date

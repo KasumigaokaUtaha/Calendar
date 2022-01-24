@@ -44,7 +44,7 @@ enum AppAction {
     /// Add event to the state dateToEventIDs
     case addEventToLocalStore(Event)
     /// Update event stored in the state dateToEventIDs
-    case updateEvenInLocalStore(Event)
+    case updateEventInLocalStore(Event)
     /// Remove event stored in the state dateToEventIDs
     case removeEventFromLocalStore(Event)
 

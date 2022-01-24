@@ -44,8 +44,10 @@ struct EventsListView: View {
         ScrollView {
             if let eventIDs = eventIDs {
                 if eventIDs.count > 0 {
-                    List(events(with: eventIDs), id: \.eventIdentifier) { event in
-                        EventLabel(event: event)
+                    VStack {
+                        ForEach(events(with: eventIDs), id: \.self) { event in
+                            Text("\(event.title)")
+                        }
                     }
                 } else {
                     Text("No events")

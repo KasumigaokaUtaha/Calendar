@@ -153,7 +153,7 @@ struct EventEditView: View {
             .toolbar {
                 makeToolbar()
             }
-            .navigationTitle("Update Event")
+            .navigationTitle(navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
         }
         .navigationViewStyle(.stack)

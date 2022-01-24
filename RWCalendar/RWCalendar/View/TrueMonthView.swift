@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 let days: [String] = Calendar.current.shortWeekdaySymbols
-let dateArray = Array(repeating: GridItem(.flexible()), count: 7)
+let dateArray = Array(repeating: GridItem(.flexible(minimum: 20)), count: 7)
 
 struct TrueMonthView: View {
     @Binding var curDate: Date
@@ -20,69 +20,89 @@ struct TrueMonthView: View {
 
     // #TODO: add a var to controll light and dark modes
     var body: some View {
-        ScrollView {
-            TitleView
-
-            HStack {
-                ForEach(days, id: \.self) { day in
-                    Text(day)
-                        .font(.body)
-                        .frame(maxWidth: .infinity)
-                }
-            }
-
-            // DateView
-            LazyVGrid(columns: dateArray, spacing: 25) {
-                ForEach(RWCalendar.getDate(date: curDate)) { value in
-
-                    DateView(value: value)
-
-                        .background(
-                            Circle()
-                                .strokeBorder(lineWidth: 0.5)
-                                .background(Color.purple)
-                                .opacity(
-                                    Calendar.current.isDate(value.date, inSameDayAs: curDate) && value
-                                        .day != 0 ? 0.5 : 0
-                                )
-                                .padding(.horizontal, 8)
-                        )
-                        .onTapGesture {
-                            curDate = value.date
-                            store.send(.setSelectedDay(Calendar.current.component(.day, from: value.date)))
-                            store.send(.setSelectedDate(value.date))
-                        }
-                }
-
-                Spacer()
-            }
-
-            .gesture(
-                DragGesture(coordinateSpace: .local)
-                    .onChanged {
-                        self.offset = $0.translation
+        NavigationView {
+            ScrollView {
+                HStack {
+                    ForEach(days, id: \.self) { day in
+                        Text(day)
+                            .font(.body)
+                            .frame(maxWidth: .infinity)
                     }
-                    .onEnded {
-                        if $0.startLocation.x > $0.location.x + 20 {
-                            withAnimation {
-                                curDate = Calendar.current.date(byAdding: .month, value: 1, to: curDate)!
+                }
+
+                // DateView
+                LazyVGrid(columns: dateArray) {
+                    ForEach(RWCalendar.getDate(date: curDate)) { value in
+                        DateView(value: value)
+                            .background(
+                                Circle()
+                                    .strokeBorder(lineWidth: 0.5)
+                                    .background(Color.purple)
+                                    .opacity(
+                                        Calendar.current.isDate(value.date, inSameDayAs: curDate) && value
+                                            .day != 0 ? 0.5 : 0
+                                    )
+                                    .padding(.horizontal, 8)
+                            )
+                            .onTapGesture {
+                                curDate = value.date
+                                store.send(.setSelectedDay(Calendar.current.component(.day, from: value.date)))
+                                store.send(.setSelectedDate(value.date))
                             }
-                        } else if $0.startLocation.x < $0.location.x - 20 {
-                            curDate = Calendar.current.date(byAdding: .month, value: -1, to: curDate)!
-                        }
-                        self.offset = .zero
                     }
-            )
+                }
+                .onAppear {
+                    store.send(.loadEventsForMonth(at: curDate))
+                }
 
-            //EventView
-            EventsListView(store: _store)
+                .gesture(
+                    DragGesture(coordinateSpace: .local)
+                        .onChanged {
+                            self.offset = $0.translation
+                        }
+                        .onEnded {
+                            if $0.startLocation.x > $0.location.x + 20 {
+                                withAnimation {
+                                    curDate = Calendar.current.date(byAdding: .month, value: 1, to: curDate)!
+                                }
+                            } else if $0.startLocation.x < $0.location.x - 20 {
+                                curDate = Calendar.current.date(byAdding: .month, value: -1, to: curDate)!
+                            }
+                            self.offset = .zero
+                        }
+                )
+
+                // EventView
+                EventsListView()
+            }
+            .navigationTitle(Text("\(RWCalendar.dateToString(date: curDate)[1]) \(RWCalendar.dateToString(date: curDate)[0])"))
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationViewStyle(.stack)
+            .toolbar {
+                ToolbarItemGroup(placement: .navigationBarLeading) {
+                    makeMenu()
+                    Button("Today") {
+                        curDate = Date()
+                        store.send(.setSelectedDay(Calendar.current.component(.day, from: Date())))
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showEventMenu.toggle()
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                }
+            }
+        }
+        .sheet(isPresented: $showEventMenu) {
+            AddEventsSheetView()
         }
     }
 }
 
 struct MonthHome: View {
     @State var curDate = Date()
-    // @EnvironmentObject var customizationData =  CustomizationData()
 
     var body: some View {
         VStack {
@@ -131,7 +151,6 @@ extension TrueMonthView {
 
                 Button {
                     showEventMenu.toggle()
-
                 } label: {
                     Image(systemName: "plus")
                 }
@@ -142,19 +161,7 @@ extension TrueMonthView {
         }
         .frame(width: .infinity, height: 135, alignment: .topLeading)
     }
-/*
-    var EventView: some View {
-        //@EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
-        VStack {
-            Text("Events")
-                .font(.title.bold())
-            //if checkEvent(date: curDate) {
-            EventsListView(store: store)
-            //}
-        }
-        // .navigationBarTitle(Text("Task"))
-    }
-*/
+
     struct AddEventsSheetView: View {
         @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
         // @State private var showEventMenu = false
@@ -204,17 +211,17 @@ extension TrueMonthView {
     }
 
     func checkEvent(date: Date) -> Bool {
-        for EventList in store.state.eventIDToEvent {
-            return Calendar.current.isDate(EventList.value.startDate, inSameDayAs: date) ? true : false
+        let key = RWDate(date: date, calendar: store.state.calendar)
+        guard let eventIDs = store.state.dateToEventIDs[key] else {
+            return false
         }
 
-        return false
-        // Calendar.current.isDate(eventDate, inSameDayAs: date)
+        return eventIDs.count > 0
     }
 
     @ViewBuilder
     func DateView(value: DateData) -> some View {
-        VStack {
+        VStack(spacing: 2) {
             if value.day != 0 {
                 Text("\(value.day)")
                     .frame(maxWidth: .infinity)
@@ -228,9 +235,5 @@ extension TrueMonthView {
                     .frame(width: 7, height: 7)
             }
         }
-        .frame(alignment: .top)
-        .padding(.vertical, -15)
-
-        .padding()
     }
 }
