@@ -162,7 +162,7 @@ struct EventEnvironment {
             }
         }
     }
-    
+
     func getCalendars(with names: [String], for entityType: EKEntityType = .event) -> AnyPublisher<AppAction, Never> {
         makeActions {
             Future { promise in
@@ -170,7 +170,7 @@ struct EventEnvironment {
                     names.contains(calendar.title)
                 }
                 let actions: [AppAction] = [.setActivatedCalendars(calendars)]
-                
+
                 promise(.success(actions))
             }
         }
@@ -207,8 +207,8 @@ struct EventEnvironment {
             Future { promise in
                 let predicate = eventStore.predicateForEvents(withStart: start, end: end, calendars: calendars)
                 let events: [Event] = eventStore.events(matching: predicate).map { .init(ekEvent: $0) }
-                let actions: [AppAction] = events.map { event in .addEventToLocalStore(event)}
-                
+                let actions: [AppAction] = events.map { event in .addEventToLocalStore(event) }
+
                 promise(.success(actions))
             }
         }
@@ -263,30 +263,32 @@ struct EventEnvironment {
     }
 
     func searchEventsByName(str: String, events: [Event]) -> AnyPublisher<AppAction, Never> {
-         makeActions{
-             Future { promise in
-                 var keyArray = str.components(separatedBy: " ")
-                 for i in keyArray.indices {
-                     keyArray[i] = keyArray[i].trimmingCharacters(in: .whitespacesAndNewlines)
-                 }
+        makeActions {
+            Future { promise in
+                var keyArray = str.components(separatedBy: " ")
+                for i in keyArray.indices {
+                    keyArray[i] = keyArray[i].trimmingCharacters(in: .whitespacesAndNewlines)
+                }
 
-                 let predicates = keyArray.map { (key: String) -> NSPredicate in
-                     NSPredicate(format: "title CONTAINS[c] %@", key)
-                 }
-                 let predicateForAllKeys = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
-                 let result = NSArray(array: events).filtered(using: predicateForAllKeys)
+                let predicates = keyArray.map { (key: String) -> NSPredicate in
+                    NSPredicate(format: "title CONTAINS[c] %@", key)
+                }
+                let predicateForAllKeys = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+                let result = NSArray(array: events).filtered(using: predicateForAllKeys)
 
-                 if let filteredEvents = result as NSArray as? [Event] {
-                     let actions: [AppAction] = [.setSearchResult(filteredEvents)]
-                     promise(.success(actions))
-                 } else {
-                     print("search events by name type convertion failed")
-                     let actions: [AppAction] = [.setSearchResult([])]
-                     promise(.success(actions))
-                 }
-             }
-         }
-     }
+                if let filteredEvents = result as NSArray as? [Event] {
+                    let actions: [AppAction] = [.setSearchResult(filteredEvents)]
+                    promise(.success(actions))
+                } else {
+                    print("search events by name type convertion failed")
+                    let actions: [AppAction] = [.setSearchResult([])]
+                    promise(.success(actions))
+                }
+            }
+        }
+    }
+
+
 
     /// Add the given event to the default EventStore and directly commit the changes.
     func addEvent(_ event: Event) -> AnyPublisher<AppAction, Never> {

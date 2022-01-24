@@ -88,7 +88,7 @@ struct AppState {
 
     var defaultEventCalendar: EKCalendar!
     var defaultReminderCalendar: EKCalendar!
-    var searchRange: [Event]
+    var searchResult: [Event]
 
     init() {
         years = [:]
@@ -116,6 +116,6 @@ struct AppState {
         
         activatedCalendarNames = []
         activatedCalendars = []
-        searchRange = []
+        searchResult = []
     }
 }

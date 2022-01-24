@@ -60,8 +60,7 @@ enum AppAction {
 
     case loadDefaultCalendar(for: EKEntityType)
     case setDefaultCalendar(EKCalendar, for: EKEntityType)
-    case setSearchRange([Event])
-
+    case setSearchResult(_ searchResult: [Event])
     // MARK: - Year View Actions
 
     case setSelectedYear(_ year: Int)
