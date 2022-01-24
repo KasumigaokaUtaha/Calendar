@@ -11,21 +11,24 @@ struct EventSearchView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
 
     @State private var searchText = ""
-    
+
     var body: some View {
         NavigationView {
-                    List {
-                        ForEach(searchResults, id: \.eventIdentifier) { event in
-                            NavigationLink(destination: EventEditView(event, defaultEventCalendar: store.state.defaultEventCalendar)) {
-                                Text(event.title)
-                            }
-                        }
+            List {
+                ForEach(searchResults, id: \.eventIdentifier) { event in
+                    NavigationLink(destination: EventEditView(
+                        event,
+                        defaultEventCalendar: store.state.defaultEventCalendar
+                    )) {
+                        Text(event.title)
                     }
-                    .searchable(text: $searchText)
-                    .navigationTitle("Events")
                 }
+            }
+            .searchable(text: $searchText)
+            .navigationTitle("Events")
+        }
     }
-    
+
     var searchResults: [Event] {
         if searchText.isEmpty {
             return []

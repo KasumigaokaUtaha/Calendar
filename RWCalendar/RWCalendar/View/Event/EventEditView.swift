@@ -46,7 +46,7 @@ struct EventEditView: View {
         _url = State(initialValue: event?.url ?? "")
         _notes = State(initialValue: event?.notes ?? "")
     }
-    
+
     init(_ event: Event?, defaultEventCalendar: EKCalendar, date: Date?) {
         if let event = event {
             self.event = event
@@ -55,13 +55,12 @@ struct EventEditView: View {
             self.event = nil
             navigationTitle = "Add Event"
         }
-        
-        
+
         _startDate = State(initialValue: date ?? Date())
         _endDate = State(initialValue: date ?? Date())
         _title = State(initialValue: event?.title ?? "")
-        //_startDate = State(initialValue: event?.startDate ?? Date())
-        //_endDate = State(initialValue: event?.endDate ?? Date())
+        // _startDate = State(initialValue: event?.startDate ?? Date())
+        // _endDate = State(initialValue: event?.endDate ?? Date())
         _calendar = State(initialValue: event?.calendar ?? defaultEventCalendar)
         _reminderTime = State(initialValue: event?.reminderTime)
         _url = State(initialValue: event?.url ?? "")

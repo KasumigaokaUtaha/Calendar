@@ -75,7 +75,9 @@ struct TrueMonthView: View {
                 // EventView
                 EventsListView()
             }
-            .navigationTitle(Text("\(RWCalendar.dateToString(date: curDate)[1]) \(RWCalendar.dateToString(date: curDate)[0])"))
+            .navigationTitle(
+                Text("\(RWCalendar.dateToString(date: curDate)[1]) \(RWCalendar.dateToString(date: curDate)[0])")
+            )
             .navigationBarTitleDisplayMode(.inline)
             .navigationViewStyle(.stack)
             .toolbar {
@@ -86,11 +88,14 @@ struct TrueMonthView: View {
                         store.send(.setSelectedDay(Calendar.current.component(.day, from: Date())))
                     }
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button {
                         showEventMenu.toggle()
                     } label: {
                         Image(systemName: "plus")
+                    }
+                    Button {} label: {
+                        Image(systemName: "magnifyingglass")
                     }
                 }
             }
@@ -167,7 +172,11 @@ extension TrueMonthView {
         // @State private var showEventMenu = false
         var body: some View {
             if store.state.defaultEventCalendar != nil {
-                EventEditView(nil, defaultEventCalendar: store.state.defaultEventCalendar, date: store.state.selectedDate)
+                EventEditView(
+                    nil,
+                    defaultEventCalendar: store.state.defaultEventCalendar,
+                    date: store.state.selectedDate
+                )
             }
         }
     }
