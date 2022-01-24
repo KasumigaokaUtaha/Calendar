@@ -66,8 +66,12 @@ struct ContentView: View {
                 }
             }
         case .month:
-
-            MonthHome(curDate: Calendar.current.date(from: components())!)
+            //store.send(.loadEventsForMonth(at: dateForMonth()))
+            MonthHome(curDate: dateForMonth())
+                .onAppear{
+                    store.send(.loadEventsForMonth(at: dateForMonth()))
+                }
+            
 
         case .week:
             ContainerView {
@@ -126,11 +130,14 @@ struct ContentView: View {
 
 extension ContentView {
     // get the components of the selected date
-    func components() -> DateComponents {
+    func dateForMonth() -> Date {
         var comp = DateComponents()
         comp.month = store.state.selectedMonth
         comp.year = store.state.selectedYear
-        return comp
+        
+        let calendar = Calendar.current
+        let date = calendar.date(from: comp)
+        return date ?? Date()
     }
 }
 

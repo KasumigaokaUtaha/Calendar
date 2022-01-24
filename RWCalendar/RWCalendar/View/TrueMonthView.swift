@@ -30,7 +30,6 @@ struct TrueMonthView: View {
                     }
                 }
 
-                // DateView
                 LazyVGrid(columns: dateArray) {
                     ForEach(RWCalendar.getDate(date: curDate)) { value in
                         DateView(value: value)
@@ -51,10 +50,8 @@ struct TrueMonthView: View {
                             }
                     }
                 }
-                .onAppear {
-                    updateMonth()
-                    curDate = Date()
-                }
+                
+                
 
                 .gesture(
                     DragGesture(coordinateSpace: .local)
@@ -65,23 +62,34 @@ struct TrueMonthView: View {
                             if $0.startLocation.x > $0.location.x + 20 {
                                 withAnimation {
                                     curDate = Calendar.current.date(byAdding: .month, value: 1, to: curDate)!
-                                    updateMonth()
+                                    //updateMonth()
+      
                                     
                                 }
                             } else if $0.startLocation.x < $0.location.x - 20 {
                                 curDate = Calendar.current.date(byAdding: .month, value: -1, to: curDate)!
-                                updateMonth()                            }
+                                //updateMonth()
+                                
+                            }
                             self.offset = .zero
                         }
                 )
 
                 // EventView
                 EventsListView()
-                    .onAppear{
-                        updateMonth()
-                        curDate = Date()
-                    }
+                    //.onAppear{
+                        //curDate = store.state.selectedDate ?? curDate
+                     //   store.send(.loadEventsForMonth(at: store.state.selectedDate ?? curDate))
+                    //}
+                
+                    
+                   
             }
+            .onAppear {
+                //curDate = store.state.selectedDate ?? curDate
+                store.send(.loadEventsForMonth(at: curDate))
+            }
+            
             .navigationTitle(
                 Text("\(RWCalendar.dateToString(date: curDate)[1]) \(RWCalendar.dateToString(date: curDate)[0])")
             )
@@ -93,6 +101,7 @@ struct TrueMonthView: View {
                     Button("Today") {
                         curDate = Date()
                         store.send(.setSelectedDay(Calendar.current.component(.day, from: Date())))
+                        store.send(.setSelectedDate(curDate))
                     }
                 }
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -119,6 +128,7 @@ struct MonthHome: View {
     var body: some View {
         VStack {
             TrueMonthView(curDate: $curDate)
+            
             // .background(Color(CustomizationData().selectedTheme.backgroundColor))
         }
     }
@@ -153,6 +163,7 @@ extension TrueMonthView {
                 Button("Today") {
                     curDate = Date()
                     store.send(.setSelectedDay(Calendar.current.component(.day, from: Date())))
+                    store.send(.setSelectedDate(curDate))
                 }
                 // years and months
                 Text(RWCalendar.dateToString(date: curDate)[1])
@@ -171,7 +182,7 @@ extension TrueMonthView {
                 }
             }
         }
-        .frame(width: .infinity, height: 135, alignment: .topLeading)
+        //.frame(width: .infinity, height: 135, alignment: .topLeading)
     }
 
     struct AddEventsSheetView: View {
@@ -247,7 +258,7 @@ extension TrueMonthView {
             if value.day != 0 {
                 Text("\(value.day)")
                     .frame(maxWidth: .infinity)
-                    .foregroundColor(isToday(date: value.date) ? .blue : .primary)
+                    .foregroundColor(isToday(date: value.date) ? .red : .primary)
 
                 Circle()
                     .fill(
