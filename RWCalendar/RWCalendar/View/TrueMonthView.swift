@@ -36,7 +36,7 @@ struct TrueMonthView: View {
                             .background(
                                 Circle()
                                     .strokeBorder(lineWidth: 0.5)
-                                    .background(Color.purple)
+                                    .background(Color.blue)
                                     .opacity(
                                         Calendar.current.isDate(value.date, inSameDayAs: curDate) && value
                                             .day != 0 ? 0.5 : 0
@@ -50,8 +50,6 @@ struct TrueMonthView: View {
                             }
                     }
                 }
-                
-                
 
                 .gesture(
                     DragGesture(coordinateSpace: .local)
@@ -62,34 +60,29 @@ struct TrueMonthView: View {
                             if $0.startLocation.x > $0.location.x + 20 {
                                 withAnimation {
                                     curDate = Calendar.current.date(byAdding: .month, value: 1, to: curDate)!
-                                    //updateMonth()
-      
-                                    
+                                    updateMonth()
+                                    //! ! try not to update load events here
                                 }
                             } else if $0.startLocation.x < $0.location.x - 20 {
                                 curDate = Calendar.current.date(byAdding: .month, value: -1, to: curDate)!
-                                //updateMonth()
-                                
+                                updateMonth()
+                                //! ! try not to update load events here
                             }
                             self.offset = .zero
                         }
                 )
 
-                // EventView
                 EventsListView()
-                    //.onAppear{
-                        //curDate = store.state.selectedDate ?? curDate
-                     //   store.send(.loadEventsForMonth(at: store.state.selectedDate ?? curDate))
-                    //}
-                
-                    
-                   
+                    .onAppear {
+                        store.send(.loadEventsForMonth(at: curDate))
+                    }
             }
             .onAppear {
-                //curDate = store.state.selectedDate ?? curDate
+                // curDate = store.state.selectedDate ?? curDate
+                //! !try not to undate curDate here otherwise cannot go to the selected month from year!!
                 store.send(.loadEventsForMonth(at: curDate))
             }
-            
+
             .navigationTitle(
                 Text("\(RWCalendar.dateToString(date: curDate)[1]) \(RWCalendar.dateToString(date: curDate)[0])")
             )
@@ -128,8 +121,6 @@ struct MonthHome: View {
     var body: some View {
         VStack {
             TrueMonthView(curDate: $curDate)
-            
-            // .background(Color(CustomizationData().selectedTheme.backgroundColor))
         }
     }
 }
@@ -182,12 +173,11 @@ extension TrueMonthView {
                 }
             }
         }
-        //.frame(width: .infinity, height: 135, alignment: .topLeading)
     }
 
     struct AddEventsSheetView: View {
         @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
-        // @State private var showEventMenu = false
+
         var body: some View {
             if store.state.defaultEventCalendar != nil {
                 EventEditView(
@@ -198,11 +188,10 @@ extension TrueMonthView {
             }
         }
     }
-    
-    func updateMonth(){
+
+    func updateMonth() {
         store.send(.setSelectedDate(curDate))
         store.send(.loadEventsForMonth(at: curDate))
-        
     }
 
     func makeMenu() -> some View {

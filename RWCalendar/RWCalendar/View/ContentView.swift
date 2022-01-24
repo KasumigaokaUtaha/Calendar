@@ -66,12 +66,10 @@ struct ContentView: View {
                 }
             }
         case .month:
-            //store.send(.loadEventsForMonth(at: dateForMonth()))
             MonthHome(curDate: dateForMonth())
-                .onAppear{
-                    store.send(.loadEventsForMonth(at: dateForMonth()))
+                .onAppear {
+                    store.send(.setSelectedDate(dateForMonth()))
                 }
-            
 
         case .week:
             ContainerView {
@@ -134,9 +132,10 @@ extension ContentView {
         var comp = DateComponents()
         comp.month = store.state.selectedMonth
         comp.year = store.state.selectedYear
-        
+
         let calendar = Calendar.current
         let date = calendar.date(from: comp)
+
         return date ?? Date()
     }
 }
