@@ -53,6 +53,7 @@ struct TrueMonthView: View {
                 }
                 .onAppear {
                     store.send(.loadEventsForMonth(at: curDate))
+                    curDate = Date()
                 }
 
                 .gesture(
