@@ -22,6 +22,7 @@ struct Event {
     var hasRecurrenceRule: Bool {
         recurrenceRule != nil
     }
+
     var reminderTime: ReminderTime? {
         get {
             guard

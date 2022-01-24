@@ -71,6 +71,7 @@ struct CompactCalendarMonthView: UIViewRepresentable {
                 self.maxItemSize = CGSize(width: maxWidth, height: maxHeight)
             }
         }
+
         var currMonthDayStyles: [TextBoxStyle?]
 
         var showLastMonthDays = false
@@ -167,7 +168,15 @@ struct CompactCalendarMonthView: UIViewRepresentable {
                 case .current:
                     if pos < currMonthDayStyles.count, let style = currMonthDayStyles[pos] {
                         let dimension = max(size.width, size.height)
-                        let path = UIBezierPath(roundedRect: CGRect(x: maxItemOrigin.x, y: maxItemOrigin.y, width: dimension, height: dimension), cornerRadius: style.cornerRadius)
+                        let path = UIBezierPath(
+                            roundedRect: CGRect(
+                                x: maxItemOrigin.x,
+                                y: maxItemOrigin.y,
+                                width: dimension,
+                                height: dimension
+                            ),
+                            cornerRadius: style.cornerRadius
+                        )
                         let context = UIGraphicsGetCurrentContext()!
                         context.saveGState()
                         defer { context.restoreGState() }

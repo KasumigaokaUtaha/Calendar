@@ -16,6 +16,7 @@ struct TrueMonthView: View {
     @State private var offset: CGSize = .zero
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
     @EnvironmentObject var customizationData: CustomizationData
+    @State private var showEventMenu = false
 
     // #TODO: add a var to controll light and dark modes
     var body: some View {
@@ -49,7 +50,6 @@ struct TrueMonthView: View {
                         .onTapGesture {
                             curDate = value.date
                             store.send(.setSelectedDay(Calendar.current.component(.day, from: value.date)))
-                            
                         }
                 }
 
@@ -127,17 +127,14 @@ extension TrueMonthView {
                 Text(RWCalendar.dateToString(date: curDate)[0])
                     .fontWeight(.bold)
 
-                Menu {
-                    // #TODO: add event menu that collabs with event view
-                    if store.state.defaultEventCalendar != nil {
-                        EventEditView(nil, defaultEventCalendar: store.state.defaultEventCalendar)
-
-                    } else {
-                        Text("add navilinks to add events")
-                    }
+                Button {
+                    showEventMenu.toggle()
 
                 } label: {
-                    Label("", systemImage: "plus")
+                    Image(systemName: "plus")
+                }
+                .sheet(isPresented: $showEventMenu) {
+                    AddEventsSheetView()
                 }
             }
         }
@@ -150,11 +147,19 @@ extension TrueMonthView {
                 .font(.title.bold())
             if checkEvent(date: curDate) {
                 EventsListView()
-                
             }
-           
         }
         // .navigationBarTitle(Text("Task"))
+    }
+
+    struct AddEventsSheetView: View {
+        @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
+        // @State private var showEventMenu = false
+        var body: some View {
+            if store.state.defaultEventCalendar != nil {
+                EventEditView(nil, defaultEventCalendar: store.state.defaultEventCalendar)
+            }
+        }
     }
 
     func makeMenu() -> some View {

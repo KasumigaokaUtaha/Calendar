@@ -43,6 +43,7 @@ struct AppState {
     var alertMessage: String
 
     var selectedDate: Date?
+
     // MARK: - Year Specific States
 
     /// The currently selected year
@@ -75,7 +76,7 @@ struct AppState {
     // MARK: - Event States
 
     var selectedEvent: Event?
-    
+
     var dateToEventIDs: [RWDate: [String]]
     var eventIDToEvent: [String: Event]
     var allEventIDs: [String]
@@ -112,7 +113,7 @@ struct AppState {
         eventIDToEvent = [:]
         allEventIDs = []
         recurringEventIDs = []
-        
+
         activatedCalendarNames = []
         activatedCalendars = []
     }

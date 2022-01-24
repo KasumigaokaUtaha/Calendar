@@ -326,9 +326,9 @@ func isToday(date: Date) -> Bool {
 }
 
 // return current month based on the int value
-//func getCurMonth(value: Int) -> Date {
+// func getCurMonth(value: Int) -> Date {
 //    Calendar.current.date(byAdding: .month, value: value, to: Date())!
-//}
+// }
 
 // get all the date in a month for display
 func getDate(date: Date) -> [DateData] {

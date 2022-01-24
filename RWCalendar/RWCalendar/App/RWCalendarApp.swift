@@ -18,7 +18,7 @@ struct RWCalendarApp: App {
             reducer: appReducer,
             environment: AppEnvironment()
         )
-        
+
         customizationData = CustomizationData()
     }
 

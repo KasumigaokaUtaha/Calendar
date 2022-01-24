@@ -10,25 +10,25 @@ import UIKit
 // Define the structure for different themes
 
 struct Theme0: Theme {
-    var backgroundColor: UIColor = UIColor(named: "DefaultBackground")!
-    var foregroundColor: UIColor = UIColor(named: "DefaultForeground")!
-    var primaryColor: UIColor = UIColor(named: "DefaultPrimary")!
-    var secondaryColor: UIColor = UIColor(named: "DefaultSecondary")!
-    var themeName: String = "Default"
+    var backgroundColor = UIColor(named: "DefaultBackground")!
+    var foregroundColor = UIColor(named: "DefaultForeground")!
+    var primaryColor = UIColor(named: "DefaultPrimary")!
+    var secondaryColor = UIColor(named: "DefaultSecondary")!
+    var themeName = "Default"
 }
 
 struct Theme1: Theme {
-    var backgroundColor: UIColor = UIColor(named: "LilaBackground")!
-    var foregroundColor: UIColor = UIColor(named: "LilaForeground")!
-    var primaryColor: UIColor = UIColor(named: "LilaPrimary")!
-    var secondaryColor: UIColor = UIColor(named: "LilaSecondary")!
-    var themeName: String = "Lila"
+    var backgroundColor = UIColor(named: "LilaBackground")!
+    var foregroundColor = UIColor(named: "LilaForeground")!
+    var primaryColor = UIColor(named: "LilaPrimary")!
+    var secondaryColor = UIColor(named: "LilaSecondary")!
+    var themeName = "Lila"
 }
 
 struct Theme2: Theme {
-    var backgroundColor: UIColor = UIColor(named: "BlueBackground")!
-    var foregroundColor: UIColor = UIColor(named: "BlueForeground")!
-    var primaryColor: UIColor = UIColor(named: "BluePrimary")!
-    var secondaryColor: UIColor = UIColor(named: "BlueSecondary")!
-    var themeName: String = "Blue"
+    var backgroundColor = UIColor(named: "BlueBackground")!
+    var foregroundColor = UIColor(named: "BlueForeground")!
+    var primaryColor = UIColor(named: "BluePrimary")!
+    var secondaryColor = UIColor(named: "BlueSecondary")!
+    var themeName = "Blue"
 }
