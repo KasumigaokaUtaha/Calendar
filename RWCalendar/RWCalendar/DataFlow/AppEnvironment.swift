@@ -207,7 +207,7 @@ struct EventEnvironment {
             Future { promise in
                 let predicate = eventStore.predicateForEvents(withStart: start, end: end, calendars: calendars)
                 let events: [Event] = eventStore.events(matching: predicate).map { .init(ekEvent: $0) }
-                let actions: [AppAction] = events.map { event in .addEventToLocalStore(event)}
+                let actions: [AppAction] = events.map { event in .updateEventInLocalStore(event)}
                 
                 promise(.success(actions))
             }
@@ -270,7 +270,7 @@ struct EventEnvironment {
 
                 do {
                     try eventStore.save(newEvent, span: .thisEvent, commit: true)
-                    let actions: [AppAction] = [.empty]
+                    let actions: [AppAction] = [.addEventToLocalStore(.init(ekEvent: newEvent))]
                     promise(.success(actions))
                 } catch {
                     let actions: [AppAction] = [
@@ -298,7 +298,7 @@ struct EventEnvironment {
 
                 do {
                     try eventStore.save(event, span: .thisEvent, commit: true)
-                    let actions: [AppAction] = [.empty]
+                    let actions: [AppAction] = [.updateEventInLocalStore(.init(ekEvent: event))]
                     promise(.success(actions))
                 } catch {
                     let actions: [AppAction] = [
@@ -325,7 +325,7 @@ struct EventEnvironment {
 
                 do {
                     try eventStore.remove(targetEvent, span: .thisEvent, commit: true)
-                    let actions: [AppAction] = [.empty]
+                    let actions: [AppAction] = [.removeEventFromLocalStore(.init(ekEvent: targetEvent))]
                     promise(.success(actions))
                 } catch {
                     let actions: [AppAction] = [

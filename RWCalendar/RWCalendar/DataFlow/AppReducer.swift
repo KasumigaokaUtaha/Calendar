@@ -214,7 +214,7 @@ func appReducer(
         default:
             fatalError()
         }
-    case let .updateEvenInLocalStore(event):
+    case let .updateEventInLocalStore(event):
         return [
             AppAction.removeEventFromLocalStore(event),
             AppAction.addEventToLocalStore(event)
