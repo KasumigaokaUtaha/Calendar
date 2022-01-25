@@ -119,5 +119,14 @@ struct AppState {
         
         activatedCalendarNames = []
         activatedCalendars = []
+        
+        if currentYear < 1970 {
+            var component = DateComponents()
+            component.year = 1970
+            component.month = 1
+            component.day = 1
+            currentDate = calendar.date(from: component)!
+            currentYear = calendar.component(.year, from: currentDate)
+        }
     }
 }
