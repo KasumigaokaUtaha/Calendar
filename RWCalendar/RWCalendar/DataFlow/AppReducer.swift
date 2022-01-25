@@ -271,6 +271,8 @@ func appReducer(
         state.searchResult = searchResult
     case let .loadSearchResult(str):
         return environment.event.searchEventsByName(str: str, events: Array(state.eventIDToEvent.values))
+            .subscribe(on: environment.backgroundQueue)
+            .eraseToAnyPublisher()
     }
     return nil
 }

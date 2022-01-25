@@ -9,38 +9,39 @@ import SwiftUI
 
 struct EventSearchView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
+    @Environment(\.presentationMode) var presentationMode
 
     @State private var searchText = ""
+    @State private var displayEvent = false
 
     var body: some View {
         NavigationView {
             List {
-                ForEach(searchResults, id: \.eventIdentifier) { event in
-                    NavigationLink(destination: EventEditView(
-                        event,
-                        defaultEventCalendar: store.state.defaultEventCalendar
-                    )) {
-                        Text(event.title)
+                ForEach(store.state.searchResult, id: \.eventIdentifier) { event in
+//                    NavigationLink(destination: EventEditView(
+//                        event,
+//                        defaultEventCalendar: event.calendar
+//                    )) {
+//                        Text(event.title)
+//                    }
+                    Button(event.title) {
+                        displayEvent.toggle()
+                    }
+                    .fullScreenCover(isPresented: $displayEvent) {
+                        EventEditView(event, defaultEventCalendar: event.calendar)
                     }
                 }
             }
             .searchable(text: $searchText)
-            .navigationTitle("Events")
+            .onSubmit(of: .search) {
+                store.send(.loadSearchResult(searchText))
+            }
+            .navigationTitle("Search events")
+            .navigationBarTitleDisplayMode(.inline)
         }
-    }
-
-    var searchResults: [Event] {
-        if searchText.isEmpty {
-            return []
-        } else {
-            store.send(.loadSearchResult(searchText))
-            return store.state.searchResult
-        }
+        .onDisappear(perform: {
+            store.send(.setSearchResult([]))
+        })
     }
 }
 
-struct EventSearchView_Previews: PreviewProvider {
-    static var previews: some View {
-        EventSearchView()
-    }
-}

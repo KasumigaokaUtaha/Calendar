@@ -11,6 +11,7 @@ import SwiftUI
 /// A view for creating, editing, and deleting calendar events.
 struct EventEditView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
+    @Environment(\.presentationMode) var presentationMode
 
     @State var title: String
     // TODO: var location
@@ -174,6 +175,8 @@ struct EventEditView: View {
                                 Text("Abort changes"),
                                 action: {
                                     // TODO: leave the view
+                                    self.presentationMode.wrappedValue.dismiss()
+
                                 }
                             )
                         ]
@@ -200,6 +203,7 @@ struct EventEditView: View {
                         store.send(.addEvent(newEvent))
                     }
                     // TODO: Dismiss this view
+                    self.presentationMode.wrappedValue.dismiss()
                 }
                 .disabled(endDate < startDate)
             }

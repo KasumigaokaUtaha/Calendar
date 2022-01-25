@@ -63,7 +63,7 @@ struct EventEnvironment {
                                 .setEventErrorMessage(
                                     "Some internal errors happened. Please send an email with the log to our support email address."
                                 ),
-                            AppAction.setShowError(true)
+                            AppAction.setShowError(true),
                         ]
                         promise(.success(actions))
                         return
@@ -77,7 +77,7 @@ struct EventEnvironment {
                                 .setAlertMessage(
                                     "This app won't work without access rights to your calendar events. Please grant this app access rights in the system settings and try againt later."
                                 ),
-                            AppAction.setShowAlert(true)
+                            AppAction.setShowAlert(true),
                         ]
                     } else {
                         // Access granted
@@ -112,7 +112,7 @@ struct EventEnvironment {
                     .setAlertMessage(
                         "This app won't work without access rights to your calendar events. Please grant this app access rights in the system settings and try againt later."
                     ),
-                AppAction.setShowAlert(true)
+                AppAction.setShowAlert(true),
             ]
             .publisher
             .flatMap { Just($0) }
@@ -129,7 +129,7 @@ struct EventEnvironment {
                     .setAlertMessage(
                         "You are in restricted mode which means you cannot grant this app access rights to your calendar events. Please try again later."
                     ),
-                AppAction.setShowAlert(true)
+                AppAction.setShowAlert(true),
             ]
             .publisher
             .flatMap { Just($0) }
@@ -212,8 +212,7 @@ struct EventEnvironment {
                 let predicate = eventStore.predicateForEvents(withStart: start, end: end, calendars: calendars)
                 let events: [Event] = eventStore.events(matching: predicate).map { .init(ekEvent: $0) }
 
-                let actions: [AppAction] = events.map { event in .updateEventInLocalStore(event)}
-                
+                let actions: [AppAction] = events.map { event in .updateEventInLocalStore(event) }
 
                 promise(.success(actions))
             }
@@ -291,21 +290,14 @@ struct EventEnvironment {
                 for i in keyArray.indices {
                     keyArray[i] = keyArray[i].trimmingCharacters(in: .whitespacesAndNewlines)
                 }
-
-                let predicates = keyArray.map { (key: String) -> NSPredicate in
-                    NSPredicate(format: "title CONTAINS[c] %@", key)
+                var result: [Event] = events
+                for key in keyArray {
+                    result = events.filter{ event in
+                        return event.title.localizedCaseInsensitiveContains(key)
+                    }
                 }
-                let predicateForAllKeys = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
-                let result = NSArray(array: events).filtered(using: predicateForAllKeys)
-
-                if let filteredEvents = result as NSArray as? [Event] {
-                    let actions: [AppAction] = [.setSearchResult(filteredEvents)]
-                    promise(.success(actions))
-                } else {
-                    print("search events by name type convertion failed")
-                    let actions: [AppAction] = [.setSearchResult([])]
-                    promise(.success(actions))
-                }
+                let actions: [AppAction] = [.setSearchResult(result)]
+                promise(.success(actions))
             }
         }
     }
@@ -323,7 +315,7 @@ struct EventEnvironment {
                 } catch {
                     let actions: [AppAction] = [
                         .setEventErrorMessage("An error occurred while saving a new event."),
-                        .setShowError(true)
+                        .setShowError(true),
                     ]
                     promise(.success(actions))
                 }
@@ -351,7 +343,7 @@ struct EventEnvironment {
                 } catch {
                     let actions: [AppAction] = [
                         .setEventErrorMessage("An error occurred while updating an existing event."),
-                        .setShowError(true)
+                        .setShowError(true),
                     ]
                     promise(.success(actions))
                 }
@@ -378,7 +370,7 @@ struct EventEnvironment {
                 } catch {
                     let actions: [AppAction] = [
                         .setEventErrorMessage("An error occurred while deleting an existing event."),
-                        .setShowError(true)
+                        .setShowError(true),
                     ]
                     promise(.success(actions))
                 }
