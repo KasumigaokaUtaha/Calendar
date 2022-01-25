@@ -78,7 +78,6 @@ struct TrueMonthView: View {
                     }
             }
             .onAppear {
-                // curDate = store.state.selectedDate ?? curDate
                 //! !try not to undate curDate here otherwise cannot go to the selected month from year!!
                 store.send(.loadEventsForMonth(at: curDate))
             }

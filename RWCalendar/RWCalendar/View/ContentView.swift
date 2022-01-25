@@ -69,6 +69,7 @@ struct ContentView: View {
             MonthHome(curDate: dateForMonth())
                 .onAppear {
                     store.send(.setSelectedDate(dateForMonth()))
+                    //!!try set theme here. Maybe put customizationData... here
                 }
 
         case .week:
