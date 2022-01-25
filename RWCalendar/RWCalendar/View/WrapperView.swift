@@ -8,11 +8,17 @@
 import SwiftUI
 
 struct WrapperView: View {
+    @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
     @EnvironmentObject var customizationData: CustomizationData
     @Environment(\.colorScheme) var colorScheme
     var body: some View {
         ContentView()
             .colorScheme(colorScheme)
+            .onAppear {
+                store.send(.loadSourcesAndCalendars)
+                store.send(.loadAppStorageProperties)
+                store.send(.loadStoredCalendars)
+            }
     }
 }
 
