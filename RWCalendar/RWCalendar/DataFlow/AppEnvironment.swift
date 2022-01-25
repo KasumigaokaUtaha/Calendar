@@ -211,8 +211,13 @@ struct EventEnvironment {
             Future { promise in
                 let predicate = eventStore.predicateForEvents(withStart: start, end: end, calendars: calendars)
                 let events: [Event] = eventStore.events(matching: predicate).map { .init(ekEvent: $0) }
+<<<<<<< HEAD
                 let actions: [AppAction] = events.map { event in .addEventToLocalStore(event) }
 
+=======
+                let actions: [AppAction] = events.map { event in .updateEventInLocalStore(event)}
+                
+>>>>>>> origin/dev
                 promise(.success(actions))
             }
         }
