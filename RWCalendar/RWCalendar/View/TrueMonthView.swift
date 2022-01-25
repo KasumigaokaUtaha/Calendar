@@ -94,6 +94,7 @@ struct TrueMonthView: View {
                         curDate = Date()
                         store.send(.setSelectedDay(Calendar.current.component(.day, from: Date())))
                         store.send(.setSelectedDate(curDate))
+                        store.send(.loadEventsForMonth(at: curDate))
                     }
                 }
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -153,7 +154,10 @@ extension TrueMonthView {
                 Button("Today") {
                     curDate = Date()
                     store.send(.setSelectedDay(Calendar.current.component(.day, from: Date())))
-                    store.send(.setSelectedDate(curDate))
+                    // updateMonth()
+                }
+                .onAppear {
+                    // updateMonth()
                 }
                 // years and months
                 Text(RWCalendar.dateToString(date: curDate)[1])
