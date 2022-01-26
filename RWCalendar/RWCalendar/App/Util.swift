@@ -326,13 +326,13 @@ func isToday(date: Date) -> Bool {
 }
 
 // return current month based on the int value
-func getCurMonth(value: Int) -> Date {
-    Calendar.current.date(byAdding: .month, value: value, to: Date())!
-}
+// func getCurMonth(value: Int) -> Date {
+//    Calendar.current.date(byAdding: .month, value: value, to: Date())!
+// }
 
 // get all the date in a month for display
-func getDate(value: Int) -> [DateData] {
-    var days = getCurMonth(value: value).getMonthDate().compactMap { date -> DateData in
+func getDate(date: Date) -> [DateData] {
+    var days = date.getMonthDate().compactMap { date -> DateData in
 
         let day = Calendar.current.component(.day, from: date)
 

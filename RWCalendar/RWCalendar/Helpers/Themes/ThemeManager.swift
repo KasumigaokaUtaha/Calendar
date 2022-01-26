@@ -11,7 +11,7 @@ import Foundation
 
 enum ThemeManager {
     static let themes: [Theme] = [Theme0(), Theme1(), Theme2()]
-    
+
     static func getTheme(_ theme: Int) -> Theme {
         Self.themes[theme]
     }

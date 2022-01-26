@@ -13,16 +13,16 @@ struct DayTaskTableView: View {
         GeometryReader { geo in
             ScrollView(.vertical, showsIndicators: false) {
                 ZStack {
-                    VStack(spacing: geo.size.height/14) {
-                        ForEach(0...12, id: \.self) { row in
+                    VStack(spacing: geo.size.height / 14) {
+                        ForEach(0 ... 12, id: \.self) { row in
                             HStack {
                                 Text("\(row) : 00 AM")
                                     .font(.footnote)
                                 Spacer()
                             }
-                        }.frame(width: geo.size.width/4, alignment: .leading)
+                        }.frame(width: geo.size.width / 4, alignment: .leading)
 
-                        ForEach(13...24, id: \.self) { row in
+                        ForEach(13 ... 24, id: \.self) { row in
                             HStack {
                                 Text("\(row) : 00 PM")
                                     .font(.footnote)
@@ -30,14 +30,14 @@ struct DayTaskTableView: View {
                             }
                         }
 
-                        .frame(width: geo.size.width/4, alignment: .leading)
+                        .frame(width: geo.size.width / 4, alignment: .leading)
                     }
                     .frame(width: geo.frame(in: .local).width, alignment: .leading)
 
                     Text("IOS Swift")
                         .frame(width: 200, height: 100)
                         .background(Color.green)
-                        .position(x: geo.size.width/2, y: 100)
+                        .position(x: geo.size.width / 2, y: 100)
                 }
             }
         }
@@ -50,7 +50,7 @@ struct DayTaskTableView_Previews: PreviewProvider {
         reducer: appReducer,
         environment: AppEnvironment()
     )
-    
+
     static var previews: some View {
         DayTaskTableView()
             .environmentObject(store)

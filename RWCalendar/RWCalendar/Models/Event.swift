@@ -8,7 +8,7 @@
 import EventKit
 import Foundation
 
-struct Event {
+struct Event: Hashable {
     var title: String
     var startDate: Date
     var endDate: Date
@@ -22,6 +22,7 @@ struct Event {
     var hasRecurrenceRule: Bool {
         recurrenceRule != nil
     }
+
     var reminderTime: ReminderTime? {
         get {
             guard

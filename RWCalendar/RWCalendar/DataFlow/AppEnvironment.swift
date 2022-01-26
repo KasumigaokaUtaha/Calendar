@@ -162,7 +162,7 @@ struct EventEnvironment {
             }
         }
     }
-    
+
     func getCalendars(with names: [String], for entityType: EKEntityType = .event) -> AnyPublisher<AppAction, Never> {
         makeActions {
             Future { promise in
@@ -170,7 +170,7 @@ struct EventEnvironment {
                     names.contains(calendar.title)
                 }
                 let actions: [AppAction] = [.setActivatedCalendars(calendars)]
-                
+
                 promise(.success(actions))
             }
         }
@@ -202,20 +202,29 @@ struct EventEnvironment {
         return result
     }
 
-    private func addEventsMatching(withStart start: Date, end: Date, calendars: [EKCalendar]?) -> AnyPublisher<AppAction, Never> {
+    private func addEventsMatching(
+        withStart start: Date,
+        end: Date,
+        calendars: [EKCalendar]?
+    ) -> AnyPublisher<AppAction, Never> {
         makeActions {
             Future { promise in
                 let predicate = eventStore.predicateForEvents(withStart: start, end: end, calendars: calendars)
                 let events: [Event] = eventStore.events(matching: predicate).map { .init(ekEvent: $0) }
-                let actions: [AppAction] = events.map { event in .updateEventInLocalStore(event)}
-                
+
+                let actions: [AppAction] = events.map { event in .updateEventInLocalStore(event) }
+
                 promise(.success(actions))
             }
         }
     }
 
     /// Adds all events in the given EKCalendars that fall in the given date.
-    func addEventsForDay(_ day: Date, calendar: Calendar, with activatedCalendars: [EKCalendar]?) -> AnyPublisher<AppAction, Never> {
+    func addEventsForDay(
+        _ day: Date,
+        calendar: Calendar,
+        with activatedCalendars: [EKCalendar]?
+    ) -> AnyPublisher<AppAction, Never> {
         guard
             let startOfDay = Util.startOfDay(day, calendar: calendar),
             let endOfDay = Util.endOfDay(day, calendar: calendar)
@@ -227,7 +236,11 @@ struct EventEnvironment {
     }
 
     /// Adds all events in the given EKCalendars that fall in the week of the given date.
-    func addEventsForWeek(date: Date, calendar: Calendar, with activatedCalendars: [EKCalendar]?) -> AnyPublisher<AppAction, Never> {
+    func addEventsForWeek(
+        date: Date,
+        calendar: Calendar,
+        with activatedCalendars: [EKCalendar]?
+    ) -> AnyPublisher<AppAction, Never> {
         guard
             let startOfWeek = Util.startOfWeek(date: date, calendar: calendar),
             let endOfWeek = Util.endOfWeek(date: date, calendar: calendar)
@@ -239,7 +252,11 @@ struct EventEnvironment {
     }
 
     /// Adds all events in the given EKCalendars that fall in the month of the given date.
-    func addEventsForMonth(date: Date, calendar: Calendar, with activatedCalendars: [EKCalendar]?) -> AnyPublisher<AppAction, Never> {
+    func addEventsForMonth(
+        date: Date,
+        calendar: Calendar,
+        with activatedCalendars: [EKCalendar]?
+    ) -> AnyPublisher<AppAction, Never> {
         guard
             let startOfMonth = Util.startOfMonth(date: date, calendar: calendar),
             let endOfMonth = Util.endOfMonth(date: date, calendar: calendar)
@@ -251,7 +268,11 @@ struct EventEnvironment {
     }
 
     /// Adds all events in the given EKCalendars that fall in the year of the given date.
-    func addEventsForYear(date: Date, calendar: Calendar, with activatedCalendars: [EKCalendar]?) -> AnyPublisher<AppAction, Never> {
+    func addEventsForYear(
+        date: Date,
+        calendar: Calendar,
+        with activatedCalendars: [EKCalendar]?
+    ) -> AnyPublisher<AppAction, Never> {
         guard
             let startOfYear = Util.startOfYear(date: date, calendar: calendar),
             let endOfYear = Util.endOfYear(date: date, calendar: calendar)
@@ -260,6 +281,32 @@ struct EventEnvironment {
         }
 
         return addEventsMatching(withStart: startOfYear, end: endOfYear, calendars: activatedCalendars)
+    }
+
+    func searchEventsByName(str: String, events: [Event]) -> AnyPublisher<AppAction, Never> {
+        makeActions {
+            Future { promise in
+                var keyArray = str.components(separatedBy: " ")
+                for i in keyArray.indices {
+                    keyArray[i] = keyArray[i].trimmingCharacters(in: .whitespacesAndNewlines)
+                }
+
+                let predicates = keyArray.map { (key: String) -> NSPredicate in
+                    NSPredicate(format: "title CONTAINS[c] %@", key)
+                }
+                let predicateForAllKeys = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+                let result = NSArray(array: events).filtered(using: predicateForAllKeys)
+
+                if let filteredEvents = result as NSArray as? [Event] {
+                    let actions: [AppAction] = [.setSearchResult(filteredEvents)]
+                    promise(.success(actions))
+                } else {
+                    print("search events by name type convertion failed")
+                    let actions: [AppAction] = [.setSearchResult([])]
+                    promise(.success(actions))
+                }
+            }
+        }
     }
 
     /// Add the given event to the default EventStore and directly commit the changes.

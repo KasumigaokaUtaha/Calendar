@@ -9,7 +9,7 @@ import SwiftUI
 
 struct DayToolbarView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
-    @State private var currentWeek: Int = 0
+    @State private var currentWeek = 0
     @State private var offset: CGSize = .zero
     let weekDays: [String] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
     var body: some View {
@@ -31,11 +31,11 @@ struct DayToolbarView: View {
         }
         .navigationViewStyle(.stack)
     }
-    
+
     func makeDayBarView() -> some View {
         VStack(spacing: 1) {
             HStack {
-                ForEach(0...6, id: \.self) { day in
+                ForEach(0 ... 6, id: \.self) { day in
                     Text(weekDays[day])
                         .font(.callout)
                         .fontWeight(.semibold)
@@ -44,13 +44,14 @@ struct DayToolbarView: View {
                 }
             }.frame(maxWidth: .infinity)
             HStack {
-                ForEach(0...6, id: \.self) {
+                ForEach(0 ... 6, id: \.self) {
                     let d = extractDate()[$0]
                     Text(String(d.day))
-                        .background(Circle()
-                            .fill(Color.red)
-                            .opacity(isSameDay(date1: d.date, date2: store.state.currentDate) ? 1 : 0)
-                            .frame(width: 25, height: 25)
+                        .background(
+                            Circle()
+                                .fill(Color.red)
+                                .opacity(isSameDay(date1: d.date, date2: store.state.currentDate) ? 1 : 0)
+                                .frame(width: 25, height: 25)
                         )
                 }.frame(maxWidth: .infinity)
                     .offset(x: offset.width * 3)
@@ -71,7 +72,9 @@ struct DayToolbarView: View {
                     self.offset = .zero
                 }
         )
-        .navigationTitle("\(getToolBarData(date: store.state.currentDate)[0]) \(getToolBarData(date: store.state.currentDate)[1])")
+        .navigationTitle(
+            "\(getToolBarData(date: store.state.currentDate)[0]) \(getToolBarData(date: store.state.currentDate)[1])"
+        )
     }
 
     func makeMenu() -> some View {
@@ -124,40 +127,40 @@ struct DayToolbarView: View {
     func getDate() -> [String] {
         let formatter = DateFormatter()
         formatter.dateFormat = "YYYY MMM"
-        
+
         let calendar = Calendar.current
         var d = store.state.currentDate
         d = calendar.date(byAdding: .weekOfYear, value: currentWeek, to: d)!
-        
+
         var MonthAndYear = formatter.string(from: d)
-        
+
         var date = MonthAndYear.components(separatedBy: " ")
-        
+
         let weekOfYear = calendar.component(.weekOfYear, from: d)
         date.append(String(weekOfYear))
-        
+
         return date
     }
-    
+
     func isSameDay(date1: Date, date2: Date) -> Bool {
         let calendar = Calendar.current
-        
+
         return calendar.isDate(date1, inSameDayAs: date2)
     }
-    
+
     func extractDate() -> [DayData] {
         let days = store.state.currentDate.getWeeks(currentWeek: currentWeek)
-        
+
         let calendar = Calendar.current
-        
+
         return days.compactMap { date -> DayData in
             let day = calendar.component(.day, from: date)
             let week = calendar.component(.weekOfYear, from: date)
-            
+
             return DayData(day: day, date: date, weekday: Weekday(week, calendar: Calendar.current) ?? Weekday.monday)
         }
     }
-    
+
     func getToolBarData(date: Date) -> [String] {
         let df = DateFormatter()
         df.dateFormat = "yyyy-MMM"
@@ -173,7 +176,7 @@ struct DayToolbarView_Previews: PreviewProvider {
         reducer: appReducer,
         environment: AppEnvironment()
     )
-    
+
     static var previews: some View {
         DayToolbarView()
             .environmentObject(store)
@@ -186,16 +189,17 @@ extension Date {
         print(currentWeek)
         // the local calendar
         let calendar = Calendar.current
-        
-        let range = 1...7
-        
+
+        let range = 1 ... 7
+
         // getting the start Date
-        
-        var startDay = calendar.date(from: Calendar.current.dateComponents([.weekOfYear, .yearForWeekOfYear], from: self))!
+
+        var startDay = calendar
+            .date(from: Calendar.current.dateComponents([.weekOfYear, .yearForWeekOfYear], from: self))!
         startDay = calendar.date(byAdding: .hour, value: 2, to: startDay) ?? Date()
         startDay = calendar.date(byAdding: .weekOfYear, value: currentWeek, to: startDay)!
         // get date...
-        
+
         return range.compactMap { weekday -> Date in
             calendar.date(byAdding: .day, value: weekday - 1, to: startDay) ?? Date()
         }

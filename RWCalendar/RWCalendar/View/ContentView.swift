@@ -15,7 +15,6 @@ struct ContentView: View {
 
     @State var showAlert = false
 
-
     var body: some View {
         if #available(iOS 15, *) {
             makeContent()
@@ -51,9 +50,8 @@ struct ContentView: View {
                         showAlert = state.showAlert
                     }
                 }
-            }
+        }
     }
-
 
     @ViewBuilder func makeContent() -> some View {
         switch store.state.currentTab {
@@ -68,17 +66,12 @@ struct ContentView: View {
                 }
             }
         case .month:
-            ContainerView {
-                // TODO: replace with actual view
-                Text("Month")
-                    .navigationTitle(String(format: "%d %d", store.state.selectedYear, store.state.selectedMonth))
-            } makeNavigationBarButton: {
-                Button {
-                    store.send(.setScrollToToday(withAnimation: true))
-                } label: {
-                    Text("Today")
+            MonthHome(curDate: dateForMonth())
+                .onAppear {
+                    store.send(.setSelectedDate(dateForMonth()))
+                    // TODO: try set theme here. Maybe put customizationData... here
                 }
-            }
+
         case .week:
             ContainerView {
                 // TODO: replace with actual view
@@ -92,13 +85,18 @@ struct ContentView: View {
             }
         case .day:
             CalendarDayView()
+
         case .settings:
+
             ContainerView {
+                Text("setting")
+
                 SettingView()
                     .navigationTitle(Text("Settings"))
-//                    .background(Color(customizationData.selectedTheme.backgroundColor).edgesIgnoringSafeArea(.all))
+                    .background(Color(customizationData.selectedTheme.backgroundColor).edgesIgnoringSafeArea(.all))
                     .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
                     .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
+
             } makeNavigationBarButton: {
                 Text("")
             }
@@ -126,6 +124,20 @@ struct ContentView: View {
         }
 
         openURL(settingsURL)
+    }
+}
+
+extension ContentView {
+    // get the components of the selected date
+    func dateForMonth() -> Date {
+        var comp = DateComponents()
+        comp.month = store.state.selectedMonth
+        comp.year = store.state.selectedYear
+
+        let calendar = Calendar.current
+        let date = calendar.date(from: comp)
+
+        return date ?? Date()
     }
 }
 

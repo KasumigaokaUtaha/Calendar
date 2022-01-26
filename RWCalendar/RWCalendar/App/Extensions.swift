@@ -25,7 +25,7 @@ extension Calendar {
         let startDate = startOfDay(for: start)
         let endDate = startOfDay(for: end)
         let numberOfDays = dateComponents([.day], from: startDate, to: endDate)
-        
+
         return numberOfDays.day!
     }
 }

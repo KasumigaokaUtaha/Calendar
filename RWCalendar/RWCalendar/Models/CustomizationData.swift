@@ -9,13 +9,14 @@ import SwiftUI
 
 class CustomizationData: ObservableObject {
     @Published var selectedTheme: Theme = Theme0()
-    
+
     // Store the user customization preference
     @AppStorage("savedThemeChoice") var savedThemeChoice = 0 {
         didSet {
             updateTheme()
         }
     }
+
     @AppStorage("savedFontSize") var savedFontSize = 17
     @AppStorage("savedFontStyle") var savedFontStyle = "Times New Roman"
     @AppStorage("savedAppIcon") var savedAppIcon = "Default" {
@@ -23,22 +24,20 @@ class CustomizationData: ObservableObject {
             updateIcon()
         }
     }
-    
+
     init() {
         updateTheme()
     }
-    
+
     func updateTheme() {
         selectedTheme = ThemeManager.getTheme(savedThemeChoice)
     }
-    
+
     func updateIcon() {
         if savedAppIcon == "Default" {
             UIApplication.shared.setAlternateIconName(nil)
-        }
-        else {
+        } else {
             UIApplication.shared.setAlternateIconName(savedAppIcon)
         }
     }
-
 }

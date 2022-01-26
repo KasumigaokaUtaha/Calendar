@@ -5,25 +5,24 @@
 //  Created by 邱昕昊 on 2022/1/24.
 //
 
-import SwiftUI
 import EventKit
+import SwiftUI
 
 struct CalendarSelectionView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
-    
+
     var calendars: [EKCalendar]
-    
+
     var body: some View {
         var selections: [EKCalendar] = store.state.activatedCalendars
         var selectionNames: [String] = store.state.activatedCalendarNames
         List {
-            ForEach(calendars, id:\.self) { calendar in
+            ForEach(calendars, id: \.self) { calendar in
                 MultipleSelectionRow(title: calendar.title, isSelected: selections.contains(calendar)) {
                     if selections.contains(calendar) {
                         selections.removeAll(where: { $0 == calendar })
                         selectionNames.removeAll(where: { $0 == calendar.title })
-                    }
-                    else{
+                    } else {
                         selections.append(calendar)
                         selectionNames.append(calendar.title)
                     }
@@ -32,7 +31,7 @@ struct CalendarSelectionView: View {
                 }
             }
         }
-        
+
         .navigationBarTitle(Text("Calendars"), displayMode: .inline)
     }
 }

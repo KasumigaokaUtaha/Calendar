@@ -47,6 +47,26 @@ struct EventEditView: View {
         _notes = State(initialValue: event?.notes ?? "")
     }
 
+    init(_ event: Event?, defaultEventCalendar: EKCalendar, date: Date?) {
+        if let event = event {
+            self.event = event
+            navigationTitle = "Edit Event"
+        } else {
+            self.event = nil
+            navigationTitle = "Add Event"
+        }
+
+        _startDate = State(initialValue: date ?? Date())
+        _endDate = State(initialValue: date ?? Date())
+        _title = State(initialValue: event?.title ?? "")
+        // _startDate = State(initialValue: event?.startDate ?? Date())
+        // _endDate = State(initialValue: event?.endDate ?? Date())
+        _calendar = State(initialValue: event?.calendar ?? defaultEventCalendar)
+        _reminderTime = State(initialValue: event?.reminderTime)
+        _url = State(initialValue: event?.url ?? "")
+        _notes = State(initialValue: event?.notes ?? "")
+    }
+
     var body: some View {
         NavigationView {
             Form {
@@ -103,15 +123,19 @@ struct EventEditView: View {
                                 .frame(maxWidth: .infinity, alignment: .center)
                         }
                         .actionSheet(isPresented: $showConfirmationForDelete) {
-                            ActionSheet(title: Text("Delete this event"),
-                                        message: Text("This event will be remove"),
-                                        buttons: [
-                                            .cancel(),
-                                            .destructive(Text("Delete"),
-                                                         action: {
-                                                             store.send(.removeEvent(event!))
-                                                         }),
-                                        ])
+                            ActionSheet(
+                                title: Text("Delete this event"),
+                                message: Text("This event will be remove"),
+                                buttons: [
+                                    .cancel(),
+                                    .destructive(
+                                        Text("Delete"),
+                                        action: {
+                                            store.send(.removeEvent(event!))
+                                        }
+                                    )
+                                ]
+                            )
                         }
                     }
                 }
@@ -128,7 +152,7 @@ struct EventEditView: View {
             .toolbar {
                 makeToolbar()
             }
-            .navigationTitle("Update Event")
+            .navigationTitle(navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
         }
         .navigationViewStyle(.stack)
@@ -141,17 +165,19 @@ struct EventEditView: View {
                     showActionSheetForCancel = true
                 }
                 .actionSheet(isPresented: $showActionSheetForCancel) {
-                    ActionSheet(title: Text("Cancel your changes on this event"),
-                                message: Text("Your changes will be aborted"),
-                                buttons: [
-                                    .cancel(),
-                                    .destructive(
-                                        Text("Abort changes"),
-                                        action: {
-                                            // TODO: leave the view
-                                        }
-                                    ),
-                                ])
+                    ActionSheet(
+                        title: Text("Cancel your changes on this event"),
+                        message: Text("Your changes will be aborted"),
+                        buttons: [
+                            .cancel(),
+                            .destructive(
+                                Text("Abort changes"),
+                                action: {
+                                    // TODO: leave the view
+                                }
+                            )
+                        ]
+                    )
                 }
             }
             ToolbarItem(placement: .navigationBarTrailing) {

@@ -43,6 +43,7 @@ struct AppState {
     var alertMessage: String
 
     var selectedDate: Date?
+
     // MARK: - Year Specific States
 
     /// The currently selected year
@@ -75,12 +76,12 @@ struct AppState {
     // MARK: - Event States
 
     var selectedEvent: Event?
-    
+
     var dateToEventIDs: [RWDate: [String]]
     var eventIDToEvent: [String: Event]
     var allEventIDs: [String]
     var recurringEventIDs: [String]
-    
+
     var sourcesAndCalendars: [EKSource: [EKCalendar]]
 
     @AppStorage("activatedCalendarNames")
@@ -90,6 +91,7 @@ struct AppState {
 
     var defaultEventCalendar: EKCalendar!
     var defaultReminderCalendar: EKCalendar!
+    var searchResult: [Event]
 
     init() {
         years = [:]
@@ -114,10 +116,21 @@ struct AppState {
         eventIDToEvent = [:]
         allEventIDs = []
         recurringEventIDs = []
-        
+
         sourcesAndCalendars = [:]
-        
+
         activatedCalendarNames = []
         activatedCalendars = []
+
+        searchResult = []
+
+        if currentYear < 1970 {
+            var component = DateComponents()
+            component.year = 1970
+            component.month = 1
+            component.day = 1
+            currentDate = calendar.date(from: component)!
+            currentYear = calendar.component(.year, from: currentDate)
+        }
     }
 }

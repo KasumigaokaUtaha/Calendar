@@ -18,7 +18,7 @@ struct RWCalendarApp: App {
             reducer: appReducer,
             environment: AppEnvironment()
         )
-        
+
         customizationData = CustomizationData()
     }
 
@@ -32,14 +32,16 @@ struct RWCalendarApp: App {
     }
 
     func onStartTasks() {
-        let rangeStart = store.state.currentYear - 1970
+        let diff = store.state.selectedYear - store.state.currentYear
+        let rangeEnd = diff > 0 ? diff : 3
+        let rangeStart = store.state.selectedYear - 1970
 
         store.send(.requestAccess(to: .event))
         store.send(.loadDefaultCalendar(for: .event))
         store.send(.setScrollToToday(withAnimation: false))
         store.send(.loadYearDataRange(
             base: store.state.currentYear,
-            range: -rangeStart ... 3
+            range: -rangeStart ... rangeEnd
         ))
     }
 }

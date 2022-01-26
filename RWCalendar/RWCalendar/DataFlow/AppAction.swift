@@ -31,26 +31,26 @@ enum AppAction {
     case setAlertMessage(String)
 
     // MARK: - Event Actions
-    
+
     case loadEventsForYear(at: Date)
     case loadEventsForMonth(at: Date)
     case loadEventsForWeek(at: Date)
     case loadEventsForDay(at: Date)
-    
+
     case loadSourcesAndCalendars
     case loadStoredCalendars
 
     case addEvent(Event)
     case updateEvent(with: Event)
     case removeEvent(Event)
-    
+
     /// Add event to the state dateToEventIDs
     case addEventToLocalStore(Event)
     /// Update event stored in the state dateToEventIDs
     case updateEventInLocalStore(Event)
     /// Remove event stored in the state dateToEventIDs
     case removeEventFromLocalStore(Event)
-    
+
     case setSelectedEvent(Event)
     case setEventErrorMessage(String)
     case setActivatedCalendars([EKCalendar])
@@ -63,11 +63,18 @@ enum AppAction {
 
     case loadDefaultCalendar(for: EKEntityType)
     case setDefaultCalendar(EKCalendar, for: EKEntityType)
+    case setSearchResult(_ searchResult: [Event])
+    case loadSearchResult(_ str: String)
 
     // MARK: - Year View Actions
 
     case setSelectedYear(_ year: Int)
     case setSelectedMonth(_ month: Int)
+    case setSelectedDay(_ day: Int)
+
+    // MARK: Month View Actions
+
+    case setSelectedDate(_ date: Date)
 
     // MARK: - Route Actions
 

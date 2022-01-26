@@ -159,24 +159,24 @@ struct RWDate: Hashable {
     let year: Int
     let month: Int
     let day: Int
-    
+
     init(year: Int, month: Int, day: Int) {
         self.year = year
         self.month = month
         self.day = day
     }
-    
+
     init(date: Date, calendar: Calendar) {
-        self.year = calendar.component(.year, from: date)
-        self.month = calendar.component(.month, from: date)
-        self.day = calendar.component(.day, from: date)
+        year = calendar.component(.year, from: date)
+        month = calendar.component(.month, from: date)
+        day = calendar.component(.day, from: date)
     }
-    
+
     init?(dateComponents: DateComponents) {
         guard let year = dateComponents.year, let month = dateComponents.month, let day = dateComponents.day else {
             return nil
         }
-        
+
         self.year = year
         self.month = month
         self.day = day
