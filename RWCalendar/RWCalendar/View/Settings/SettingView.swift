@@ -21,14 +21,18 @@ struct SettingView: View {
     var body: some View {
         Form {
             Section(header: Text("Calendar Settings")) {
-                NavigationLink(destination: SourceSelectionView()
-                                .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
-                                .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
+                NavigationLink(
+                    destination: SourceSelectionView()
+                        .font(.custom(
+                            customizationData.savedFontStyle,
+                            size: CGFloat(customizationData.savedFontSize)
+                        ))
+                        .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
                 ) {
                     Text("Displayed Calendars")
                 }
             }
-            
+
             Section(header: Text("Customization")) {
                 Picker(selection: customizationData.$savedFontSize, label: Text("Font Size"), content: {
                     Text("Extra Small")

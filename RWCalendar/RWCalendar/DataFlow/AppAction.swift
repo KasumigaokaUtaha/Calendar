@@ -36,7 +36,7 @@ enum AppAction {
     case loadEventsForMonth(at: Date)
     case loadEventsForWeek(at: Date)
     case loadEventsForDay(at: Date)
-    
+
     case loadSourcesAndCalendars
     case loadStoredCalendars
 

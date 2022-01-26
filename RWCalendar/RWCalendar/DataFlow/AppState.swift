@@ -81,7 +81,7 @@ struct AppState {
     var eventIDToEvent: [String: Event]
     var allEventIDs: [String]
     var recurringEventIDs: [String]
-    
+
     var sourcesAndCalendars: [EKSource: [EKCalendar]]
 
     @AppStorage("activatedCalendarNames")
@@ -117,15 +117,13 @@ struct AppState {
         allEventIDs = []
         recurringEventIDs = []
 
-        
         sourcesAndCalendars = [:]
-        
 
         activatedCalendarNames = []
         activatedCalendars = []
 
         searchResult = []
-        
+
         if currentYear < 1970 {
             var component = DateComponents()
             component.year = 1970
@@ -134,6 +132,5 @@ struct AppState {
             currentDate = calendar.date(from: component)!
             currentYear = calendar.component(.year, from: currentDate)
         }
-
     }
 }

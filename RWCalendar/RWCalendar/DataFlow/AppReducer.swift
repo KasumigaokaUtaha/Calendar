@@ -277,9 +277,9 @@ func appReducer(
         return environment.event.getCalendars(with: state.activatedCalendarNames)
 
     case let .setSearchResult(searchResult):
-             state.searchResult = searchResult
-         case let .loadSearchResult(str):
-             return environment.event.searchEventsByName(str: str, events: Array(state.eventIDToEvent.values))
+        state.searchResult = searchResult
+    case let .loadSearchResult(str):
+        return environment.event.searchEventsByName(str: str, events: Array(state.eventIDToEvent.values))
     }
     return nil
 }
