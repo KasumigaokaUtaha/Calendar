@@ -31,7 +31,7 @@ struct EventSearchView: View {
                         EventEditView(event, defaultEventCalendar: event.calendar)
                     }
                 }
-                if store.state.searchResult.count == 0 && displayNoResult {
+                if store.state.searchResult.count == 0, displayNoResult {
                     if searchText != "" {
                         Text("No Result for \(searchText)")
                             .foregroundColor(.gray)

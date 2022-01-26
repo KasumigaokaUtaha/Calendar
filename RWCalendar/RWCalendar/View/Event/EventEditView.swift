@@ -136,8 +136,6 @@ struct EventEditView: View {
                                         action: {
                                             store.send(.removeEvent(event!))
                                             self.presentationMode.wrappedValue.dismiss()
-                                            
-
                                         }
                                     )
                                 ]
@@ -180,7 +178,6 @@ struct EventEditView: View {
                                 Text("Abort changes"),
                                 action: {
                                     self.presentationMode.wrappedValue.dismiss()
-
                                 }
                             )
                         ]

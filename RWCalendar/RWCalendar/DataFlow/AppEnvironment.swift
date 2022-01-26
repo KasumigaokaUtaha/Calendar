@@ -63,7 +63,7 @@ struct EventEnvironment {
                                 .setEventErrorMessage(
                                     "Some internal errors happened. Please send an email with the log to our support email address."
                                 ),
-                            AppAction.setShowError(true),
+                            AppAction.setShowError(true)
                         ]
                         promise(.success(actions))
                         return
@@ -77,7 +77,7 @@ struct EventEnvironment {
                                 .setAlertMessage(
                                     "This app won't work without access rights to your calendar events. Please grant this app access rights in the system settings and try againt later."
                                 ),
-                            AppAction.setShowAlert(true),
+                            AppAction.setShowAlert(true)
                         ]
                     } else {
                         // Access granted
@@ -112,7 +112,7 @@ struct EventEnvironment {
                     .setAlertMessage(
                         "This app won't work without access rights to your calendar events. Please grant this app access rights in the system settings and try againt later."
                     ),
-                AppAction.setShowAlert(true),
+                AppAction.setShowAlert(true)
             ]
             .publisher
             .flatMap { Just($0) }
@@ -129,7 +129,7 @@ struct EventEnvironment {
                     .setAlertMessage(
                         "You are in restricted mode which means you cannot grant this app access rights to your calendar events. Please try again later."
                     ),
-                AppAction.setShowAlert(true),
+                AppAction.setShowAlert(true)
             ]
             .publisher
             .flatMap { Just($0) }
@@ -292,8 +292,8 @@ struct EventEnvironment {
                 }
                 var result: [Event] = events
                 for key in keyArray {
-                    result = events.filter{ event in
-                        return event.title.localizedCaseInsensitiveContains(key)
+                    result = events.filter { event in
+                        event.title.localizedCaseInsensitiveContains(key)
                     }
                 }
                 let actions: [AppAction] = [.setSearchResult(result)]
@@ -315,7 +315,7 @@ struct EventEnvironment {
                 } catch {
                     let actions: [AppAction] = [
                         .setEventErrorMessage("An error occurred while saving a new event."),
-                        .setShowError(true),
+                        .setShowError(true)
                     ]
                     promise(.success(actions))
                 }
@@ -343,7 +343,7 @@ struct EventEnvironment {
                 } catch {
                     let actions: [AppAction] = [
                         .setEventErrorMessage("An error occurred while updating an existing event."),
-                        .setShowError(true),
+                        .setShowError(true)
                     ]
                     promise(.success(actions))
                 }
@@ -365,12 +365,15 @@ struct EventEnvironment {
 
                 do {
                     try eventStore.remove(targetEvent, span: .thisEvent, commit: true)
-                    let actions: [AppAction] = [.removeEventFromLocalStore(.init(ekEvent: targetEvent)), .removeEventFromSearchResult(event)]
+                    let actions: [AppAction] = [
+                        .removeEventFromLocalStore(.init(ekEvent: targetEvent)),
+                        .removeEventFromSearchResult(event)
+                    ]
                     promise(.success(actions))
                 } catch {
                     let actions: [AppAction] = [
                         .setEventErrorMessage("An error occurred while deleting an existing event."),
-                        .setShowError(true),
+                        .setShowError(true)
                     ]
                     promise(.success(actions))
                 }
