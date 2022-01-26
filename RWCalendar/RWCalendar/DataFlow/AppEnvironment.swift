@@ -297,20 +297,14 @@ struct EventEnvironment {
                 for i in keyArray.indices {
                     keyArray[i] = keyArray[i].trimmingCharacters(in: .whitespacesAndNewlines)
                 }
-
-                let predicates = keyArray.map { (key: String) -> NSPredicate in
-                    NSPredicate(format: "title CONTAINS[c] %@", key)
+                var result: [Event] = events
+                for key in keyArray {
+                    result = events.filter { event in
+                        event.title.localizedCaseInsensitiveContains(key)
+                    }
                 }
-                let predicateForAllKeys = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
-                let result = NSArray(array: events).filtered(using: predicateForAllKeys)
-
-                if let filteredEvents = result as NSArray as? [Event] {
-                    let actions: [AppAction] = [.setSearchResult(filteredEvents)]
-                    promise(.success(actions))
-                } else {
-                    let actions: [AppAction] = [.setSearchResult([])]
-                    promise(.success(actions))
-                }
+                let actions: [AppAction] = [.setSearchResult(result)]
+                promise(.success(actions))
             }
         }
     }
@@ -378,7 +372,10 @@ struct EventEnvironment {
 
                 do {
                     try eventStore.remove(targetEvent, span: .thisEvent, commit: true)
-                    let actions: [AppAction] = [.removeEventFromLocalStore(.init(ekEvent: targetEvent))]
+                    let actions: [AppAction] = [
+                        .removeEventFromLocalStore(.init(ekEvent: targetEvent)),
+                        .removeEventFromSearchResult(event)
+                    ]
                     promise(.success(actions))
                 } catch {
                     let actions: [AppAction] = [

@@ -17,6 +17,7 @@ struct TrueMonthView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
     @EnvironmentObject var customizationData: CustomizationData
     @State private var showEventMenu = false
+    @State private var showSearchBar = false
 
     // #TODO: add a var to controll light and dark modes
     var body: some View {
@@ -100,7 +101,9 @@ struct TrueMonthView: View {
                     } label: {
                         Image(systemName: "plus")
                     }
-                    Button {} label: {
+                    Button {
+                        showSearchBar.toggle()
+                    } label: {
                         Image(systemName: "magnifyingglass")
                     }
                 }
@@ -108,6 +111,9 @@ struct TrueMonthView: View {
         }
         .sheet(isPresented: $showEventMenu) {
             AddEventsSheetView()
+        }
+        .sheet(isPresented: $showSearchBar) {
+            EventSearchView(isPresented: $showSearchBar)
         }
     }
 }

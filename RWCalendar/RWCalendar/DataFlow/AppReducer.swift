@@ -226,6 +226,10 @@ func appReducer(
         .publisher
         .flatMap { action in Just(action) }
         .eraseToAnyPublisher()
+    case let .removeEventFromSearchResult(eventToRemove):
+        state.searchResult = state.searchResult.filter { event -> Bool in
+            event.eventIdentifier != eventToRemove.eventIdentifier
+        }
     case .loadAppStorageProperties:
         state.activatedCalendarNames = state.storedActivatedCalendarNames.toStringArray() ?? []
     case let .setActivatedCalendars(calendars):
@@ -281,6 +285,8 @@ func appReducer(
         state.searchResult = searchResult
     case let .loadSearchResult(str):
         return environment.event.searchEventsByName(str: str, events: Array(state.eventIDToEvent.values))
+            .subscribe(on: environment.backgroundQueue)
+            .eraseToAnyPublisher()
     }
     return nil
 }
