@@ -35,7 +35,6 @@ struct FilledRoundedCornerButtonStyle: ButtonStyle {
             )
             .border(primaryColor)
             .cornerRadius(cornerRadius)
-            // .shadow(radius:5)
             .scaleEffect(configuration.isPressed ? 0.9 : 1.0)
     }
 }

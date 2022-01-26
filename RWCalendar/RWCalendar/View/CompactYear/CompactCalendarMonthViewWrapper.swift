@@ -83,9 +83,7 @@ extension CompactCalendarMonthViewWrapper {
         }
 
         return monthData.days
-            .map { day in
-                store.state.calendar.isDate(day.date, inSameDayAs: store.state.currentDate) ? TextBoxStyle() : nil
-            }
+            .map { day in store.state.calendar.isDate(day.date, inSameDayAs: Date()) ? TextBoxStyle() : nil }
     }
 
     func getMonthData() -> MonthData? {

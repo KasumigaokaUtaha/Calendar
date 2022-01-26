@@ -62,12 +62,10 @@ struct TrueMonthView: View {
                                 withAnimation {
                                     curDate = Calendar.current.date(byAdding: .month, value: 1, to: curDate)!
                                     updateMonth()
-                                    //! ! try not to update load events here
                                 }
                             } else if $0.startLocation.x < $0.location.x - 20 {
                                 curDate = Calendar.current.date(byAdding: .month, value: -1, to: curDate)!
                                 updateMonth()
-                                //! ! try not to update load events here
                             }
                             self.offset = .zero
                         }
@@ -79,7 +77,6 @@ struct TrueMonthView: View {
                     }
             }
             .onAppear {
-                //! !try not to undate curDate here otherwise cannot go to the selected month from year!!
                 store.send(.loadEventsForMonth(at: curDate))
             }
 
@@ -95,6 +92,7 @@ struct TrueMonthView: View {
                         curDate = Date()
                         store.send(.setSelectedDay(Calendar.current.component(.day, from: Date())))
                         store.send(.setSelectedDate(curDate))
+                        store.send(.loadEventsForMonth(at: curDate))
                     }
                 }
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -151,7 +149,6 @@ struct TrueMonthView_Previews: PreviewProvider {
 }
 
 extension TrueMonthView {
-
     struct AddEventsSheetView: View {
         @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
 

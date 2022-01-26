@@ -138,19 +138,23 @@ struct CompactCalendarMonthView: UIViewRepresentable {
                 height: rect.height - edgeInsets.top - edgeInsets.bottom
             )
             var maxItemOrigin = contentRect.origin, index = 1, count = 1
-            var allDays: [(String, Tense)] = []
+            var allDays: [(String, Tense, TextBoxStyle?)] = []
 
             for lastMonthDay in lastMonthDays {
-                allDays.append((lastMonthDay, .past))
+                allDays.append((lastMonthDay, .past, nil))
             }
-            for currMonthDay in currMonthDays {
-                allDays.append((currMonthDay, .current))
+            for (index, currMonthDay) in currMonthDays.enumerated() {
+                var style: TextBoxStyle?
+                if index < currMonthDayStyles.count, let value = currMonthDayStyles[index] {
+                    style = value
+                }
+                allDays.append((currMonthDay, .current, style))
             }
             for nextMonthDay in nextMonthDays {
-                allDays.append((nextMonthDay, .future))
+                allDays.append((nextMonthDay, .future, nil))
             }
 
-            for (pos, (day, tense)) in allDays.enumerated() {
+            for (day, tense, style) in allDays {
                 let size = itemSizes[day]!
                 let xOffset = (maxItemSize.width - size.width) / 2.0
                 let yOffset = (maxItemSize.height - size.height) / 2.0
@@ -166,7 +170,7 @@ struct CompactCalendarMonthView: UIViewRepresentable {
                         NSString(string: day).draw(at: itemOrigin, withAttributes: attributes)
                     }
                 case .current:
-                    if pos < currMonthDayStyles.count, let style = currMonthDayStyles[pos] {
+                    if let style = style {
                         let dimension = max(size.width, size.height)
                         let path = UIBezierPath(
                             roundedRect: CGRect(
