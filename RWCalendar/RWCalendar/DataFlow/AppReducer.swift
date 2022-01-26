@@ -237,6 +237,11 @@ func appReducer(
         if let data = names.toData() {
             state.storedActivatedCalendarNames = data
         }
+        // clear all stored events and related states
+        state.dateToEventIDs = [:]
+        state.eventIDToEvent = [:]
+        state.allEventIDs = []
+        state.recurringEventIDs = []
     case let .activateCalendar(name):
         guard !state.activatedCalendarNames.contains(name) else {
             return nil
