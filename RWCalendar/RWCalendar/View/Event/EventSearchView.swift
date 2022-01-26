@@ -26,9 +26,10 @@ struct EventSearchView: View {
                 ForEach(store.state.searchResult, id: \.eventIdentifier) { event in
                     Button(event.title) {
                         displayEvent.toggle()
+                        store.send(.setSelectedEvent(event))
                     }
                     .fullScreenCover(isPresented: $displayEvent) {
-                        EventEditView(event, defaultEventCalendar: event.calendar)
+                        EventDisplayView()
                     }
                 }
                 if store.state.searchResult.count == 0, displayNoResult {

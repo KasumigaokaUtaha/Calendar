@@ -122,7 +122,7 @@ struct AppState {
         allSources = []
         sourceAndCalendars = [:]
         sourceTitleAndCalendarTitles = [:]
-        
+
         activatedCalendarNames = []
         activatedCalendars = []
 
