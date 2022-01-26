@@ -135,7 +135,6 @@ func appReducer(
         state.selectedDay = day
     case let .setSelectedDate(date):
         state.selectedDate = date
-        print("setSelectedDate: \(date)")
     case let .setSelectedEvent(event):
         state.selectedEvent = event
     case let .loadEventsForYear(date):
@@ -147,7 +146,6 @@ func appReducer(
     case let .loadEventsForDay(date):
         return environment.event.addEventsForDay(date, calendar: state.calendar, with: state.activatedCalendars)
     case let .addEvent(newEvent):
-        print("addEvent: \(newEvent)")
         return environment.event.addEvent(newEvent)
     case let .updateEvent(newEvent):
         return environment.event.updateEvent(with: newEvent)
