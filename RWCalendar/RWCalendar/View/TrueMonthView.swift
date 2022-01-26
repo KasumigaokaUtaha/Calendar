@@ -87,7 +87,7 @@ struct TrueMonthView: View {
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarLeading) {
                     makeMenu()
-                    Button("Today") {
+                    Button(NSLocalizedString("Today", comment: "Scroll to today")) {
                         curDate = Date()
                         store.send(.setSelectedDay(Calendar.current.component(.day, from: Date())))
                         store.send(.setSelectedDate(curDate))
@@ -221,6 +221,10 @@ extension TrueMonthView {
                     .fill(
                         checkEvent(date: value.date) ?
                             Color.red : Color.white
+                    )
+                    .opacity(
+                        checkEvent(date: value.date) ?
+                            0.5 : 0
                     )
                     .frame(width: 7, height: 7)
             }
