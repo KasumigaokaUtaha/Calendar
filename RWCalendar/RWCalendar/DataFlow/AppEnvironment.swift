@@ -163,43 +163,50 @@ struct EventEnvironment {
         }
     }
 
-    func getCalendars(with names: [String], for entityType: EKEntityType = .event) -> AnyPublisher<AppAction, Never> {
+    /// Returns all calendar sources.
+    func getAllSources() -> AnyPublisher<AppAction, Never> {
         makeActions {
             Future { promise in
-                let calendars = eventStore.calendars(for: entityType).filter { calendar in
-                    names.contains(calendar.title)
-                }
-                let actions: [AppAction] = [.setActivatedCalendars(calendars)]
-
+                let sources = eventStore.sources
+                    .sorted(by: { $0.title.localizedStandardCompare($1.title) == .orderedAscending })
+                let actions: [AppAction] = [.setAllSources(sources)]
                 promise(.success(actions))
             }
         }
     }
 
     /// Returns a dictionary from calendar source to array of calendar.
-    func getSourceToCalendars(for _: EKEntityType = .event) -> [EKSource: [EKCalendar]] {
-        var result: [EKSource: [EKCalendar]] = [:]
+    func getSourceToCalendars(for entityType: EKEntityType = .event) -> AnyPublisher<AppAction, Never> {
+        makeActions {
+            Future { promise in
+                var result: [EKSource: [EKCalendar]] = [:]
+                for source in eventStore.sources {
+                    result.updateValue(Array(source.calendars(for: entityType)), forKey: source)
+                }
 
-        for source in eventStore.sources {
-            result.updateValue(Array(source.calendars(for: .event)), forKey: source)
+                let actions: [AppAction] = [.setSourceToCalendars(result)]
+                promise(.success(actions))
+            }
         }
-
-        return result
     }
 
     /// Returns a dictionary from calendar source title to array of sorted calendar titles.
-    func getSourceTitleToCalendarTitles(for entityType: EKEntityType = .event) -> [String: [String]] {
-        var result: [String: [String]] = [:]
+    func getSourceTitleToCalendarTitles(for entityType: EKEntityType = .event) -> AnyPublisher<AppAction, Never> {
+        makeActions {
+            Future { promise in
+                var result: [String: [String]] = [:]
+                for source in eventStore.sources {
+                    let calendarTitles = source.calendars(for: entityType).map(\.title)
+                    result.updateValue(
+                        calendarTitles.sorted { $0.localizedStandardCompare($1) == .orderedAscending },
+                        forKey: source.title
+                    )
+                }
 
-        for source in eventStore.sources {
-            let calendarTitles = source.calendars(for: entityType).map(\.title)
-            result.updateValue(
-                calendarTitles.sorted { $0.localizedStandardCompare($1) == .orderedAscending },
-                forKey: source.title
-            )
+                let actions: [AppAction] = [.setSourceTitleToCalendarTitles(result)]
+                promise(.success(actions))
+            }
         }
-
-        return result
     }
 
     private func addEventsMatching(
@@ -290,21 +297,14 @@ struct EventEnvironment {
                 for i in keyArray.indices {
                     keyArray[i] = keyArray[i].trimmingCharacters(in: .whitespacesAndNewlines)
                 }
-
-                let predicates = keyArray.map { (key: String) -> NSPredicate in
-                    NSPredicate(format: "title CONTAINS[c] %@", key)
+                var result: [Event] = events
+                for key in keyArray {
+                    result = events.filter { event in
+                        event.title.localizedCaseInsensitiveContains(key)
+                    }
                 }
-                let predicateForAllKeys = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
-                let result = NSArray(array: events).filtered(using: predicateForAllKeys)
-
-                if let filteredEvents = result as NSArray as? [Event] {
-                    let actions: [AppAction] = [.setSearchResult(filteredEvents)]
-                    promise(.success(actions))
-                } else {
-                    print("search events by name type convertion failed")
-                    let actions: [AppAction] = [.setSearchResult([])]
-                    promise(.success(actions))
-                }
+                let actions: [AppAction] = [.setSearchResult(result)]
+                promise(.success(actions))
             }
         }
     }
@@ -372,7 +372,10 @@ struct EventEnvironment {
 
                 do {
                     try eventStore.remove(targetEvent, span: .thisEvent, commit: true)
-                    let actions: [AppAction] = [.removeEventFromLocalStore(.init(ekEvent: targetEvent))]
+                    let actions: [AppAction] = [
+                        .removeEventFromLocalStore(.init(ekEvent: targetEvent)),
+                        .removeEventFromSearchResult(event)
+                    ]
                     promise(.success(actions))
                 } catch {
                     let actions: [AppAction] = [

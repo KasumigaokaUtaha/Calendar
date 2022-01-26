@@ -12,6 +12,8 @@
 		53DFB8DB7602CCA52C7061BD /* EventEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 183957203A57BF5D477E043D /* EventEditView.swift */; };
 		5AD640B1279F1253006463C5 /* EventSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD640B0279F1253006463C5 /* EventSearchView.swift */; };
 		6237E06027820BD3009340D2 /* CompactCalendarYearView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6237E05F27820BD3009340D2 /* CompactCalendarYearView.swift */; };
+		6268EC6027A1EB7F00916D1B /* PickerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6268EC5F27A1EB7F00916D1B /* PickerModel.swift */; };
+		6268EC6227A1EBE300916D1B /* MultiplePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6268EC6127A1EBE300916D1B /* MultiplePickerView.swift */; };
 		628252BB277E432300A8464B /* CompactCalendarMonthViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628252BA277E432300A8464B /* CompactCalendarMonthViewWrapper.swift */; };
 		628252BD277E65FA00A8464B /* RWCalendarUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628252BC277E65FA00A8464B /* RWCalendarUtilTests.swift */; };
 		628252BF277E66B900A8464B /* RWCalendarDateDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628252BE277E66B900A8464B /* RWCalendarDateDataTests.swift */; };
@@ -83,6 +85,8 @@
 		5AD640B0279F1253006463C5 /* EventSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSearchView.swift; sourceTree = "<group>"; };
 		5FCBCF82599F2CA3F7F4D14B /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		6237E05F27820BD3009340D2 /* CompactCalendarYearView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactCalendarYearView.swift; sourceTree = "<group>"; };
+		6268EC5F27A1EB7F00916D1B /* PickerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerModel.swift; sourceTree = "<group>"; };
+		6268EC6127A1EBE300916D1B /* MultiplePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplePickerView.swift; sourceTree = "<group>"; };
 		628252BA277E432300A8464B /* CompactCalendarMonthViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactCalendarMonthViewWrapper.swift; sourceTree = "<group>"; };
 		628252BC277E65FA00A8464B /* RWCalendarUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RWCalendarUtilTests.swift; sourceTree = "<group>"; };
 		628252BE277E66B900A8464B /* RWCalendarDateDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RWCalendarDateDataTests.swift; sourceTree = "<group>"; };
@@ -102,7 +106,7 @@
 		62E8ABB1277DD0A0007487E1 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		62E8ABB3277DD0A9007487E1 /* AppAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAction.swift; sourceTree = "<group>"; };
 		62E8ABB5277DD0B0007487E1 /* AppReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReducer.swift; sourceTree = "<group>"; };
-		62E8ABB7277DD0BD007487E1 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
+		62E8ABB7277DD0BD007487E1 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		62E8ABB9277DD0C9007487E1 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		62E8ABBB277DD0D0007487E1 /* DateData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateData.swift; sourceTree = "<group>"; };
 		62E8ABBD277DD0DE007487E1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -261,6 +265,7 @@
 				62E8ABB9277DD0C9007487E1 /* Event.swift */,
 				62E8ABBB277DD0D0007487E1 /* DateData.swift */,
 				A1B4A5B9278B546100D8716F /* CustomizationData.swift */,
+				6268EC5F27A1EB7F00916D1B /* PickerModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -277,6 +282,7 @@
 				A1B4A5D0278C81D300D8716F /* WrapperView.swift */,
 				1206E93BAF656AB759D4A668 /* TrueMonthView.swift */,
 				364D0D1C6A047E7A2D5F253F /* RWPageView.swift */,
+				6268EC6127A1EBE300916D1B /* MultiplePickerView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -482,6 +488,7 @@
 				628252BB277E432300A8464B /* CompactCalendarMonthViewWrapper.swift in Sources */,
 				62E8ABBA277DD0C9007487E1 /* Event.swift in Sources */,
 				A1B4A5C1278B555500D8716F /* ThemeDefinitions.swift in Sources */,
+				6268EC6027A1EB7F00916D1B /* PickerModel.swift in Sources */,
 				5AD640B1279F1253006463C5 /* EventSearchView.swift in Sources */,
 				A1B4A5E0278C8EE700D8716F /* SettingView.swift in Sources */,
 				6237E06027820BD3009340D2 /* CompactCalendarYearView.swift in Sources */,
@@ -510,6 +517,7 @@
 				8539346296312E1DDA056756 /* EventsListView.swift in Sources */,
 				7243D8BE59AE53F0449FA996 /* Extensions.swift in Sources */,
 				53DFB8DB7602CCA52C7061BD /* EventEditView.swift in Sources */,
+				6268EC6227A1EBE300916D1B /* MultiplePickerView.swift in Sources */,
 				823CDDFAA2192DB36436B40F /* Tab.swift in Sources */,
 				A9CB8D9B11EEE5394CDE01EF /* TrueMonthView.swift in Sources */,
 				8D191667BEE1C47B921CB779 /* RWPageView.swift in Sources */,
@@ -717,7 +725,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"RWCalendar/Preview Content\"";
-				DEVELOPMENT_TEAM = 35HU5T69RA;
+				DEVELOPMENT_TEAM = 743R7M7GS9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RWCalendar/Info.plist;

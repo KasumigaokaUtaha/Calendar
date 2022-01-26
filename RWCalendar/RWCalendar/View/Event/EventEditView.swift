@@ -11,6 +11,7 @@ import SwiftUI
 /// A view for creating, editing, and deleting calendar events.
 struct EventEditView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
+    @Environment(\.presentationMode) var presentationMode
 
     @State var title: String
     // TODO: var location
@@ -59,8 +60,6 @@ struct EventEditView: View {
         _startDate = State(initialValue: date ?? Date())
         _endDate = State(initialValue: date ?? Date())
         _title = State(initialValue: event?.title ?? "")
-        // _startDate = State(initialValue: event?.startDate ?? Date())
-        // _endDate = State(initialValue: event?.endDate ?? Date())
         _calendar = State(initialValue: event?.calendar ?? defaultEventCalendar)
         _reminderTime = State(initialValue: event?.reminderTime)
         _url = State(initialValue: event?.url ?? "")
@@ -107,8 +106,7 @@ struct EventEditView: View {
                     }
                 }
                 Section {
-                    // TODO: Add picker to select calendar
-                    // Picker("Calendar", selection: $)
+                    makeCalendarPicker()
                 }
                 Section {
                     TextField("URL", text: $url)
@@ -117,7 +115,9 @@ struct EventEditView: View {
                 }
                 if event != nil {
                     Section {
-                        Button {} label: {
+                        Button {
+                            showConfirmationForDelete.toggle()
+                        } label: {
                             Text("Delete")
                                 .foregroundColor(Color.red)
                                 .frame(maxWidth: .infinity, alignment: .center)
@@ -132,6 +132,7 @@ struct EventEditView: View {
                                         Text("Delete"),
                                         action: {
                                             store.send(.removeEvent(event!))
+                                            self.presentationMode.wrappedValue.dismiss()
                                         }
                                     )
                                 ]
@@ -158,6 +159,32 @@ struct EventEditView: View {
         .navigationViewStyle(.stack)
     }
 
+    func makeCalendarPicker() -> some View {
+        NavigationLink {
+            MultiplePickerView(
+                selection: $calendar,
+                pickerModels: store.state.allSources.map { source -> PickerModel<EKCalendar> in
+                    PickerModel(
+                        values: store.state.sourceAndCalendars[source]!
+                            .reduce([String: EKCalendar]()) { result, calendar in
+                                var result = result
+                                result.updateValue(calendar, forKey: calendar.title)
+                                return result
+                            },
+                        headerTitle: source.title
+                    )
+                }
+            )
+        } label: {
+            HStack {
+                Text("Calendar")
+                Spacer()
+                Text("\(calendar.title)")
+                    .foregroundColor(Color.secondary)
+            }
+        }
+    }
+
     func makeToolbar() -> some ToolbarContent {
         Group {
             ToolbarItem(placement: .navigationBarLeading) {
@@ -173,7 +200,7 @@ struct EventEditView: View {
                             .destructive(
                                 Text("Abort changes"),
                                 action: {
-                                    // TODO: leave the view
+                                    self.presentationMode.wrappedValue.dismiss()
                                 }
                             )
                         ]
@@ -200,6 +227,7 @@ struct EventEditView: View {
                         store.send(.addEvent(newEvent))
                     }
                     // TODO: Dismiss this view
+                    self.presentationMode.wrappedValue.dismiss()
                 }
                 .disabled(endDate < startDate)
             }

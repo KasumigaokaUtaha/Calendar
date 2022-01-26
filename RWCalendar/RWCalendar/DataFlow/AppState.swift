@@ -82,7 +82,9 @@ struct AppState {
     var allEventIDs: [String]
     var recurringEventIDs: [String]
 
-    var sourcesAndCalendars: [EKSource: [EKCalendar]]
+    var allSources: [EKSource]
+    var sourceAndCalendars: [EKSource: [EKCalendar]]
+    var sourceTitleAndCalendarTitles: [String: [String]]
 
     @AppStorage("activatedCalendarNames")
     var storedActivatedCalendarNames = Data([])
@@ -117,8 +119,10 @@ struct AppState {
         allEventIDs = []
         recurringEventIDs = []
 
-        sourcesAndCalendars = [:]
-
+        allSources = []
+        sourceAndCalendars = [:]
+        sourceTitleAndCalendarTitles = [:]
+        
         activatedCalendarNames = []
         activatedCalendars = []
 

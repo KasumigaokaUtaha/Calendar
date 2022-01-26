@@ -17,6 +17,7 @@ struct TrueMonthView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
     @EnvironmentObject var customizationData: CustomizationData
     @State private var showEventMenu = false
+    @State private var showSearchBar = false
 
     // #TODO: add a var to controll light and dark modes
     var body: some View {
@@ -87,7 +88,7 @@ struct TrueMonthView: View {
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarLeading) {
                     makeMenu()
-                    Button("Today") {
+                    Button(NSLocalizedString("Today", comment: "Scroll to today")) {
                         curDate = Date()
                         store.send(.setSelectedDay(Calendar.current.component(.day, from: Date())))
                         store.send(.setSelectedDate(curDate))
@@ -100,7 +101,9 @@ struct TrueMonthView: View {
                     } label: {
                         Image(systemName: "plus")
                     }
-                    Button {} label: {
+                    Button {
+                        showSearchBar.toggle()
+                    } label: {
                         Image(systemName: "magnifyingglass")
                     }
                 }
@@ -108,6 +111,9 @@ struct TrueMonthView: View {
         }
         .sheet(isPresented: $showEventMenu) {
             AddEventsSheetView()
+        }
+        .sheet(isPresented: $showSearchBar) {
+            EventSearchView(isPresented: $showSearchBar)
         }
     }
 }
@@ -221,6 +227,10 @@ extension TrueMonthView {
                     .fill(
                         checkEvent(date: value.date) ?
                             Color.red : Color.white
+                    )
+                    .opacity(
+                        checkEvent(date: value.date) ?
+                            0.5 : 0
                     )
                     .frame(width: 7, height: 7)
             }

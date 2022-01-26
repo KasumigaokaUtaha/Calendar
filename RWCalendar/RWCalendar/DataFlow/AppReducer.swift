@@ -135,7 +135,6 @@ func appReducer(
         state.selectedDay = day
     case let .setSelectedDate(date):
         state.selectedDate = date
-        print("setSelectedDate: \(date)")
     case let .setSelectedEvent(event):
         state.selectedEvent = event
     case let .loadEventsForYear(date):
@@ -147,7 +146,6 @@ func appReducer(
     case let .loadEventsForDay(date):
         return environment.event.addEventsForDay(date, calendar: state.calendar, with: state.activatedCalendars)
     case let .addEvent(newEvent):
-        print("addEvent: \(newEvent)")
         return environment.event.addEvent(newEvent)
     case let .updateEvent(newEvent):
         return environment.event.updateEvent(with: newEvent)
@@ -228,6 +226,10 @@ func appReducer(
         .publisher
         .flatMap { action in Just(action) }
         .eraseToAnyPublisher()
+    case let .removeEventFromSearchResult(eventToRemove):
+        state.searchResult = state.searchResult.filter { event -> Bool in
+            event.eventIdentifier != eventToRemove.eventIdentifier
+        }
     case .loadAppStorageProperties:
         state.activatedCalendarNames = state.storedActivatedCalendarNames.toStringArray() ?? []
     case let .setActivatedCalendars(calendars):
@@ -267,16 +269,24 @@ func appReducer(
         }
     case let .requestAccess(entityType):
         return environment.event.requestAccess(to: entityType)
-
-    case .loadSourcesAndCalendars:
-        state.sourcesAndCalendars = environment.event.getSourceToCalendars()
-    case .loadStoredCalendars:
-        return environment.event.getCalendars(with: state.activatedCalendarNames)
-
+    case .loadAllSources:
+        return environment.event.getAllSources()
+    case let .setAllSources(sources):
+        state.allSources = sources
+    case let .loadSourceToCalendars(entityType):
+        return environment.event.getSourceToCalendars(for: entityType)
+    case let .setSourceToCalendars(values):
+        state.sourceAndCalendars = values
+    case let .loadSourceTitleToCalendarTitles(entityType):
+        return environment.event.getSourceTitleToCalendarTitles(for: entityType)
+    case let .setSourceTitleToCalendarTitles(values):
+        state.sourceTitleAndCalendarTitles = values
     case let .setSearchResult(searchResult):
         state.searchResult = searchResult
     case let .loadSearchResult(str):
         return environment.event.searchEventsByName(str: str, events: Array(state.eventIDToEvent.values))
+            .subscribe(on: environment.backgroundQueue)
+            .eraseToAnyPublisher()
     }
     return nil
 }

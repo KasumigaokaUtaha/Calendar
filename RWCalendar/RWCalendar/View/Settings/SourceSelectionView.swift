@@ -13,15 +13,11 @@ struct SourceSelectionView: View {
     @EnvironmentObject var customizationData: CustomizationData
 
     var body: some View {
-        let sourcesAndCalendars = store.state.sourcesAndCalendars.sorted { $0.key.title < $1.key.title}
         List {
-            ForEach(sourcesAndCalendars, id: \.key) { source, calendar in
+            ForEach(store.state.allSources, id: \.title) { source in
                 NavigationLink(
-                    destination: CalendarSelectionView(calendars: calendar.sorted { $0.title < $1.title })
-                        .font(.custom(
-                            customizationData.savedFontStyle,
-                            size: CGFloat(customizationData.savedFontSize)
-                        ))
+                    destination: CalendarSelectionView(calendars: store.state.sourceAndCalendars[source]!)
+                        .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
                         .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
                 ) {
                     Text(source.title)
