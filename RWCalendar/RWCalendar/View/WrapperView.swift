@@ -15,9 +15,7 @@ struct WrapperView: View {
         ContentView()
             .colorScheme(colorScheme)
             .onAppear {
-                store.send(.loadSourcesAndCalendars)
                 store.send(.loadAppStorageProperties)
-                store.send(.loadStoredCalendars)
             }
     }
 }
