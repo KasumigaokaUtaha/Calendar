@@ -87,10 +87,7 @@ struct ContentView: View {
             CalendarDayView()
 
         case .settings:
-
             ContainerView {
-                Text("setting")
-
                 SettingView()
                     .navigationTitle(Text("Settings"))
                     .background(Color(customizationData.selectedTheme.backgroundColor).edgesIgnoringSafeArea(.all))

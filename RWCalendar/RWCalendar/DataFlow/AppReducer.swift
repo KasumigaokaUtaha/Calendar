@@ -269,10 +269,7 @@ func appReducer(
         return environment.event.requestAccess(to: entityType)
 
     case .loadSourcesAndCalendars:
-        let sortedDict = environment.event.getSourceToCalendars().sorted { $0.key.title > $1.key.title }
-        for (first, second) in sortedDict {
-            state.sourcesAndCalendars[first] = second
-        }
+        state.sourcesAndCalendars = environment.event.getSourceToCalendars()
     case .loadStoredCalendars:
         return environment.event.getCalendars(with: state.activatedCalendarNames)
 
