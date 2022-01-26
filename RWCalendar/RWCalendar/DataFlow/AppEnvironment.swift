@@ -365,7 +365,7 @@ struct EventEnvironment {
 
                 do {
                     try eventStore.remove(targetEvent, span: .thisEvent, commit: true)
-                    let actions: [AppAction] = [.removeEventFromLocalStore(.init(ekEvent: targetEvent))]
+                    let actions: [AppAction] = [.removeEventFromLocalStore(.init(ekEvent: targetEvent)), .removeEventFromSearchResult(event)]
                     promise(.success(actions))
                 } catch {
                     let actions: [AppAction] = [

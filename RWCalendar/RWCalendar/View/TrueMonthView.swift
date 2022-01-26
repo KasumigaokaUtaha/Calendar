@@ -115,7 +115,7 @@ struct TrueMonthView: View {
             AddEventsSheetView()
         }
         .sheet(isPresented: $showSearchBar) {
-            EventSearchView()
+            EventSearchView(isPresented: $showSearchBar)
         }
     }
 }
@@ -151,34 +151,6 @@ struct TrueMonthView_Previews: PreviewProvider {
 }
 
 extension TrueMonthView {
-    // subviews for title and dates
-    var TitleView: some View {
-        NavigationView {
-            HStack {
-                makeMenu()
-                Button("Today") {
-                    curDate = Date()
-                    store.send(.setSelectedDay(Calendar.current.component(.day, from: Date())))
-                    store.send(.setSelectedDate(curDate))
-                }
-                // years and months
-                Text(RWCalendar.dateToString(date: curDate)[1])
-                    .fontWeight(.bold)
-
-                Text(RWCalendar.dateToString(date: curDate)[0])
-                    .fontWeight(.bold)
-
-                Button {
-                    showEventMenu.toggle()
-                } label: {
-                    Image(systemName: "plus")
-                }
-                .sheet(isPresented: $showEventMenu) {
-                    AddEventsSheetView()
-                }
-            }
-        }
-    }
 
     struct AddEventsSheetView: View {
         @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>

@@ -118,7 +118,9 @@ struct EventEditView: View {
                 }
                 if event != nil {
                     Section {
-                        Button {} label: {
+                        Button {
+                            showConfirmationForDelete.toggle()
+                        } label: {
                             Text("Delete")
                                 .foregroundColor(Color.red)
                                 .frame(maxWidth: .infinity, alignment: .center)
@@ -133,6 +135,9 @@ struct EventEditView: View {
                                         Text("Delete"),
                                         action: {
                                             store.send(.removeEvent(event!))
+                                            self.presentationMode.wrappedValue.dismiss()
+                                            
+
                                         }
                                     )
                                 ]
@@ -174,7 +179,6 @@ struct EventEditView: View {
                             .destructive(
                                 Text("Abort changes"),
                                 action: {
-                                    // TODO: leave the view
                                     self.presentationMode.wrappedValue.dismiss()
 
                                 }
