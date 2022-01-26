@@ -132,7 +132,7 @@ struct DayToolbarView: View {
         var d = store.state.currentDate
         d = calendar.date(byAdding: .weekOfYear, value: currentWeek, to: d)!
 
-        var MonthAndYear = formatter.string(from: d)
+        let MonthAndYear = formatter.string(from: d)
 
         var date = MonthAndYear.components(separatedBy: " ")
 
@@ -186,7 +186,6 @@ struct DayToolbarView_Previews: PreviewProvider {
 // extension Date to get the whole week
 extension Date {
     func getWeeks(currentWeek: Int) -> [Date] {
-        print(currentWeek)
         // the local calendar
         let calendar = Calendar.current
 

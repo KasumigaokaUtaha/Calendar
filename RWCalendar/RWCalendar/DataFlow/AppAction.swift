@@ -37,9 +37,6 @@ enum AppAction {
     case loadEventsForWeek(at: Date)
     case loadEventsForDay(at: Date)
 
-    case loadSourcesAndCalendars
-    case loadStoredCalendars
-
     case addEvent(Event)
     case updateEvent(with: Event)
     case removeEvent(Event)
@@ -63,6 +60,16 @@ enum AppAction {
 
     case loadDefaultCalendar(for: EKEntityType)
     case setDefaultCalendar(EKCalendar, for: EKEntityType)
+
+    case loadAllSources
+    case setAllSources([EKSource])
+
+    case loadSourceToCalendars(for: EKEntityType)
+    case setSourceToCalendars([EKSource: [EKCalendar]])
+
+    case loadSourceTitleToCalendarTitles(for: EKEntityType)
+    case setSourceTitleToCalendarTitles([String: [String]])
+
     case setSearchResult(_ searchResult: [Event])
     case loadSearchResult(_ str: String)
 
