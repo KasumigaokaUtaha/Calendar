@@ -59,8 +59,6 @@ struct EventEditView: View {
         _startDate = State(initialValue: date ?? Date())
         _endDate = State(initialValue: date ?? Date())
         _title = State(initialValue: event?.title ?? "")
-        // _startDate = State(initialValue: event?.startDate ?? Date())
-        // _endDate = State(initialValue: event?.endDate ?? Date())
         _calendar = State(initialValue: event?.calendar ?? defaultEventCalendar)
         _reminderTime = State(initialValue: event?.reminderTime)
         _url = State(initialValue: event?.url ?? "")
