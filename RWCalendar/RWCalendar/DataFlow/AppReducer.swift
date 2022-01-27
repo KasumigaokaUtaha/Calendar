@@ -230,6 +230,12 @@ func appReducer(
         state.searchResult = state.searchResult.filter { event -> Bool in
             event.eventIdentifier != eventToRemove.eventIdentifier
         }
+    case let .updateEventInSearchResult(eventToUpdate):
+        for i in state.searchResult.indices {
+            if state.searchResult[i].eventIdentifier == eventToUpdate.eventIdentifier {
+                state.searchResult[i] = eventToUpdate
+            }
+        }
     case .loadAppStorageProperties:
         state.activatedCalendarNames = state.storedActivatedCalendarNames.toStringArray() ?? []
     case let .setActivatedCalendars(calendars):

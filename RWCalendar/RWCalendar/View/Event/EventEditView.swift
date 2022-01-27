@@ -223,10 +223,11 @@ struct EventEditView: View {
 
                     if event != nil {
                         store.send(.updateEvent(with: newEvent))
+                        store.send(.setSelectedEvent(newEvent))
                     } else {
                         store.send(.addEvent(newEvent))
+                        store.send(.setSelectedEvent(newEvent))
                     }
-                    // TODO: Dismiss this view
                     self.presentationMode.wrappedValue.dismiss()
                 }
                 .disabled(endDate < startDate)
