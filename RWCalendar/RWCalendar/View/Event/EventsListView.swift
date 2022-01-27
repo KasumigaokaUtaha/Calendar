@@ -5,6 +5,7 @@
 //  Created by Liu on 03.01.22.
 //
 
+import EventKit
 import Foundation
 import SwiftUI
 
@@ -15,20 +16,24 @@ struct EventLabel: View {
     init(event: Event) {
         self.event = event
         dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "YY, MMM d, HH:mm:ss"
+        dateFormatter.dateFormat = "YY, MMM, HH:mm"
     }
 
     var body: some View {
-        HStack {
+        VStack {
             Text(event.title)
             Spacer()
-            Text(dateFormatter.string(from: event.startDate))
+            Text("From: \(dateFormatter.string(from: event.startDate))")
+            Text("To: \(dateFormatter.string(from: event.endDate))")
         }
+        .frame(maxWidth: .infinity)
+        .padding()
     }
 }
 
 struct EventsListView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
+    @State private var showMiniEventList = false
 
     var eventIDs: [String]? {
         guard let selectedDate = store.state.selectedDate else {
@@ -46,9 +51,25 @@ struct EventsListView: View {
                 if eventIDs.count > 0 {
                     VStack {
                         ForEach(events(with: eventIDs), id: \.self) { event in
-                            Text("\(event.title)")
+                            EventLabel(event: event)
+                                .background(
+                                    Capsule()
+                                        // TODO: set the color to corresponding calendar color
+                                        .strokeBorder(lineWidth: .infinity)
+                                        .background(Color.blue)
+                                        .opacity(0.5)
+                                )
+
+                                .onTapGesture {
+                                    store.send(.setSelectedEvent(event))
+                                    showMiniEventList.toggle()
+                                }
                         }
                     }
+                    .sheet(isPresented: $showMiniEventList) {
+                        EventDisplayView()
+                    }
+
                 } else {
                     Text("No events")
                 }
