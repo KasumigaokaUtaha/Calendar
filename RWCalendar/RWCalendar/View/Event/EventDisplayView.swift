@@ -47,7 +47,8 @@ struct EventDisplayView: View {
                         Text("Notes").bold()
                         Text(event!.notes!)
                     }
-                    if self.event!.url != nil && self.event!.url != "" {
+                    // TODO: fix potential bugs
+                    if self.event!.url != nil, self.event!.url != "" {
                         Divider()
                         Text("URL").bold()
                         Link(event!.url!, destination: URL(string: event!.url!)!)
@@ -84,9 +85,3 @@ struct EventDisplayView: View {
         }
     }
 }
-
-// struct EventDisplayView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        EventDisplayView()
-//    }
-// }

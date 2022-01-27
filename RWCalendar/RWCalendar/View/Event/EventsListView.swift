@@ -32,7 +32,8 @@ struct EventLabel: View {
         print("end time: \(endTimeHour)")
         let selectedTime = dateFormatter.string(from: store.state.selectedDate!)
         print("selected time: \(selectedTime)")
-        return startTimeHour <= 1 && endTimeHour >= 23 || startTimeDay < store.state.selectedDay && endTimeDay > store.state.selectedDay
+        return startTimeHour <= 1 && endTimeHour >= 23 || startTimeDay < store.state.selectedDay && endTimeDay > store
+            .state.selectedDay
     }
 
     var body: some View {
@@ -45,7 +46,9 @@ struct EventLabel: View {
                 if isAllDay(self.event) {
                     Text("All day")
                 } else {
-                    Text("\(dateFormatter.string(from: event.startDate)) - \(dateFormatter.string(from: event.endDate))")
+                    Text(
+                        "\(dateFormatter.string(from: event.startDate)) - \(dateFormatter.string(from: event.endDate))"
+                    )
                 }
             }
         }
@@ -77,7 +80,7 @@ struct EventsListView: View {
                             EventLabel(event: event)
                                 .background(
                                     Capsule()
-                                        // TODO: set the color to corresponding calendar color
+
                                         .strokeBorder(lineWidth: .infinity)
                                         .background(Color(cgColor: event.calendar.cgColor))
                                         .opacity(0.5)
