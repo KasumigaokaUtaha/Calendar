@@ -41,6 +41,17 @@ struct EventDisplayView: View {
                         Spacer()
                         Text(dateFormatter.string(from: event!.endDate))
                     }
+
+                    if self.event!.notes != nil {
+                        Divider()
+                        Text("Notes").bold()
+                        Text(event!.notes!)
+                    }
+                    if self.event!.url != nil && self.event!.url != "" {
+                        Divider()
+                        Text("URL").bold()
+                        Link(event!.url!, destination: URL(string: event!.url!)!)
+                    }
                     Spacer()
                 }
             }

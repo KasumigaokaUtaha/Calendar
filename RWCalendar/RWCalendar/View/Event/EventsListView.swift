@@ -10,21 +10,44 @@ import Foundation
 import SwiftUI
 
 struct EventLabel: View {
+    @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
+
     let event: Event
     let dateFormatter: DateFormatter
 
     init(event: Event) {
         self.event = event
         dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "YY, MMM, HH:mm"
+        dateFormatter.dateFormat = "MMM d, HH:mm"
+    }
+
+    func isAllDay(_ event: Event) -> Bool {
+        let calendar = Calendar.current
+        let startTimeHour = calendar.component(.hour, from: event.startDate)
+        let endTimeHour = calendar.component(.hour, from: event.endDate)
+        let startTimeDay = calendar.component(.day, from: event.startDate)
+        let endTimeDay = calendar.component(.day, from: event.endDate)
+        print("start time: \(startTimeHour)")
+
+        print("end time: \(endTimeHour)")
+        let selectedTime = dateFormatter.string(from: store.state.selectedDate!)
+        print("selected time: \(selectedTime)")
+        return startTimeHour <= 1 && endTimeHour >= 23 || startTimeDay < store.state.selectedDay && endTimeDay > store.state.selectedDay
     }
 
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
             Text(event.title)
+                .font(.title2)
+                .bold()
             Spacer()
-            Text("From: \(dateFormatter.string(from: event.startDate))")
-            Text("To: \(dateFormatter.string(from: event.endDate))")
+            HStack {
+                if isAllDay(self.event) {
+                    Text("All day")
+                } else {
+                    Text("\(dateFormatter.string(from: event.startDate)) - \(dateFormatter.string(from: event.endDate))")
+                }
+            }
         }
         .frame(maxWidth: .infinity)
         .padding()
@@ -56,7 +79,7 @@ struct EventsListView: View {
                                     Capsule()
                                         // TODO: set the color to corresponding calendar color
                                         .strokeBorder(lineWidth: .infinity)
-                                        .background(Color.blue)
+                                        .background(Color(cgColor: event.calendar.cgColor))
                                         .opacity(0.5)
                                 )
 
