@@ -22,6 +22,7 @@ struct DayTaskTableView: View {
 
     private var threeColumnGrid = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
 
+    // get the events ids from the selected date
     var eventIDs: [String]? {
         guard let selectedDate = store.state.selectedDate else {
             return nil
@@ -40,6 +41,7 @@ struct DayTaskTableView: View {
         return idArr
     }
 
+    // according the events IDs get the events
     func events(with eventIDs: [String]) -> [Event] {
         var events: [Event] = []
         for eventID in eventIDs {
@@ -89,11 +91,11 @@ struct DayTaskTableView: View {
                 continue
             }
         }
-        
 
         return events_selectedDay
     }
 
+    /// accroding the events get the taskcard, to be showed in the day task view
     func eventsToTaskCards(events: [Event]) -> [TaskCard] {
         var taskCards: [TaskCard] = []
         let events_sorted = events.sorted { $0.startDate < $1.startDate }
@@ -107,7 +109,6 @@ struct DayTaskTableView: View {
             }
 
             for i in taskCards.indices {
-
                 if event.startDate < taskCards[i].cardEndingTime {
                     taskCards[i].events_set.insert(event)
                     taskCards[i].cardEndingTime = event.endDate > taskCards[i].cardEndingTime ? event.endDate : taskCards[i].cardEndingTime
@@ -128,7 +129,6 @@ struct DayTaskTableView: View {
             }
         }
 
-
         return taskCards
     }
 
@@ -141,7 +141,7 @@ struct DayTaskTableView: View {
         let m1 = calendar.component(.minute, from: date1)
         let h1 = calendar.component(.hour, from: date1)
         let m2 = calendar.component(.minute, from: date2)
-        let h2 : Int
+        let h2: Int
         if calendar.startOfDay(for: date2) > calendar.startOfDay(for: date1) {
             h2 = 24
         } else {
@@ -160,31 +160,44 @@ struct DayTaskTableView: View {
     }
 
     // to show the task card view
-    func taskCardView(taskCards: [TaskCard], geo: GeometryProxy) -> some View {
 
-        // set the mininum height of view
+
+    func taskCardView(taskCards: [TaskCard], geo: GeometryProxy) -> some View {
+        print(taskCards.count)
         func getViewHeigt(event: Event) -> Double {
             let ideaHeight = (getScrollViewHeight(geo: geo) - 20) / 24 * (event.endDate.timeIntervalSinceReferenceDate - event.startDate.timeIntervalSinceReferenceDate) / 3600
+            // set the mininum height of view
             return ideaHeight < 30 ? 30 : ideaHeight
         }
 
         func getViewY(event: Event) -> Double {
             return (getScrollViewHeight(geo: geo) - 20) / 24 * getMiddleTime(date1: event.startDate, date2: event.endDate) + 10
         }
-        return ForEach(taskCards, id: \.self) { taskCard in
 
-            ForEach(taskCard.events, id: \.self) { _ in
-                HStack {
-                    Spacer(minLength: 80)
-                    ForEach(taskCard.events.indices, id: \.self) { id in
-                        let event = taskCard.events[id]
-                        Text("\(event.title)")
-                            .frame(width: getFrameWidth(geo: geo, taskCard: taskCard), height: getViewHeigt(event: event), alignment: .topLeading)
-                            .background(Color(cgColor: event.calendar.cgColor).opacity(0.3))
-                            .position(x: getCardPosition(geo: geo, taskCard: taskCard), y: getViewY(event: event))
-                    }
+        return (ForEach(taskCards, id: \.self) { taskCard in
+            HStack {
+                Spacer(minLength: 80)
+                ForEach(taskCard.events.indices, id: \.self) { id in
+                    let event = taskCard.events[id]
+                    Text("\(event.title)")
+                        .frame(width: getFrameWidth(geo: geo, taskCard: taskCard), height: getViewHeigt(event: event), alignment: .topLeading)
+                        .background(Color(cgColor: event.calendar.cgColor).opacity(0.6))
+                        .position(x: getCardPosition(geo: geo, taskCard: taskCard), y: getViewY(event: event))
                 }
             }
+        })
+    }
+
+    @ViewBuilder
+    func getCardView(eventsIds: [String]?, geo: GeometryProxy) -> some View {
+        if let eventIDs = eventsIds {
+            if eventIDs.count > 0 {
+                taskCardView(taskCards: eventsToTaskCards(events: events(with: eventsIds!)), geo: geo)
+            } else {
+                Text("No events")
+            }
+        } else {
+            Text("No events")
         }
     }
 
@@ -223,17 +236,18 @@ struct DayTaskTableView: View {
                     }
                     .frame(width: geo.frame(in: .local).width, alignment: .leading)
                     .border(.red)
+//                    getCardView(eventsIds: eventIDs, geo: geo)
+                    getCardView(eventsIds: eventIDs, geo: geo)
 
-                    if let eventIDs = eventIDs {
-                        if eventIDs.count > 0 {
-                            taskCardView(taskCards: eventsToTaskCards(events: events(with: eventIDs)), geo: geo)
-                        } else {
-                            Text("No events")
-                        }
-                    } else {
-                        Text("No events")
-                    }
-
+//                    if let eventIDs = eventIDs {
+//                        if eventIDs.count > 0 {
+//                            taskCardView(taskCards: eventsToTaskCards(events: events(with: eventIDs)), geo: geo)
+//                        } else {
+//                            Text("No events")
+//                        }
+//                    } else {
+//                        Text("No events")
+//                    }
                 }
             }
             .onReceive(store.$state) { _ in
