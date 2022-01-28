@@ -138,6 +138,7 @@ struct DayTaskTableView: View {
     func getScrollViewHeight(geo: GeometryProxy) -> Double {
         return (geo.size.height / 15 * 24 + 20 * 25)
     }
+
     // get the middle time point, help to find the center of the task card view
     func getMiddleTime(date1: Date, date2: Date) -> Double {
         let calendar = store.state.calendar
@@ -181,8 +182,11 @@ struct DayTaskTableView: View {
                 ForEach(taskCard.events.indices, id: \.self) { id in
                     let event = taskCard.events[id]
                     Text("\(event.title)")
+                        .frame(width: getFrameWidth(geo: geo, taskCard: taskCard), height: 20, alignment: .topLeading)
+                        .background(RoundedRectangle(cornerRadius: 4).fill(Color(cgColor: event.calendar.cgColor))
+                        )
                         .frame(width: getFrameWidth(geo: geo, taskCard: taskCard), height: getViewHeigt(event: event), alignment: .topLeading)
-                        .background(Color(cgColor: event.calendar.cgColor).opacity(0.6))
+                        .background(RoundedRectangle(cornerRadius: 4).fill(Color(cgColor: event.calendar.cgColor).opacity(0.6)))
                         .position(x: getCardPosition(geo: geo, taskCard: taskCard), y: getViewY(event: event))
                         .onTapGesture {
                             store.send(.setSelectedEvent(event))
@@ -245,7 +249,6 @@ struct DayTaskTableView: View {
                     .frame(width: geo.frame(in: .local).width, alignment: .leading)
                     .border(.red)
                     getCardView(eventsIds: eventIDs, geo: geo)
-
                 }
             }
             .onReceive(store.$state) { _ in
@@ -256,7 +259,6 @@ struct DayTaskTableView: View {
         }
     }
 }
-
 
 // to avoid add duplicate events, use set to collect the events and copy it with array
 struct TaskCard: Hashable {
