@@ -5,30 +5,61 @@
 //  Created by Liu on 03.01.22.
 //
 
+import EventKit
 import Foundation
 import SwiftUI
 
 struct EventLabel: View {
+    @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
+
     let event: Event
     let dateFormatter: DateFormatter
 
     init(event: Event) {
         self.event = event
         dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "YY, MMM d, HH:mm:ss"
+        dateFormatter.dateFormat = "MMM d, HH:mm"
+    }
+
+    func isAllDay(_ event: Event) -> Bool {
+        let calendar = Calendar.current
+        let startTimeHour = calendar.component(.hour, from: event.startDate)
+        let endTimeHour = calendar.component(.hour, from: event.endDate)
+        let startTimeDay = calendar.component(.day, from: event.startDate)
+        let endTimeDay = calendar.component(.day, from: event.endDate)
+        print("start time: \(startTimeHour)")
+
+        print("end time: \(endTimeHour)")
+        let selectedTime = dateFormatter.string(from: store.state.selectedDate!)
+        print("selected time: \(selectedTime)")
+        return startTimeHour <= 1 && endTimeHour >= 23 || startTimeDay < store.state.selectedDay && endTimeDay > store
+            .state.selectedDay
     }
 
     var body: some View {
-        HStack {
+        VStack(alignment: .leading) {
             Text(event.title)
+                .font(.title2)
+                .bold()
             Spacer()
-            Text(dateFormatter.string(from: event.startDate))
+            HStack {
+                if isAllDay(self.event) {
+                    Text("All day")
+                } else {
+                    Text(
+                        "\(dateFormatter.string(from: event.startDate)) - \(dateFormatter.string(from: event.endDate))"
+                    )
+                }
+            }
         }
+        .frame(maxWidth: .infinity)
+        .padding()
     }
 }
 
 struct EventsListView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
+    @State private var showMiniEventList = false
 
     var eventIDs: [String]? {
         guard let selectedDate = store.state.selectedDate else {
@@ -46,9 +77,25 @@ struct EventsListView: View {
                 if eventIDs.count > 0 {
                     VStack {
                         ForEach(events(with: eventIDs), id: \.self) { event in
-                            Text("\(event.title)")
+                            EventLabel(event: event)
+                                .background(
+                                    Capsule()
+
+                                        .strokeBorder(lineWidth: .infinity)
+                                        .background(Color(cgColor: event.calendar.cgColor))
+                                        .opacity(0.5)
+                                )
+
+                                .onTapGesture {
+                                    store.send(.setSelectedEvent(event))
+                                    showMiniEventList.toggle()
+                                }
                         }
                     }
+                    .sheet(isPresented: $showMiniEventList) {
+                        EventDisplayView()
+                    }
+
                 } else {
                     Text("No events")
                 }

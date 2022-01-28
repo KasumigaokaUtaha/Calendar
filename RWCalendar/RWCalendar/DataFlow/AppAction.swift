@@ -48,6 +48,7 @@ enum AppAction {
     /// Remove event stored in the state dateToEventIDs
     case removeEventFromLocalStore(Event)
     case removeEventFromSearchResult(Event)
+    case updateEventInSearchResult(Event)
 
     case setSelectedEvent(Event)
     case setEventErrorMessage(String)
