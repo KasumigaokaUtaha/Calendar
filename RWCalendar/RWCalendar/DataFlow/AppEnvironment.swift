@@ -345,7 +345,10 @@ struct EventEnvironment {
 
                 do {
                     try eventStore.save(event, span: .thisEvent, commit: true)
-                    let actions: [AppAction] = [.updateEventInLocalStore(.init(ekEvent: event))]
+                    let actions: [AppAction] = [
+                        .updateEventInLocalStore(.init(ekEvent: event)),
+                        .updateEventInSearchResult(newEvent)
+                    ]
                     promise(.success(actions))
                 } catch {
                     let actions: [AppAction] = [

@@ -11,6 +11,7 @@
 		275AF4C61BBEB1381F552EC1 /* DayTaskTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498EE4D9BD1AF359D5A4D00C /* DayTaskTableView.swift */; };
 		53DFB8DB7602CCA52C7061BD /* EventEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 183957203A57BF5D477E043D /* EventEditView.swift */; };
 		5AD640B1279F1253006463C5 /* EventSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD640B0279F1253006463C5 /* EventSearchView.swift */; };
+		5AD640B327A1F4B8006463C5 /* EventDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD640B227A1F4B8006463C5 /* EventDisplayView.swift */; };
 		6237E06027820BD3009340D2 /* CompactCalendarYearView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6237E05F27820BD3009340D2 /* CompactCalendarYearView.swift */; };
 		6268EC6027A1EB7F00916D1B /* PickerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6268EC5F27A1EB7F00916D1B /* PickerModel.swift */; };
 		6268EC6227A1EBE300916D1B /* MultiplePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6268EC6127A1EBE300916D1B /* MultiplePickerView.swift */; };
@@ -83,6 +84,7 @@
 		364D0D1C6A047E7A2D5F253F /* RWPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RWPageView.swift; sourceTree = "<group>"; };
 		498EE4D9BD1AF359D5A4D00C /* DayTaskTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayTaskTableView.swift; sourceTree = "<group>"; };
 		5AD640B0279F1253006463C5 /* EventSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSearchView.swift; sourceTree = "<group>"; };
+		5AD640B227A1F4B8006463C5 /* EventDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDisplayView.swift; sourceTree = "<group>"; };
 		5FCBCF82599F2CA3F7F4D14B /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		6237E05F27820BD3009340D2 /* CompactCalendarYearView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactCalendarYearView.swift; sourceTree = "<group>"; };
 		6268EC5F27A1EB7F00916D1B /* PickerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerModel.swift; sourceTree = "<group>"; };
@@ -327,6 +329,7 @@
 				183957203A57BF5D477E043D /* EventEditView.swift */,
 				12A010C0D631630A69103D95 /* EventsListView.swift */,
 				5AD640B0279F1253006463C5 /* EventSearchView.swift */,
+				5AD640B227A1F4B8006463C5 /* EventDisplayView.swift */,
 			);
 			path = Event;
 			sourceTree = "<group>";
@@ -510,6 +513,7 @@
 				A1B4A5D1278C81D300D8716F /* WrapperView.swift in Sources */,
 				62E8ABBE277DD0DE007487E1 /* ContentView.swift in Sources */,
 				62E8ABB4277DD0A9007487E1 /* AppAction.swift in Sources */,
+				5AD640B327A1F4B8006463C5 /* EventDisplayView.swift in Sources */,
 				62E8ABA9277DD057007487E1 /* Util.swift in Sources */,
 				62E8ABB2277DD0A0007487E1 /* AppState.swift in Sources */,
 				011140ED5DFEAAFA270E69B5 /* ContainerView.swift in Sources */,
