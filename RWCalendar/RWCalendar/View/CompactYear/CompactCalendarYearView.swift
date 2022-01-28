@@ -9,9 +9,10 @@ import SwiftUI
 
 struct CompactCalendarYearView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
+    @EnvironmentObject var customizationData: CustomizationData
 
     @State var currentYear = Calendar.current.component(.year, from: Date())
-    private var columns = Array(repeating: GridItem(.flexible(minimum: 20.0)), count: 2)
+    let column = GridItem(.flexible(minimum: 20.0))
 
     var body: some View {
         Group {
@@ -33,6 +34,26 @@ struct CompactCalendarYearView: View {
 
             store.send(.loadEventsForYear(at: someDateInCurrentYear))
         }
+    }
+
+    var dayFont: UIFont {
+        if
+            let font = UIFont(
+                name: customizationData.savedFontStyle,
+                size: CGFloat(customizationData.savedFontSize)
+            )
+        {
+            return font
+        } else {
+            return UIFont.systemFont(ofSize: 15)
+        }
+    }
+
+    var monthFont: Font {
+        Font.custom(
+            customizationData.savedFontStyle,
+            size: CGFloat(customizationData.savedFontSize + 5)
+        )
     }
 
     func makeContent() -> some View {
@@ -68,16 +89,30 @@ struct CompactCalendarYearView: View {
     /// Create the compact year view for the given year
     func makeYear(_ year: Int) -> some View {
         ScrollView {
-            LazyVGrid(columns: columns) {
+            LazyVGrid(columns: getColumns(for: customizationData.savedFontSize)) {
                 ForEach(fetchMonthData(for: year)) { monthData in
                     CompactCalendarMonthViewWrapper(
                         year: year,
                         month: monthData.month,
-                        font: .system(.caption2)
+                        dayFont: self.dayFont,
+                        monthFont: self.monthFont,
+                        theme: customizationData.selectedTheme
                     )
                 }
             }
         }
+    }
+
+    func getColumns(for fontSize: Int) -> [GridItem] {
+        var count = 2
+
+        if fontSize < 13 {
+            count = 3
+        } else if fontSize > 17 {
+            count = 1
+        }
+
+        return Array(repeating: column, count: count)
     }
 
     func fetchMonthData(for year: Int) -> [MonthData] {
