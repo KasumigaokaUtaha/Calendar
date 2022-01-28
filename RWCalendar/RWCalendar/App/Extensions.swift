@@ -41,6 +41,9 @@ extension EKEvent {
         url = event.url != nil ? URL(string: event.url!) : nil
         notes = event.notes
         alarms = event.alarms
+        if let recurrenceRule = event.recurrenceRule {
+            recurrenceRules = [recurrenceRule]
+        }
     }
 
     func update(with event: Event) {
@@ -51,5 +54,10 @@ extension EKEvent {
         url = event.url != nil ? URL(string: event.url!) : nil
         notes = event.notes
         alarms = event.alarms
+        if let recurrenceRule = event.recurrenceRule {
+            recurrenceRules = [recurrenceRule]
+        } else {
+            recurrenceRules = nil
+        }
     }
 }

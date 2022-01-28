@@ -21,6 +21,7 @@ struct EventEditView: View {
     @State private var reminderTime: ReminderTime?
     @State private var url: String
     @State private var notes: String
+    @State private var recurr: EKRecurrenceFrequency?
 
     @State private var showLocationSelectionView = false
 
@@ -46,6 +47,7 @@ struct EventEditView: View {
         _reminderTime = State(initialValue: event?.reminderTime)
         _url = State(initialValue: event?.url ?? "")
         _notes = State(initialValue: event?.notes ?? "")
+        _recurr = State(initialValue: event?.recurrenceRule?.frequency)
     }
 
     init(_ event: Event?, defaultEventCalendar: EKCalendar, date: Date?) {
@@ -64,6 +66,7 @@ struct EventEditView: View {
         _reminderTime = State(initialValue: event?.reminderTime)
         _url = State(initialValue: event?.url ?? "")
         _notes = State(initialValue: event?.notes ?? "")
+        _recurr = State(initialValue: event?.recurrenceRule?.frequency)
     }
 
     var body: some View {
@@ -107,6 +110,7 @@ struct EventEditView: View {
                 }
                 Section {
                     makeCalendarPicker()
+                    makeEventRecurrencePicker()
                 }
                 Section {
                     TextField("URL", text: $url)
@@ -132,9 +136,10 @@ struct EventEditView: View {
                                         Text("Delete"),
                                         action: {
                                             store.send(.removeEvent(event!))
+                                            store.send(.setSelectedEvent(nil))
                                             self.presentationMode.wrappedValue.dismiss()
                                         }
-                                    )
+                                    ),
                                 ]
                             )
                         }
@@ -185,6 +190,17 @@ struct EventEditView: View {
         }
     }
 
+    func makeEventRecurrencePicker() -> some View {
+        Picker("Recurrence Rule", selection: $recurr) {
+            Text("Never").tag(EKRecurrenceFrequency?.none)
+            Text("Daily").tag(EKRecurrenceFrequency?.some(.daily))
+            Text("Weekly").tag(EKRecurrenceFrequency?.some(.weekly))
+            Text("Monthly").tag(EKRecurrenceFrequency?.some(.monthly))
+            Text("Yearly").tag(EKRecurrenceFrequency?.some(.yearly))
+        }
+        
+    }
+
     func makeToolbar() -> some ToolbarContent {
         Group {
             ToolbarItem(placement: .navigationBarLeading) {
@@ -202,7 +218,7 @@ struct EventEditView: View {
                                 action: {
                                     self.presentationMode.wrappedValue.dismiss()
                                 }
-                            )
+                            ),
                         ]
                     )
                 }
@@ -218,7 +234,7 @@ struct EventEditView: View {
                         notes: notes,
                         reminderTime: reminderTime,
                         eventIdentifier: event?.eventIdentifier,
-                        recurrenceRule: event?.recurrenceRule
+                        recurrenceRule: recurr != nil ? EKRecurrenceRule(recurrenceWith: recurr!, interval: 1, end: nil) : nil
                     )
 
                     if event != nil {

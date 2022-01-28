@@ -79,6 +79,10 @@ struct Event: Hashable {
         notes = ekEvent.notes
         alarms = ekEvent.alarms
         eventIdentifier = ekEvent.eventIdentifier
+        
+        if let recurrenceRules = ekEvent.recurrenceRules, recurrenceRules.count > 0 {
+            recurrenceRule = recurrenceRules[0]
+        }
     }
 }
 

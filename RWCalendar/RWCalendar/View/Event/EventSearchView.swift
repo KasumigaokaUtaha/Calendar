@@ -44,7 +44,6 @@ struct EventSearchView: View {
             .onSubmit(of: .search) {
                 store.send(.loadSearchResult(searchText))
                 displayNoResult = true
-                print(displayNoResult)
             }
             .navigationTitle("Search events")
             .navigationBarTitleDisplayMode(.inline)

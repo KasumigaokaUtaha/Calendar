@@ -98,6 +98,7 @@ struct TrueMonthView: View {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button {
                         showEventMenu.toggle()
+                        
                     } label: {
                         Image(systemName: "plus")
                     }
