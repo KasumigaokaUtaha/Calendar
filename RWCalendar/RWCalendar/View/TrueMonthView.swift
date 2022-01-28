@@ -29,6 +29,7 @@ struct TrueMonthView: View {
                                 customizationData.savedFontStyle,
                                 size: CGFloat(customizationData.savedFontSize)
                             ))
+                            .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
                             .frame(maxWidth: .infinity)
                     }
                 }
@@ -37,8 +38,8 @@ struct TrueMonthView: View {
                     ForEach(RWCalendar.getDate(date: curDate)) { value in
                         DateView(value: value)
                             .background(
-                                Circle()
-                                    .strokeBorder(lineWidth: 0.5)
+                                Rectangle()
+                                    .strokeBorder(lineWidth: 0.8)
                                     .background(Color(customizationData.selectedTheme.foregroundColor))
                                     .opacity(
                                         Calendar.current.isDate(value.date, inSameDayAs: curDate) && value
@@ -98,7 +99,6 @@ struct TrueMonthView: View {
                         store.send(.setSelectedDate(curDate))
                         store.send(.loadEventsForMonth(at: curDate))
                     }
-
                 }
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button {
@@ -112,7 +112,6 @@ struct TrueMonthView: View {
                     } label: {
                         Image(systemName: "magnifyingglass")
                     }
-
                 }
             }
         }
@@ -224,8 +223,6 @@ extension TrueMonthView {
         } label: {
             Image(systemName: "slider.horizontal.3")
         }
-
-
     }
 
     func checkEvent(date: Date) -> Bool {
@@ -246,7 +243,7 @@ extension TrueMonthView {
                     .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
                     .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
                     .background(
-                        Circle()
+                        Rectangle()
                             .strokeBorder(lineWidth: 0.8)
                             .background(Color(customizationData.selectedTheme.foregroundColor))
                             .opacity(
