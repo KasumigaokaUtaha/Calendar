@@ -12,7 +12,7 @@ struct IconSelectionView: View {
 
     @Binding var iconName: String
 
-    let iconNameList: [String] = ["Default", "Lila", "Blue"]
+    let iconNameList: [String] = [NSLocalizedString("icon_default", value: "Default", comment:"Default Icon"), NSLocalizedString("icon_lila", value: "Lila", comment:"Lila Icon"), NSLocalizedString("icon_blue", value: "Blue", comment:"Blue Icon")]
 
     var body: some View {
         VStack(alignment: .center) {
@@ -48,7 +48,7 @@ struct IconSelectionView: View {
 
             Spacer()
 
-                .navigationBarTitle(Text("App Icons"), displayMode: .inline)
+            .navigationBarTitle(Text(NSLocalizedString("settings_appIcon", comment: "App Icon")), displayMode: .inline)
         }
         .padding()
     }

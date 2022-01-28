@@ -44,7 +44,7 @@ struct EventLabel: View {
             Spacer()
             HStack {
                 if isAllDay(self.event) {
-                    Text("All day")
+                    Text(NSLocalizedString("allDay", comment: "All day"))
                 } else {
                     Text(
                         "\(dateFormatter.string(from: event.startDate)) - \(dateFormatter.string(from: event.endDate))"
@@ -97,10 +97,10 @@ struct EventsListView: View {
                     }
 
                 } else {
-                    Text("No events")
+                    Text(NSLocalizedString("noEvents", comment: "No events"))
                 }
             } else {
-                Text("No events")
+                Text(NSLocalizedString("noEvents", comment: "No events"))
             }
         }
     }
