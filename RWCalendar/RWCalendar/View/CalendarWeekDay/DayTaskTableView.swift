@@ -7,6 +7,8 @@
 
 import EventKitUI
 import SwiftUI
+
+// to draw the line of task table
 struct Line: Shape {
     func path(in rect: CGRect) -> Path {
         var path = Path()
@@ -19,7 +21,7 @@ struct Line: Shape {
 
 struct DayTaskTableView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
-
+    @State private var showMiniEventList = false
     private var threeColumnGrid = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
 
     // get the events ids from the selected date
@@ -132,6 +134,7 @@ struct DayTaskTableView: View {
         return taskCards
     }
 
+    // get the size of Scroll view, help to draw the task card
     func getScrollViewHeight(geo: GeometryProxy) -> Double {
         return (geo.size.height / 15 * 24 + 20 * 25)
     }
@@ -160,8 +163,6 @@ struct DayTaskTableView: View {
     }
 
     // to show the task card view
-
-
     func taskCardView(taskCards: [TaskCard], geo: GeometryProxy) -> some View {
         print(taskCards.count)
         func getViewHeigt(event: Event) -> Double {
@@ -183,6 +184,13 @@ struct DayTaskTableView: View {
                         .frame(width: getFrameWidth(geo: geo, taskCard: taskCard), height: getViewHeigt(event: event), alignment: .topLeading)
                         .background(Color(cgColor: event.calendar.cgColor).opacity(0.6))
                         .position(x: getCardPosition(geo: geo, taskCard: taskCard), y: getViewY(event: event))
+                        .onTapGesture {
+                            store.send(.setSelectedEvent(event))
+                            showMiniEventList.toggle()
+                        }
+                }
+                .sheet(isPresented: $showMiniEventList) {
+                    EventDisplayView()
                 }
             }
         })
@@ -203,7 +211,6 @@ struct DayTaskTableView: View {
 
     /// Description
     var body: some View {
-//        var eventsIDS: [String] = store.state.allEventIDs
         GeometryReader { geo in
             ScrollView(.vertical, showsIndicators: false) {
                 ZStack {
@@ -236,18 +243,8 @@ struct DayTaskTableView: View {
                     }
                     .frame(width: geo.frame(in: .local).width, alignment: .leading)
                     .border(.red)
-//                    getCardView(eventsIds: eventIDs, geo: geo)
                     getCardView(eventsIds: eventIDs, geo: geo)
 
-//                    if let eventIDs = eventIDs {
-//                        if eventIDs.count > 0 {
-//                            taskCardView(taskCards: eventsToTaskCards(events: events(with: eventIDs)), geo: geo)
-//                        } else {
-//                            Text("No events")
-//                        }
-//                    } else {
-//                        Text("No events")
-//                    }
                 }
             }
             .onReceive(store.$state) { _ in
