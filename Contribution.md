@@ -7,9 +7,9 @@
 
 
 ## Han Zhang 376230 
-- project organizer
-- implement the year view
-- implement most of the redux architecture
+- Project organizer
+- Implemetation of the year view
+- Implementation of the redux architecture
 
 
 
