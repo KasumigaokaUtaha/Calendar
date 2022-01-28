@@ -13,6 +13,8 @@
 
 
 ## Liangkun He 374300 
+- Implementation of the month view
+- Implementation of (part of) the event list view that displays the information of events briefly
 
 
 
