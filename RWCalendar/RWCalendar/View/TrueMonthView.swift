@@ -19,14 +19,16 @@ struct TrueMonthView: View {
     @State private var showEventMenu = false
     @State private var showSearchBar = false
 
-    // #TODO: add a var to controll light and dark modes
     var body: some View {
         NavigationView {
             ScrollView {
                 HStack {
                     ForEach(days, id: \.self) { day in
                         Text(day)
-                            .font(.body)
+                            .font(.custom(
+                                customizationData.savedFontStyle,
+                                size: CGFloat(customizationData.savedFontSize)
+                            ))
                             .frame(maxWidth: .infinity)
                     }
                 }
@@ -37,7 +39,7 @@ struct TrueMonthView: View {
                             .background(
                                 Circle()
                                     .strokeBorder(lineWidth: 0.5)
-                                    .background(Color.blue)
+                                    .background(Color(customizationData.selectedTheme.foregroundColor))
                                     .opacity(
                                         Calendar.current.isDate(value.date, inSameDayAs: curDate) && value
                                             .day != 0 ? 0.5 : 0
@@ -83,7 +85,9 @@ struct TrueMonthView: View {
             .navigationTitle(
                 Text("\(RWCalendar.dateToString(date: curDate)[1]) \(RWCalendar.dateToString(date: curDate)[0])")
             )
+
             .navigationBarTitleDisplayMode(.inline)
+
             .navigationViewStyle(.stack)
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarLeading) {
@@ -94,6 +98,10 @@ struct TrueMonthView: View {
                         store.send(.setSelectedDate(curDate))
                         store.send(.loadEventsForMonth(at: curDate))
                     }
+                    .buttonStyle(FilledRoundedCornerButtonStyle(
+                        foregroundColor: Color(customizationData.selectedTheme.foregroundColor),
+                        primaryColor: Color(customizationData.selectedTheme.primaryColor)
+                    ))
                 }
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button {
@@ -101,11 +109,19 @@ struct TrueMonthView: View {
                     } label: {
                         Image(systemName: "plus")
                     }
+                    .buttonStyle(FilledRoundedCornerButtonStyle(
+                        foregroundColor: Color(customizationData.selectedTheme.foregroundColor),
+                        primaryColor: Color(customizationData.selectedTheme.primaryColor)
+                    ))
                     Button {
                         showSearchBar.toggle()
                     } label: {
                         Image(systemName: "magnifyingglass")
                     }
+                    .buttonStyle(FilledRoundedCornerButtonStyle(
+                        foregroundColor: Color(customizationData.selectedTheme.foregroundColor),
+                        primaryColor: Color(customizationData.selectedTheme.primaryColor)
+                    ))
                 }
             }
         }
@@ -114,6 +130,19 @@ struct TrueMonthView: View {
         }
         .sheet(isPresented: $showSearchBar) {
             EventSearchView(isPresented: $showSearchBar)
+        }
+    }
+
+    var Font: UIFont {
+        if
+            let font = UIFont(
+                name: customizationData.savedFontStyle,
+                size: CGFloat(customizationData.savedFontSize)
+            )
+        {
+            return font
+        } else {
+            return UIFont.systemFont(ofSize: 15)
         }
     }
 }
@@ -204,6 +233,10 @@ extension TrueMonthView {
         } label: {
             Image(systemName: "slider.horizontal.3")
         }
+        .menuStyle(customMenuStyle(
+            foregroundColor: Color(customizationData.selectedTheme.foregroundColor),
+            primaryColor: Color(customizationData.selectedTheme.primaryColor)
+        ))
     }
 
     func checkEvent(date: Date) -> Bool {
@@ -221,16 +254,25 @@ extension TrueMonthView {
             if value.day != 0 {
                 Text("\(value.day)")
                     .frame(maxWidth: .infinity)
-                    .foregroundColor(isToday(date: value.date) ? .red : .primary)
+                    .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
+                    .background(
+                        Circle()
+                            .strokeBorder(lineWidth: 0.8)
+                            .background(Color(customizationData.selectedTheme.foregroundColor))
+                            .opacity(
+                                isToday(date: value.date) ? 0.5 : 0
+                            )
+                            .padding(.horizontal, 8)
+                    )
 
                 Circle()
                     .fill(
                         checkEvent(date: value.date) ?
-                            Color.red : Color.white
+                            Color(customizationData.selectedTheme.foregroundColor) : Color.white
                     )
                     .opacity(
                         checkEvent(date: value.date) ?
-                            0.5 : 0
+                            0.9 : 0
                     )
                     .frame(width: 7, height: 7)
             }
