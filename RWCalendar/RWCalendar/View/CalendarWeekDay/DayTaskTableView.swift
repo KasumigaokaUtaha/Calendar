@@ -205,11 +205,7 @@ struct DayTaskTableView: View {
         if let eventIDs = eventsIds {
             if eventIDs.count > 0 {
                 taskCardView(taskCards: eventsToTaskCards(events: events(with: eventsIds!)), geo: geo)
-            } else {
-                Text("No events")
             }
-        } else {
-            Text("No events")
         }
     }
 
@@ -217,18 +213,19 @@ struct DayTaskTableView: View {
     /// the card view are some tasks happen at same time period ( if the start time between the time of other taks)
     var body: some View {
         GeometryReader { geo in
-            ScrollView(.vertical, showsIndicators: false) {
+            ScrollView(.vertical, showsIndicators: true) {
                 ZStack {
                     VStack(spacing: geo.size.height / 15) {
                         ForEach(0...12, id: \.self) { row in
                             HStack(spacing: 10) {
                                 Text("\(row) : 00 AM")
+                                    .foregroundColor(.gray)
                                     .font(.footnote)
                                     .frame(width: 70)
 
                                 Line()
                                     .stroke(style: StrokeStyle(lineWidth: 0.5))
-                                    .fill(.red)
+                                    .fill(.gray)
                                     .frame(height: 1)
                             }
                         }.frame(width: geo.size.width, height: 20, alignment: .leading)
@@ -236,18 +233,18 @@ struct DayTaskTableView: View {
                         ForEach(13...24, id: \.self) { row in
                             HStack(spacing: 10) {
                                 Text("\(row) : 00 PM")
+                                    .foregroundColor(.gray)
                                     .font(.footnote)
                                     .frame(width: 70)
 
                                 Line()
                                     .stroke(style: StrokeStyle(lineWidth: 0.5))
-                                    .fill(.red)
+                                    .fill(.gray)
                                     .frame(height: 1)
                             }
                         }.frame(width: geo.size.width, height: 20, alignment: .leading)
                     }
                     .frame(width: geo.frame(in: .local).width, alignment: .leading)
-                    .border(.red)
                     getCardView(eventsIds: eventIDs, geo: geo)
                 }
             }

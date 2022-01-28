@@ -13,9 +13,11 @@ struct DayToolbarView: View {
     @Binding var currentWeek: Int
     @State private var offset: CGSize = .zero
     @State var selectedDate: Date = .init()
-    var weekDays :[String]{
+    @State var showSearchBar:Bool = false
+    var weekDays: [String] {
         return store.state.calendar.shortWeekdaySymbols
     }
+
     var body: some View {
         DayDataView
             .navigationBarTitleDisplayMode(.inline)
@@ -23,15 +25,25 @@ struct DayToolbarView: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     makeMenu()
                 }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    makeButton()
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing){
+                    Button {
+                        showSearchBar.toggle()
+                    } label: {
+                        Image(systemName: "magnifyingglass")
+                    }
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     DayAddEvent()
                 }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    makeButton()
-                }
+            }.sheet(isPresented: $showSearchBar) {
+                EventSearchView(isPresented: $showSearchBar)
             }
     }
+
     // to switch the view
     func makeMenu() -> some View {
         Menu {
@@ -70,6 +82,7 @@ struct DayToolbarView: View {
             Image(systemName: "slider.horizontal.3")
         }
     }
+
     // reset the selected to today and reset the view to today
     func makeButton() -> some View {
         Button {
@@ -104,8 +117,8 @@ struct DayToolbarView: View {
                 .opacity(isSameDayToSelectedDay(date1: d.date) ? 1 : 0)
                 .frame(width: 25, height: 25)
             )
-        }.onAppear{
-            store.send(.loadEventsForYear(at: Date()))
+        }.onAppear {
+            store.send(.loadEventsForMonth(at: store.state.selectedDate ?? Date()))
         }
     }
     
@@ -114,7 +127,7 @@ struct DayToolbarView: View {
         let formatter = DateFormatter()
         formatter.dateFormat = "YYYY MMM"
         
-        let calendar = Calendar.current
+        let calendar = store.state.calendar
         var d = store.state.currentDate
         d = calendar.date(byAdding: .weekOfYear, value: currentWeek, to: d)!
         
@@ -128,6 +141,7 @@ struct DayToolbarView: View {
         
         return date
     }
+
     // to check the date and mark the selected date
     func isSameDayToSelectedDay(date1: Date) -> Bool {
         let calendar = Calendar.current
@@ -135,7 +149,6 @@ struct DayToolbarView: View {
         dc.year = store.state.selectedYear
         dc.month = store.state.selectedMonth
         dc.day = store.state.selectedDay
-        
         
         return calendar.isDate(date1, inSameDayAs: store.state.selectedDate!)
     }
@@ -153,10 +166,11 @@ struct DayToolbarView: View {
             return DayData(day: day, date: date, weekday: Weekday(week, calendar: Calendar.current) ?? Weekday.monday)
         }
     }
+
     // to set tool bar title of day view
     func getToolBarData(date: Date) -> String {
         let df = DateFormatter()
-        df.dateFormat = "yyyy MMM"
+        df.dateFormat = "MMM yyyy"
         let calendar = Calendar.current
         let d = calendar.date(byAdding: .weekOfYear, value: currentWeek, to: date)!
         return df.string(from: d)
@@ -164,43 +178,58 @@ struct DayToolbarView: View {
 }
 
 extension DayToolbarView {
+    
+    
     var DayDataView: some View {
-        VStack(spacing: 1) {
-            HStack {
-                ForEach(0...6, id: \.self) { day in
-                    Text(weekDays[day])
-                        .font(.callout)
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity)
-                    // *******
-                }
-            }.frame(maxWidth: .infinity)
-            HStack {
-                getWeekFrame(currentWeek: currentWeek)
-                    .offset(x: offset.width)
-                    .frame(maxWidth: .infinity)
-            }
-        }
-        .frame(height: 30, alignment: .bottom)
-        .highPriorityGesture(
-            DragGesture(coordinateSpace: .local)
-                .onChanged {
-                    self.offset = $0.translation
-                }
-                .onEnded {
-                    if $0.startLocation.x > $0.location.x + 20 {
-                        withAnimation {
-                            self.currentWeek += 1
-                        }
-                        
-                    } else if $0.startLocation.x < $0.location.x - 20 {
-                        withAnimation {
-                            self.currentWeek -= 1
-                        }
+        VStack(spacing:5){
+            VStack(spacing: 0) {
+                HStack {
+                    ForEach(0...6, id: \.self) { day in
+                        Text(weekDays[day])
+                            .font(.callout)
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity)
+                        // *******
                     }
-                    self.offset = .zero
+                }.frame(maxWidth: .infinity)
+                HStack {
+                    getWeekFrame(currentWeek: currentWeek)
+                        .offset(x: offset.width)
+                        .frame(maxWidth: .infinity)
                 }
-        )
+            }
+            .frame(height: 30, alignment: .bottom)
+            .highPriorityGesture(
+                DragGesture(coordinateSpace: .local)
+                    .onChanged {
+                        self.offset = $0.translation
+                    }
+                    .onEnded {
+                        if $0.startLocation.x > $0.location.x + 20 {
+                            withAnimation {
+                                self.currentWeek += 1
+                            }
+                            
+                        } else if $0.startLocation.x < $0.location.x - 20 {
+                            withAnimation {
+                                self.currentWeek -= 1
+                            }
+                        }
+                        self.offset = .zero
+                    }
+            )
+            
+            HStack(spacing:0){
+                Text("  ")
+                Text(" Week:\(getDate()[2]) ")
+                    .font(.footnote)
+                    .foregroundColor(.blue)
+                    .frame(height:20)
+                    .background(RoundedRectangle(cornerRadius: 4).fill(.yellow))
+                Spacer()
+            }.frame(height:10)
+        }
+        
         .navigationTitle(getToolBarData(date: store.state.currentDate))
     }
 }

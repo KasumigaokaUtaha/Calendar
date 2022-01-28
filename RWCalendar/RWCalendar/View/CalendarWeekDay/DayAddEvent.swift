@@ -18,7 +18,7 @@ struct DayAddEvent: View {
             showingDayEventSheet.toggle()
         }
             label: {
-                Image(systemName: "plus.circle")
+                Image(systemName: "plus")
             }
             .sheet(isPresented: self.$showingDayEventSheet) {
                 EventEditView(nil, defaultEventCalendar: store.state.defaultEventCalendar)

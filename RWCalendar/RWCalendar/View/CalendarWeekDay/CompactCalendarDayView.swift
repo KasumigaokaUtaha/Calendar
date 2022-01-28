@@ -23,7 +23,7 @@ struct CompactCalendarDayView: View {
                         store.send(.setSelectedMonth(month))
                         store.send(.setSelectedYear(year))
                     }
-                Spacer(minLength: 20)
+//                Spacer(minLength: 20)
                 DayTaskTableView()
             }
         }
