@@ -12,7 +12,7 @@ struct CompactCalendarYearView: View {
     @EnvironmentObject var customizationData: CustomizationData
 
     @State var currentYear = Calendar.current.component(.year, from: Date())
-    let column = GridItem(.flexible(minimum: 20.0))
+    let columns = Array(repeating: GridItem(.flexible(minimum: 20.0)), count: 2)
 
     var body: some View {
         Group {
@@ -37,12 +37,7 @@ struct CompactCalendarYearView: View {
     }
 
     var dayFont: UIFont {
-        if
-            let font = UIFont(
-                name: customizationData.savedFontStyle,
-                size: CGFloat(customizationData.savedFontSize)
-            )
-        {
+        if let font = UIFont(name: customizationData.savedFontStyle, size: 15) {
             return font
         } else {
             return UIFont.systemFont(ofSize: 15)
@@ -50,10 +45,7 @@ struct CompactCalendarYearView: View {
     }
 
     var monthFont: Font {
-        Font.custom(
-            customizationData.savedFontStyle,
-            size: CGFloat(customizationData.savedFontSize + 5)
-        )
+        Font.custom(customizationData.savedFontStyle, size: 20)
     }
 
     func makeContent() -> some View {
@@ -89,7 +81,7 @@ struct CompactCalendarYearView: View {
     /// Create the compact year view for the given year
     func makeYear(_ year: Int) -> some View {
         ScrollView {
-            LazyVGrid(columns: getColumns(for: customizationData.savedFontSize)) {
+            LazyVGrid(columns: columns) {
                 ForEach(fetchMonthData(for: year)) { monthData in
                     CompactCalendarMonthViewWrapper(
                         year: year,
@@ -101,18 +93,6 @@ struct CompactCalendarYearView: View {
                 }
             }
         }
-    }
-
-    func getColumns(for fontSize: Int) -> [GridItem] {
-        var count = 2
-
-        if fontSize < 13 {
-            count = 3
-        } else if fontSize > 17 {
-            count = 1
-        }
-
-        return Array(repeating: column, count: count)
     }
 
     func fetchMonthData(for year: Int) -> [MonthData] {
