@@ -12,7 +12,7 @@ struct DayAddEvent: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
 
     @State private var showingDayEventSheet = false
-
+    // to show the adding view
     var body: some View {
         Button {
             showingDayEventSheet.toggle()

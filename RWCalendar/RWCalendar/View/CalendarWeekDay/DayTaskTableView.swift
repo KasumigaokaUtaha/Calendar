@@ -97,7 +97,7 @@ struct DayTaskTableView: View {
         return events_selectedDay
     }
 
-    /// accroding the events get the taskcard, to be showed in the day task view
+    // accroding the events get the taskcard, to be showed in the day task view
     func eventsToTaskCards(events: [Event]) -> [TaskCard] {
         var taskCards: [TaskCard] = []
         let events_sorted = events.sorted { $0.startDate < $1.startDate }
@@ -138,7 +138,7 @@ struct DayTaskTableView: View {
     func getScrollViewHeight(geo: GeometryProxy) -> Double {
         return (geo.size.height / 15 * 24 + 20 * 25)
     }
-
+    // get the middle time point, help to find the center of the task card view
     func getMiddleTime(date1: Date, date2: Date) -> Double {
         let calendar = store.state.calendar
         let m1 = calendar.component(.minute, from: date1)
@@ -209,7 +209,8 @@ struct DayTaskTableView: View {
         }
     }
 
-    /// Description
+    /// the task view make up time table( base converage) and the task card view
+    /// the card view are some tasks happen at same time period ( if the start time between the time of other taks)
     var body: some View {
         GeometryReader { geo in
             ScrollView(.vertical, showsIndicators: false) {
@@ -256,6 +257,8 @@ struct DayTaskTableView: View {
     }
 }
 
+
+// to avoid add duplicate events, use set to collect the events and copy it with array
 struct TaskCard: Hashable {
     var events_set: Set<Event> = []
     var cardStartingTime: Date

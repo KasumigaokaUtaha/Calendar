@@ -32,7 +32,7 @@ struct DayToolbarView: View {
                 }
             }
     }
-    
+    // to switch the view
     func makeMenu() -> some View {
         Menu {
             Button {
@@ -70,7 +70,7 @@ struct DayToolbarView: View {
             Image(systemName: "slider.horizontal.3")
         }
     }
-    
+    // reset the selected to today and reset the view to today
     func makeButton() -> some View {
         Button {
             currentWeek = 0
@@ -118,7 +118,7 @@ struct DayToolbarView: View {
         var d = store.state.currentDate
         d = calendar.date(byAdding: .weekOfYear, value: currentWeek, to: d)!
         
-        var MonthAndYear = formatter.string(from: d)
+        let MonthAndYear = formatter.string(from: d)
         
         // date[0]: years... date[1]: month ... date[2]: weeksnumber of year
         var date = MonthAndYear.components(separatedBy: " ")
@@ -128,7 +128,7 @@ struct DayToolbarView: View {
         
         return date
     }
-    
+    // to check the date and mark the selected date
     func isSameDayToSelectedDay(date1: Date) -> Bool {
         let calendar = Calendar.current
         var dc = DateComponents()
@@ -136,7 +136,6 @@ struct DayToolbarView: View {
         dc.month = store.state.selectedMonth
         dc.day = store.state.selectedDay
         
-        let d2 = calendar.date(from: dc)!
         
         return calendar.isDate(date1, inSameDayAs: store.state.selectedDate!)
     }
@@ -154,7 +153,7 @@ struct DayToolbarView: View {
             return DayData(day: day, date: date, weekday: Weekday(week, calendar: Calendar.current) ?? Weekday.monday)
         }
     }
-    
+    // to set tool bar title of day view
     func getToolBarData(date: Date) -> String {
         let df = DateFormatter()
         df.dateFormat = "yyyy MMM"
@@ -211,18 +210,3 @@ struct StaticButtonStyle: ButtonStyle {
         configuration.label
     }
 }
-
-// struct DayToolbarView_Previews: PreviewProvider {
-//    @State var currentWeek:Int = 0
-//    static let store: AppStore<AppState, AppAction, AppEnvironment> = AppStore(
-//        initialState: AppState(),
-//        reducer: appReducer,
-//        environment: AppEnvironment()
-//    )
-//
-//    static var previews: some View {
-//
-//        DayToolbarView(currentWeek: 0)
-//            .environmentObject(store)
-//    }
-// }
