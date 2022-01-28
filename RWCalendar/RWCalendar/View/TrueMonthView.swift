@@ -98,10 +98,7 @@ struct TrueMonthView: View {
                         store.send(.setSelectedDate(curDate))
                         store.send(.loadEventsForMonth(at: curDate))
                     }
-                    .buttonStyle(FilledRoundedCornerButtonStyle(
-                        foregroundColor: Color(customizationData.selectedTheme.foregroundColor),
-                        primaryColor: Color(customizationData.selectedTheme.primaryColor)
-                    ))
+
                 }
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button {
@@ -109,19 +106,13 @@ struct TrueMonthView: View {
                     } label: {
                         Image(systemName: "plus")
                     }
-                    .buttonStyle(FilledRoundedCornerButtonStyle(
-                        foregroundColor: Color(customizationData.selectedTheme.foregroundColor),
-                        primaryColor: Color(customizationData.selectedTheme.primaryColor)
-                    ))
+
                     Button {
                         showSearchBar.toggle()
                     } label: {
                         Image(systemName: "magnifyingglass")
                     }
-                    .buttonStyle(FilledRoundedCornerButtonStyle(
-                        foregroundColor: Color(customizationData.selectedTheme.foregroundColor),
-                        primaryColor: Color(customizationData.selectedTheme.primaryColor)
-                    ))
+
                 }
             }
         }
@@ -233,10 +224,8 @@ extension TrueMonthView {
         } label: {
             Image(systemName: "slider.horizontal.3")
         }
-        .menuStyle(customMenuStyle(
-            foregroundColor: Color(customizationData.selectedTheme.foregroundColor),
-            primaryColor: Color(customizationData.selectedTheme.primaryColor)
-        ))
+
+
     }
 
     func checkEvent(date: Date) -> Bool {
@@ -254,6 +243,7 @@ extension TrueMonthView {
             if value.day != 0 {
                 Text("\(value.day)")
                     .frame(maxWidth: .infinity)
+                    .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
                     .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
                     .background(
                         Circle()
