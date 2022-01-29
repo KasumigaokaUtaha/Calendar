@@ -33,10 +33,10 @@ struct EventEditView: View {
     init(_ event: Event?, defaultEventCalendar: EKCalendar) {
         if let event = event {
             self.event = event
-            navigationTitle = "Edit Event"
+            navigationTitle = NSLocalizedString("event_edit", comment: "Edit Event")
         } else {
             self.event = nil
-            navigationTitle = "Add Event"
+            navigationTitle = NSLocalizedString("event_add", comment: "Add Event")
         }
 
         _title = State(initialValue: event?.title ?? "")
@@ -51,10 +51,10 @@ struct EventEditView: View {
     init(_ event: Event?, defaultEventCalendar: EKCalendar, date: Date?) {
         if let event = event {
             self.event = event
-            navigationTitle = "Edit Event"
+            navigationTitle = NSLocalizedString("event_edit", comment: "Edit Event")
         } else {
             self.event = nil
-            navigationTitle = "Add Event"
+            navigationTitle = NSLocalizedString("event_add", comment: "Add Event")
         }
 
         _startDate = State(initialValue: date ?? Date())
@@ -71,14 +71,14 @@ struct EventEditView: View {
             Form {
                 Section {
                     TextField(
-                        "Title",
+                        NSLocalizedString("title", comment: "Title"),
                         text: $title
                     )
                     Button {
                         showLocationSelectionView = true
                     } label: {
                         HStack {
-                            Text("Location")
+                            Text(NSLocalizedString("location", comment:"Location"))
                                 .foregroundColor(Color.secondary)
                             Spacer()
                             Image(systemName: "map")
@@ -87,17 +87,17 @@ struct EventEditView: View {
                 }
                 Section {
                     DatePicker(
-                        "Start",
+                        NSLocalizedString("startDate", comment: "Start Date"),
                         selection: $startDate,
                         displayedComponents: [.date, .hourAndMinute]
                     )
                     DatePicker(
-                        "End",
+                        NSLocalizedString("endDate", comment: "End"),
                         selection: $endDate,
                         displayedComponents: [.date, .hourAndMinute]
                     )
-                    Picker("Remind", selection: $reminderTime) {
-                        Text("None")
+                    Picker(NSLocalizedString("remind", comment: "Remind"), selection: $reminderTime) {
+                        Text(NSLocalizedString("none", comment: "None"))
                             .tag(ReminderTime?.none)
                         ForEach(ReminderTime.allCases) { time in
                             Text(time.description)
@@ -109,7 +109,7 @@ struct EventEditView: View {
                     makeCalendarPicker()
                 }
                 Section {
-                    TextField("URL", text: $url)
+                    TextField(NSLocalizedString("url", comment: "URL"), text: $url)
                         .keyboardType(.URL)
                     TextEditor(text: $notes)
                 }
@@ -118,18 +118,18 @@ struct EventEditView: View {
                         Button {
                             showConfirmationForDelete.toggle()
                         } label: {
-                            Text("Delete")
+                            Text(NSLocalizedString("delete", comment: "Delete"))
                                 .foregroundColor(Color.red)
                                 .frame(maxWidth: .infinity, alignment: .center)
                         }
                         .actionSheet(isPresented: $showConfirmationForDelete) {
                             ActionSheet(
-                                title: Text("Delete this event"),
-                                message: Text("This event will be remove"),
+                                title: Text(NSLocalizedString("deleteEventMessage", comment: "Delete this event")),
+                                message: Text(NSLocalizedString("removeEventMessage", comment: "This event will be remove")),
                                 buttons: [
                                     .cancel(),
                                     .destructive(
-                                        Text("Delete"),
+                                        Text(NSLocalizedString("delete", comment: "Delete")),
                                         action: {
                                             store.send(.removeEvent(event!))
                                             self.presentationMode.wrappedValue.dismiss()
@@ -177,7 +177,7 @@ struct EventEditView: View {
             )
         } label: {
             HStack {
-                Text("Calendar")
+                Text(NSLocalizedString("event_Calendar", comment: "Calendar"))
                 Spacer()
                 Text("\(calendar.title)")
                     .foregroundColor(Color.secondary)
@@ -188,17 +188,17 @@ struct EventEditView: View {
     func makeToolbar() -> some ToolbarContent {
         Group {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button("Cancel") {
+                Button(NSLocalizedString("cancel", comment: "Cancel")) {
                     showActionSheetForCancel = true
                 }
                 .actionSheet(isPresented: $showActionSheetForCancel) {
                     ActionSheet(
-                        title: Text("Cancel your changes on this event"),
-                        message: Text("Your changes will be aborted"),
+                        title: Text(NSLocalizedString("cancelChangesMessage", comment: "Cancel your changes on this event")),
+                        message: Text(NSLocalizedString("abortChangesMessage", comment: "Your changes will be aborted")),
                         buttons: [
                             .cancel(),
                             .destructive(
-                                Text("Abort changes"),
+                                Text(NSLocalizedString("abortChanges", comment: "Abort changes")),
                                 action: {
                                     self.presentationMode.wrappedValue.dismiss()
                                 }
@@ -208,7 +208,7 @@ struct EventEditView: View {
                 }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(event != nil ? "Save" : "Add") {
+                Button(event != nil ? NSLocalizedString("save", comment: "Save") : NSLocalizedString("add", comment: "Add")) {
                     let newEvent = Event(
                         title: title,
                         startDate: startDate,
