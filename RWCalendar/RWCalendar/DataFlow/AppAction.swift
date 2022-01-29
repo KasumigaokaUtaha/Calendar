@@ -50,7 +50,7 @@ enum AppAction {
     case removeEventFromSearchResult(Event)
     case updateEventInSearchResult(Event)
 
-    case setSelectedEvent(Event)
+    case setSelectedEvent(Event?)
     case setEventErrorMessage(String)
     case setActivatedCalendars([EKCalendar])
     case setActivatedCalendarNames([String])

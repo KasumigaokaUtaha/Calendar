@@ -71,7 +71,7 @@ struct ContentView: View {
                     store.send(.setSelectedDate(dateForMonth()))
                 }
         case .day:
-            CalendarDayView()
+            CompactCalendarDayView()
         case .settings:
             ContainerView {
                 SettingView()

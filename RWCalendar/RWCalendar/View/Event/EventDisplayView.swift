@@ -11,6 +11,8 @@ struct EventDisplayView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
 
+    @State var displayEditView = false
+
     let dateFormatter = DateFormatter()
     var event: Event? {
         guard let selectedEvent = store.state.selectedEvent else {
@@ -54,9 +56,18 @@ struct EventDisplayView: View {
                         Link(event!.url!, destination: URL(string: event!.url!)!)
                     }
                     Spacer()
+                } else {
+                    Text("No event selected")
+                        .foregroundColor(Color.gray)
                 }
             }
             .toolbar(content: makeToolbar)
+            .sheet(isPresented: $displayEditView) {
+                EventEditView(
+                    self.event,
+                    defaultEventCalendar: self.event?.calendar ?? store.state.defaultEventCalendar
+                )
+            }
             .padding(.horizontal, 25)
             .navigationTitle(NSLocalizedString("nav_details", comment: "Event Details"))
             .navigationBarTitleDisplayMode(.inline)
@@ -71,16 +82,17 @@ struct EventDisplayView: View {
                     self.presentationMode.wrappedValue.dismiss()
                 }
             }
+
             ToolbarItem(placement: .navigationBarTrailing) {
-                NavigationLink(
-                    destination: {
-                        EventEditView(
-                            self.event,
-                            defaultEventCalendar: self.event?.calendar ?? store.state.defaultEventCalendar
-                        )
-                    },
-                    label: { Text(NSLocalizedString("edit", comment: "Edit")) }
-                )
+
+                if self.event != nil {
+                    Button {
+                        displayEditView.toggle()
+                    } label: {
+                        Text(NSLocalizedString("edit", comment: "Edit"))
+                    }
+                }
+
             }
         }
     }
