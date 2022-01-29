@@ -78,7 +78,7 @@ struct EventEditView: View {
                         showLocationSelectionView = true
                     } label: {
                         HStack {
-                            Text(NSLocalizedString("location", comment:"Location"))
+                            Text(NSLocalizedString("location", comment: "Location"))
                                 .foregroundColor(Color.secondary)
                             Spacer()
                             Image(systemName: "map")
@@ -125,7 +125,10 @@ struct EventEditView: View {
                         .actionSheet(isPresented: $showConfirmationForDelete) {
                             ActionSheet(
                                 title: Text(NSLocalizedString("deleteEventMessage", comment: "Delete this event")),
-                                message: Text(NSLocalizedString("removeEventMessage", comment: "This event will be remove")),
+                                message: Text(NSLocalizedString(
+                                    "removeEventMessage",
+                                    comment: "This event will be remove"
+                                )),
                                 buttons: [
                                     .cancel(),
                                     .destructive(
@@ -193,8 +196,14 @@ struct EventEditView: View {
                 }
                 .actionSheet(isPresented: $showActionSheetForCancel) {
                     ActionSheet(
-                        title: Text(NSLocalizedString("cancelChangesMessage", comment: "Cancel your changes on this event")),
-                        message: Text(NSLocalizedString("abortChangesMessage", comment: "Your changes will be aborted")),
+                        title: Text(NSLocalizedString(
+                            "cancelChangesMessage",
+                            comment: "Cancel your changes on this event"
+                        )),
+                        message: Text(NSLocalizedString(
+                            "abortChangesMessage",
+                            comment: "Your changes will be aborted"
+                        )),
                         buttons: [
                             .cancel(),
                             .destructive(
@@ -208,7 +217,10 @@ struct EventEditView: View {
                 }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(event != nil ? NSLocalizedString("save", comment: "Save") : NSLocalizedString("add", comment: "Add")) {
+                Button(
+                    event != nil ? NSLocalizedString("save", comment: "Save") :
+                        NSLocalizedString("add", comment: "Add")
+                ) {
                     let newEvent = Event(
                         title: title,
                         startDate: startDate,

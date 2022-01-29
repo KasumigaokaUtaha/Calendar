@@ -46,7 +46,7 @@ struct EventSearchView: View {
                 displayNoResult = true
                 print(displayNoResult)
             }
-            .navigationTitle(Text(NSLocalizedString("nav_search", comment:"Search events")))
+            .navigationTitle(Text(NSLocalizedString("nav_search", comment: "Search events")))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {

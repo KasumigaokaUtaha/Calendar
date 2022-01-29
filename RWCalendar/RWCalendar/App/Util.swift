@@ -296,23 +296,7 @@ extension Util {
     }
 }
 
-/*
-  Helping functions that used for TrueMonthView
- ********************************************************************************/
-
-extension Date {
-    func getMonthDate() -> [Date] {
-        let range = Calendar.current.range(of: .day, in: .month, for: self)!
-
-        let starter = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: self))!
-
-        return range.compactMap { day -> Date in
-            Calendar.current.date(byAdding: .day, value: day - 1, to: starter)!
-        }
-    }
-}
-
-// convert year and month to string
+/// convert year and month to string
 func dateToString(date: Date) -> [String] {
     let month = Calendar.current.component(.month, from: date) - 1
     let year = Calendar.current.component(.year, from: date)
@@ -320,17 +304,12 @@ func dateToString(date: Date) -> [String] {
     return ["\(year)", Calendar.current.shortMonthSymbols[month]]
 }
 
-// check if the input date is today
+/// check if the input date is today
 func isToday(date: Date) -> Bool {
     Calendar.current.isDateInToday(date)
 }
 
-// return current month based on the int value
-// func getCurMonth(value: Int) -> Date {
-//    Calendar.current.date(byAdding: .month, value: value, to: Date())!
-// }
-
-// get all the date in a month for display
+/// get all the date in a month for display
 func getDate(date: Date) -> [DateData] {
     var days = date.getMonthDate().compactMap { date -> DateData in
 
@@ -342,13 +321,9 @@ func getDate(date: Date) -> [DateData] {
     let firstWeek = Calendar.current.component(.weekday, from: days.first!.date)
 
     for _ in 0 ..< firstWeek - 1 {
-        // offset: set extra dates as 0
+        /// offset: set extra dates as 0
         days.insert(DateData(day: 0, date: Date()), at: 0)
     }
 
     return days
 }
-
-/*
- Helping functions that used for TrueMonthView
- ******************************************************************************/

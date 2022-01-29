@@ -25,7 +25,10 @@ struct SourceSelectionView: View {
             }
         }
 
-        .navigationBarTitle(Text(NSLocalizedString("settings_sources", comment: "Calendar Sources")), displayMode: .inline)
+        .navigationBarTitle(
+            Text(NSLocalizedString("settings_sources", comment: "Calendar Sources")),
+            displayMode: .inline
+        )
     }
 }
 

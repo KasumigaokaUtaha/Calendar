@@ -62,7 +62,7 @@ struct ContentView: View {
                 Button {
                     store.send(.setScrollToToday(withAnimation: true))
                 } label: {
-                    Text(NSLocalizedString("today",comment: "Today"))
+                    Text(NSLocalizedString("today", comment: "Today"))
                 }
             }
         case .month:
@@ -79,7 +79,7 @@ struct ContentView: View {
                 Button {
                     store.send(.setScrollToToday(withAnimation: true))
                 } label: {
-                    Text(NSLocalizedString("today",comment: "Today"))
+                    Text(NSLocalizedString("today", comment: "Today"))
                 }
             }
         case .day:
@@ -123,8 +123,8 @@ struct ContentView: View {
     }
 }
 
+/// get the components of the selected date
 extension ContentView {
-    // get the components of the selected date
     func dateForMonth() -> Date {
         var comp = DateComponents()
         comp.month = store.state.selectedMonth
