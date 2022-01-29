@@ -110,7 +110,6 @@ struct EventEditView: View {
                 }
                 Section {
                     makeCalendarPicker()
-                    makeEventRecurrencePicker()
                 }
                 Section {
                     TextField("URL", text: $url)
