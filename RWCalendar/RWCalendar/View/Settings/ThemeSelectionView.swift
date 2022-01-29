@@ -29,10 +29,10 @@ struct ThemeSelectionView: View {
                         Spacer()
                         HStack {
                             Spacer()
-                            Text("Primary")
+                            Text(NSLocalizedString("themes_primary", comment: "Primary Color"))
                                 .foregroundColor(Color(ThemeManager.themes[theme].primaryColor))
                             Spacer()
-                            Text("Secondary")
+                            Text(NSLocalizedString("themes_secondary", comment: "Secondary Color"))
                                 .foregroundColor(Color(ThemeManager.themes[theme].secondaryColor))
                             Spacer()
                         }
@@ -50,7 +50,7 @@ struct ThemeSelectionView: View {
         }
         .padding()
 
-        .navigationBarTitle(Text("Themes"), displayMode: .inline)
+        .navigationBarTitle(Text(NSLocalizedString("nav_theme", comment: "Navigation Theme")), displayMode: .inline)
     }
 }
 

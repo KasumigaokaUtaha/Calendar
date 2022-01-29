@@ -10,6 +10,7 @@ import Foundation
 import SwiftUI
 
 struct EventLabel: View {
+    @EnvironmentObject var customizationData: CustomizationData
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
 
     let event: Event
@@ -27,8 +28,6 @@ struct EventLabel: View {
         let endTimeHour = calendar.component(.hour, from: event.endDate)
         let startTimeDay = calendar.component(.day, from: event.startDate)
         let endTimeDay = calendar.component(.day, from: event.endDate)
-
-        let selectedTime = dateFormatter.string(from: store.state.selectedDate!)
         return startTimeHour <= 1 && endTimeHour >= 23 || startTimeDay < store.state.selectedDay && endTimeDay > store
             .state.selectedDay
     }
@@ -36,16 +35,21 @@ struct EventLabel: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(event.title)
-                .font(.title2)
                 .bold()
+                .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
+
             Spacer()
             HStack {
                 if isAllDay(self.event) {
-                    Text("All day")
+
+                    Text(NSLocalizedString("All day", comment: "All day"))
+                        .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
+
                 } else {
                     Text(
                         "\(dateFormatter.string(from: event.startDate)) - \(dateFormatter.string(from: event.endDate))"
                     )
+                    .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
                 }
             }
         }
@@ -56,6 +60,7 @@ struct EventLabel: View {
 
 struct EventsListView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
+    @EnvironmentObject var customizationData: CustomizationData
     @State private var showMiniEventList = false
 
     var eventIDs: [String]? {
@@ -94,10 +99,14 @@ struct EventsListView: View {
                     }
 
                 } else {
-                    Text("No events")
+
+                    Text(NSLocalizedString("No events", comment: "No events"))
+                        .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
                 }
             } else {
-                Text("No events")
+                Text(NSLocalizedString("No events", comment: "No events"))
+                    .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
+
             }
         }
     }

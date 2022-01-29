@@ -32,7 +32,7 @@ struct CalendarSelectionView: View {
             }
         }
 
-        .navigationBarTitle(Text("Calendars"), displayMode: .inline)
+        .navigationBarTitle(Text(NSLocalizedString("settings_calendars", comment: "Calendar Names")), displayMode: .inline)
     }
 }
 

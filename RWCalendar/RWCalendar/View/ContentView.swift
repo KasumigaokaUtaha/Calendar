@@ -19,7 +19,7 @@ struct ContentView: View {
         if #available(iOS 15, *) {
             makeContent()
                 .alert(store.state.alertTitle, isPresented: $showAlert) {
-                    Button("Settings", action: makeOpenSettingsAction)
+                    Button(NSLocalizedString("settings", comment: "Settings"), action: makeOpenSettingsAction)
                     Button("OK", role: .cancel) {
                         store.send(.setShowAlert(false))
                     }
@@ -37,7 +37,7 @@ struct ContentView: View {
                     Alert(
                         title: Text(store.state.alertTitle),
                         message: Text(store.state.alertMessage),
-                        primaryButton: .default(Text("Settings")) {
+                        primaryButton: .default(Text(NSLocalizedString("settings", comment: "Settings"))) {
                             makeOpenSettingsAction()
                         },
                         secondaryButton: .default(Text("OK")) {
@@ -62,14 +62,13 @@ struct ContentView: View {
                 Button {
                     store.send(.setScrollToToday(withAnimation: true))
                 } label: {
-                    Text("Today")
+                    Text(NSLocalizedString("today",comment: "Today"))
                 }
             }
         case .month:
             MonthHome(curDate: dateForMonth())
                 .onAppear {
                     store.send(.setSelectedDate(dateForMonth()))
-                    // TODO: try set theme here. Maybe put customizationData... here
                 }
 
         case .week:
@@ -80,17 +79,16 @@ struct ContentView: View {
                 Button {
                     store.send(.setScrollToToday(withAnimation: true))
                 } label: {
-                    Text("Today")
+                    Text(NSLocalizedString("today",comment: "Today"))
                 }
             }
         case .day:
             CalendarDayView()
 
         case .settings:
-
             ContainerView {
                 SettingView()
-                    .navigationTitle(Text("Settings"))
+                    .navigationTitle(Text(NSLocalizedString("settings", comment: "Settings")))
                     .background(Color(customizationData.selectedTheme.backgroundColor).edgesIgnoringSafeArea(.all))
                     .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
                     .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))

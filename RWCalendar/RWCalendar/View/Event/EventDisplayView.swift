@@ -34,25 +34,25 @@ struct EventDisplayView: View {
                         .font(.title2)
                     Divider()
                     HStack(alignment: .center) {
-                        Text("From")
+                        Text(NSLocalizedString("from", comment: "From"))
                         Spacer()
                         Text(dateFormatter.string(from: event!.startDate))
                     }
                     HStack(alignment: .center) {
-                        Text("To")
+                        Text(NSLocalizedString("to", comment: "To"))
                         Spacer()
                         Text(dateFormatter.string(from: event!.endDate))
                     }
 
                     if self.event!.notes != nil {
                         Divider()
-                        Text("Notes").bold()
+                        Text(NSLocalizedString("notes", comment: "Notes")).bold()
                         Text(event!.notes!)
                     }
                     // TODO: fix potential bugs
                     if self.event!.url != nil, self.event!.url != "" {
                         Divider()
-                        Text("URL").bold()
+                        Text(NSLocalizedString("url", comment: "URL")).bold()
                         Link(event!.url!, destination: URL(string: event!.url!)!)
                     }
                     Spacer()
@@ -69,7 +69,7 @@ struct EventDisplayView: View {
                 )
             }
             .padding(.horizontal, 25)
-            .navigationTitle("Event Details")
+            .navigationTitle(NSLocalizedString("nav_details", comment: "Event Details"))
             .navigationBarTitleDisplayMode(.inline)
         }
         .navigationViewStyle(.stack)
@@ -78,19 +78,21 @@ struct EventDisplayView: View {
     func makeToolbar() -> some ToolbarContent {
         Group {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button("Back") {
+                Button(NSLocalizedString("back", comment: "Back")) {
                     self.presentationMode.wrappedValue.dismiss()
                 }
             }
 
             ToolbarItem(placement: .navigationBarTrailing) {
+
                 if self.event != nil {
                     Button {
                         displayEditView.toggle()
                     } label: {
-                        Text("Edit")
+                        Text(NSLocalizedString("edit", comment: "Edit"))
                     }
                 }
+
             }
         }
     }

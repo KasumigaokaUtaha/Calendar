@@ -10,6 +10,8 @@ import SwiftUI
 /// A custom view that displays all days in a calendar month in a compact way.
 struct CompactCalendarMonthView: UIViewRepresentable {
     let font: UIFont
+    let theme: Theme
+
     let lastMonthDays: [String]
     let currMonthDays: [String]
     let nextMonthDays: [String]
@@ -21,6 +23,7 @@ struct CompactCalendarMonthView: UIViewRepresentable {
     func makeUIView(context _: Context) -> RWCompactCalendarMonthView {
         let view = RWCompactCalendarMonthView()
         view.font = font
+        view.theme = theme
         view.lastMonthDays = lastMonthDays
         view.currMonthDays = currMonthDays
         view.nextMonthDays = nextMonthDays
@@ -45,6 +48,8 @@ struct CompactCalendarMonthView: UIViewRepresentable {
         private var maxItemSize: CGSize
 
         var font: UIFont
+        var theme: Theme
+
         var lastMonthDays: [String] {
             didSet {
                 let maxItemSize = computeAndUpdateItemSizes(for: lastMonthDays)
@@ -95,6 +100,7 @@ struct CompactCalendarMonthView: UIViewRepresentable {
         override init(frame: CGRect) {
             maxItemSize = CGSize()
             font = .systemFont(ofSize: 10)
+            theme = Theme0()
             lastMonthDays = []
             currMonthDays = []
             nextMonthDays = []
@@ -161,7 +167,7 @@ struct CompactCalendarMonthView: UIViewRepresentable {
                 let itemOrigin = CGPoint(x: maxItemOrigin.x + xOffset, y: maxItemOrigin.y + yOffset)
                 var attributes: [NSAttributedString.Key: Any] = [
                     .font: font,
-                    .foregroundColor: tense == .current ? UIColor.label : UIColor.secondaryLabel
+                    .foregroundColor: tense == .current ? theme.foregroundColor : theme.secondaryColor
                 ]
 
                 switch tense {
@@ -171,13 +177,12 @@ struct CompactCalendarMonthView: UIViewRepresentable {
                     }
                 case .current:
                     if let style = style {
-                        let dimension = max(size.width, size.height)
                         let path = UIBezierPath(
                             roundedRect: CGRect(
                                 x: maxItemOrigin.x,
                                 y: maxItemOrigin.y,
-                                width: dimension,
-                                height: dimension
+                                width: size.width,
+                                height: size.height
                             ),
                             cornerRadius: style.cornerRadius
                         )
@@ -185,7 +190,7 @@ struct CompactCalendarMonthView: UIViewRepresentable {
                         context.saveGState()
                         defer { context.restoreGState() }
                         context.addPath(path.cgPath)
-                        context.setFillColor(style.backgroundColor.cgColor)
+                        context.setFillColor(theme.primaryColor.cgColor)
                         context.closePath()
                         context.fillPath()
                         attributes.updateValue(style.foregroundColor, forKey: .foregroundColor)
@@ -215,6 +220,7 @@ struct CompactCalendarMonthView_Previews: PreviewProvider {
     static var previews: some View {
         CompactCalendarMonthView(
             font: .systemFont(ofSize: 10),
+            theme: Theme0(),
             lastMonthDays: (25 ... 30).map { "\($0)" },
             currMonthDays: (1 ... 31).map { "\($0)" },
             nextMonthDays: (1 ... 7).map { "\($0)" },

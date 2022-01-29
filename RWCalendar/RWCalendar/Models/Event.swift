@@ -105,21 +105,21 @@ enum ReminderTime: TimeInterval, CaseIterable, Identifiable {
 
         switch self {
         case .zeroMinute:
-            text = "At time of event"
+            text = NSLocalizedString("zeroMinute", comment: "At time of event")
         case .oneMinute:
-            text = "1 minute before"
+            text = NSLocalizedString("oneMinute", comment: "1 minute before")
         case .twoMinutes:
-            text = "2 minutes before"
+            text = NSLocalizedString("twoMinute", comment: "2 minutes before")
         case .fiveMinutes:
-            text = "5 minutes before"
+            text = NSLocalizedString("fiveMinute", comment: "5 minutes before")
         case .tenMinutes:
-            text = "10 minutes before"
+            text = NSLocalizedString("tenMinute", comment: "10 minutes before")
         case .fiveteenMinutes:
-            text = "15 minutes before"
+            text = NSLocalizedString("fifteenMinute", comment: "15 minutes before")
         case .thirtyMinutes:
-            text = "30 minutes before"
+            text = NSLocalizedString("thirtyMinute", comment: "30 minutes before")
         case .oneHour:
-            text = "1 hour before"
+            text = NSLocalizedString("oneHour", comment: "1 hour before")
         }
 
         return text

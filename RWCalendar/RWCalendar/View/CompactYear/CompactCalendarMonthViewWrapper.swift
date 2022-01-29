@@ -16,20 +16,27 @@ struct CompactCalendarMonthViewWrapper: View {
 
     let showLastMonthDays: Bool
     let showNextMonthDays: Bool
-    let font: Font
+
+    let dayFont: UIFont
+    let monthFont: Font
+    let theme: Theme
 
     init(
         year: Int,
         month: Int,
         showLastMonthDays: Bool = false,
         showNextMonthDays: Bool = false,
-        font: Font = .system(.body)
+        dayFont: UIFont = .preferredFont(forTextStyle: .body),
+        monthFont: Font = .title3,
+        theme: Theme = Theme0()
     ) {
         self.year = year
         self.month = month
         self.showLastMonthDays = showLastMonthDays
         self.showNextMonthDays = showNextMonthDays
-        self.font = font
+        self.dayFont = dayFont
+        self.monthFont = monthFont
+        self.theme = theme
     }
 
     var body: some View {
@@ -39,9 +46,10 @@ struct CompactCalendarMonthViewWrapper: View {
         } label: {
             VStack(alignment: .center, spacing: 0) {
                 Text("\(shortMonthSymbol)")
-                    .font(.title3)
+                    .font(monthFont)
                 CompactCalendarMonthView(
-                    font: .systemFont(ofSize: 15),
+                    font: self.dayFont,
+                    theme: self.theme,
                     lastMonthDays: lastMonthDays,
                     currMonthDays: currMonthDays,
                     nextMonthDays: nextMonthDays,

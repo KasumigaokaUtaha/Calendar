@@ -34,7 +34,7 @@ struct EventSearchView: View {
                 }
                 if store.state.searchResult.count == 0, displayNoResult {
                     if searchText != "" {
-                        Text("No Result for \(searchText)")
+                        Text(NSLocalizedString("noResult", comment: "No result for:") + "\(searchText)")
                             .foregroundColor(.gray)
                             .italic()
                     }
@@ -45,14 +45,14 @@ struct EventSearchView: View {
                 store.send(.loadSearchResult(searchText))
                 displayNoResult = true
             }
-            .navigationTitle("Search events")
+            .navigationTitle(Text(NSLocalizedString("nav_search", comment:"Search events")))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
                         isPresented = false
                     } label: {
-                        Text("Back")
+                        Text(NSLocalizedString("back", comment: "Back"))
                     }
                 }
             }
