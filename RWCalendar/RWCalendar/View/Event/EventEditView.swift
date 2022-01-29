@@ -97,7 +97,7 @@ struct EventEditView: View {
                         displayedComponents: [.date, .hourAndMinute]
                     )
                     Picker(NSLocalizedString("remind", comment: "Remind"), selection: $reminderTime) {
-                        Text("none", comment: "None")
+                        Text(NSLocalizedString("none", comment: "None"))
                             .tag(ReminderTime?.none)
                         ForEach(ReminderTime.allCases) { time in
                             Text(time.description)
