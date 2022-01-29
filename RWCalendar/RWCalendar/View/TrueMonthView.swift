@@ -19,14 +19,17 @@ struct TrueMonthView: View {
     @State private var showEventMenu = false
     @State private var showSearchBar = false
 
-    // #TODO: add a var to controll light and dark modes
     var body: some View {
         NavigationView {
             ScrollView {
                 HStack {
                     ForEach(days, id: \.self) { day in
                         Text(day)
-                            .font(.body)
+                            .font(.custom(
+                                customizationData.savedFontStyle,
+                                size: CGFloat(customizationData.savedFontSize)
+                            ))
+                            .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
                             .frame(maxWidth: .infinity)
                     }
                 }
@@ -35,9 +38,9 @@ struct TrueMonthView: View {
                     ForEach(RWCalendar.getDate(date: curDate)) { value in
                         DateView(value: value)
                             .background(
-                                Circle()
-                                    .strokeBorder(lineWidth: 0.5)
-                                    .background(Color.blue)
+                                Rectangle()
+                                    .strokeBorder(lineWidth: 0.8)
+                                    .background(Color(customizationData.selectedTheme.foregroundColor))
                                     .opacity(
                                         Calendar.current.isDate(value.date, inSameDayAs: curDate) && value
                                             .day != 0 ? 0.5 : 0
@@ -83,7 +86,9 @@ struct TrueMonthView: View {
             .navigationTitle(
                 Text("\(RWCalendar.dateToString(date: curDate)[1]) \(RWCalendar.dateToString(date: curDate)[0])")
             )
+
             .navigationBarTitleDisplayMode(.inline)
+
             .navigationViewStyle(.stack)
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarLeading) {
@@ -101,6 +106,7 @@ struct TrueMonthView: View {
                     } label: {
                         Image(systemName: "plus")
                     }
+
                     Button {
                         showSearchBar.toggle()
                     } label: {
@@ -114,6 +120,19 @@ struct TrueMonthView: View {
         }
         .sheet(isPresented: $showSearchBar) {
             EventSearchView(isPresented: $showSearchBar)
+        }
+    }
+
+    var Font: UIFont {
+        if
+            let font = UIFont(
+                name: customizationData.savedFontStyle,
+                size: CGFloat(customizationData.savedFontSize)
+            )
+        {
+            return font
+        } else {
+            return UIFont.systemFont(ofSize: 15)
         }
     }
 }
@@ -221,16 +240,26 @@ extension TrueMonthView {
             if value.day != 0 {
                 Text("\(value.day)")
                     .frame(maxWidth: .infinity)
-                    .foregroundColor(isToday(date: value.date) ? .red : .primary)
+                    .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
+                    .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
+                    .background(
+                        Rectangle()
+                            .strokeBorder(lineWidth: 0.8)
+                            .background(Color(customizationData.selectedTheme.foregroundColor))
+                            .opacity(
+                                isToday(date: value.date) ? 0.5 : 0
+                            )
+                            .padding(.horizontal, 8)
+                    )
 
                 Circle()
                     .fill(
                         checkEvent(date: value.date) ?
-                            Color.red : Color.white
+                            Color(customizationData.selectedTheme.foregroundColor) : Color.white
                     )
                     .opacity(
                         checkEvent(date: value.date) ?
-                            0.5 : 0
+                            0.9 : 0
                     )
                     .frame(width: 7, height: 7)
             }
