@@ -71,20 +71,8 @@ struct ContentView: View {
                     store.send(.setSelectedDate(dateForMonth()))
                 }
 
-        case .week:
-            ContainerView {
-                // TODO: replace with actual view
-                Text("Week")
-            } makeNavigationBarButton: {
-                Button {
-                    store.send(.setScrollToToday(withAnimation: true))
-                } label: {
-                    Text(NSLocalizedString("today", comment: "Today"))
-                }
-            }
         case .day:
-            CalendarDayView()
-
+            CompactCalendarDayView()
         case .settings:
             ContainerView {
                 SettingView()
@@ -95,18 +83,6 @@ struct ContentView: View {
 
             } makeNavigationBarButton: {
                 Text("")
-            }
-
-        case .onboarding:
-            ContainerView {
-                // TODO: replace with actual view
-                Text("onboarding")
-            } makeNavigationBarButton: {
-                Button {
-                    store.send(.open(.year))
-                } label: {
-                    Text("Done")
-                }
             }
         }
     }

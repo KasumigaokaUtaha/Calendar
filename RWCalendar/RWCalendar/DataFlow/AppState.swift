@@ -42,7 +42,7 @@ struct AppState {
     var errorMessage: String
     var alertMessage: String
 
-    var selectedDate: Date?
+    var selectedDate: Date? = Date()
 
     // MARK: - Year Specific States
 

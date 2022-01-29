@@ -29,8 +29,6 @@ struct EventLabel: View {
         let endTimeHour = calendar.component(.hour, from: event.endDate)
         let startTimeDay = calendar.component(.day, from: event.startDate)
         let endTimeDay = calendar.component(.day, from: event.endDate)
-        _ = dateFormatter.string(from: store.state.selectedDate!)
-
         return startTimeHour <= 1 && endTimeHour >= 23 || startTimeDay < store.state.selectedDay && endTimeDay > store
             .state.selectedDay
     }

@@ -51,12 +51,6 @@ struct ContainerView<Content, T>: View where Content: View, T: View {
                 Image(systemName: "calendar")
             }
             Button {
-                store.send(.open(.week))
-            } label: {
-                Text(NSLocalizedString("week", comment: "Week"))
-                Image(systemName: "calendar")
-            }
-            Button {
                 store.send(.open(.day))
             } label: {
                 Text(NSLocalizedString("day", comment: "Day"))
