@@ -9,9 +9,10 @@ import SwiftUI
 
 struct CompactCalendarYearView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
+    @EnvironmentObject var customizationData: CustomizationData
 
     @State var currentYear = Calendar.current.component(.year, from: Date())
-    private var columns = Array(repeating: GridItem(.flexible(minimum: 20.0)), count: 2)
+    let columns = Array(repeating: GridItem(.flexible(minimum: 20.0)), count: 2)
 
     var body: some View {
         Group {
@@ -33,6 +34,18 @@ struct CompactCalendarYearView: View {
 
             store.send(.loadEventsForYear(at: someDateInCurrentYear))
         }
+    }
+
+    var dayFont: UIFont {
+        if let font = UIFont(name: customizationData.savedFontStyle, size: 15) {
+            return font
+        } else {
+            return UIFont.systemFont(ofSize: 15)
+        }
+    }
+
+    var monthFont: Font {
+        Font.custom(customizationData.savedFontStyle, size: 20)
     }
 
     func makeContent() -> some View {
@@ -73,7 +86,9 @@ struct CompactCalendarYearView: View {
                     CompactCalendarMonthViewWrapper(
                         year: year,
                         month: monthData.month,
-                        font: .system(.caption2)
+                        dayFont: self.dayFont,
+                        monthFont: self.monthFont,
+                        theme: customizationData.selectedTheme
                     )
                 }
             }
