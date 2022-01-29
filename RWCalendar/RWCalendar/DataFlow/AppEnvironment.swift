@@ -219,9 +219,6 @@ struct EventEnvironment {
                 let predicate = eventStore.predicateForEvents(withStart: start, end: end, calendars: calendars)
                 let events: [Event] = eventStore.events(matching: predicate).map { .init(ekEvent: $0) }
 
-                events.forEach { event in
-                    debugPrint("event: \(event)")
-                }
                 let actions: [AppAction] = events.map { event in .updateEventInLocalStore(event) }
 
                 promise(.success(actions))
