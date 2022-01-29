@@ -12,21 +12,22 @@ struct IconSelectionView: View {
 
     @Binding var iconName: String
 
-    let iconNameList: [String] = [NSLocalizedString("icon_default", value: "Default", comment:"Default Icon"), NSLocalizedString("icon_lila", value: "Lila", comment:"Lila Icon"), NSLocalizedString("icon_blue", value: "Blue", comment:"Blue Icon")]
-
+    let iconNameList: [String] = ["Default", "Lila", "Blue"]
+    let iconNameListLocalized: [String] = [NSLocalizedString("icon_default", comment:"Default Icon"), NSLocalizedString("icon_lila", comment:"Lila Icon"), NSLocalizedString("icon_blue", comment:"Blue Icon")]
+    
     var body: some View {
         VStack(alignment: .center) {
             HStack(alignment: .top, spacing: 30) {
                 ForEach(0 ..< iconNameList.count, id: \.self) { idx in
                     Button(action: {
                         customizationData.savedAppIcon = iconNameList[idx]
-                        iconName = iconNameList[idx]
+                        iconName = iconNameListLocalized[idx]
                     }) {
                         VStack {
                             Image(iconNameList[idx] + "Preview")
                                 .cornerRadius(20)
                             HStack {
-                                Text(iconNameList[idx])
+                                Text(iconNameListLocalized[idx])
                                 if customizationData.savedAppIcon == iconNameList[idx] {
                                     Image(systemName: "checkmark.seal.fill")
                                         .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))

@@ -11,7 +11,7 @@ struct SettingView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
     @EnvironmentObject var customizationData: CustomizationData
 
-    @State private var iconName = "Default"
+    @State private var iconName = NSLocalizedString("icon_default", comment:"Default Icon")
 
     // Change background color for setting view
 //    init() {
@@ -47,7 +47,7 @@ struct SettingView: View {
                     Text(NSLocalizedString("settings_large", comment: "Large"))
                         .tag(21)
                         .font(.custom(customizationData.savedFontStyle, size: 21, relativeTo: .body))
-                    Text(NSLocalizedString("settings_extraLargee", comment: "Extra Large"))
+                    Text(NSLocalizedString("settings_extraLarge", comment: "Extra Large"))
                         .tag(24)
                         .font(.custom(customizationData.savedFontStyle, size: 24, relativeTo: .body))
                 })
