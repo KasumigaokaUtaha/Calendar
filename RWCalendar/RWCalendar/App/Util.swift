@@ -310,6 +310,25 @@ extension Date {
             Calendar.current.date(byAdding: .day, value: day - 1, to: starter)!
         }
     }
+    
+    
+    func getWeekDate(currentWeek: Int) -> [Date] {
+        // the local calendar
+        let calendar = Calendar.current
+        
+        let range = 1...7
+        
+        // getting the start Date
+        
+        var startDay = calendar.date(from: Calendar.current.dateComponents([.weekOfYear, .yearForWeekOfYear], from: self))!
+        startDay = calendar.date(byAdding: .hour, value: 2, to: startDay) ?? Date()
+        startDay = calendar.date(byAdding: .weekOfYear, value: currentWeek, to: startDay)!
+        // get date...
+        
+        return range.compactMap { weekday -> Date in
+            calendar.date(byAdding: .day, value: weekday - 1, to: startDay) ?? Date()
+        }
+    }
 }
 
 // convert year and month to string

@@ -83,7 +83,7 @@ struct ContentView: View {
                 }
             }
         case .day:
-            CalendarDayView()
+            CompactCalendarDayView()
 
         case .settings:
             ContainerView {
