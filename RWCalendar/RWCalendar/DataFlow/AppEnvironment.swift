@@ -58,10 +58,10 @@ struct EventEnvironment {
                 eventStore.requestAccess(to: entityType) { granted, error in
                     guard error == nil else {
                         let actions = [
-                            AppAction.setAlertTitle("Request Access Failed"),
+                            AppAction.setAlertTitle(NSLocalizedString("requestAccess", comment: "Request Access Failed")),
                             AppAction
                                 .setEventErrorMessage(
-                                    "Some internal errors happened. Please send an email with the log to our support email address."
+                                    NSLocalizedString("requestAccessMessage", comment: "Some internal errors happened. Please send an email with the log to our support email address.")
                                 ),
                             AppAction.setShowError(true)
                         ]
@@ -72,10 +72,10 @@ struct EventEnvironment {
                     let actions: [AppAction]
                     if !granted {
                         actions = [
-                            AppAction.setAlertTitle("Access Denied"),
+                            AppAction.setAlertTitle(NSLocalizedString("accessDenied", comment: "Access Denied")),
                             AppAction
                                 .setAlertMessage(
-                                    "This app won't work without access rights to your calendar events. Please grant this app access rights in the system settings and try againt later."
+                                    NSLocalizedString("accessDeniedMessage", comment: "This app won't work without access rights to your calendar events. Please grant this app access rights in the system settings and try againt later.")
                                 ),
                             AppAction.setShowAlert(true)
                         ]
@@ -107,10 +107,10 @@ struct EventEnvironment {
         case .denied:
             // The user explicitly denied access to the service for the app.
             result = [
-                AppAction.setAlertTitle("Access denied"),
+                AppAction.setAlertTitle(NSLocalizedString("accessDenied", comment:"Access denied")),
                 AppAction
                     .setAlertMessage(
-                        "This app won't work without access rights to your calendar events. Please grant this app access rights in the system settings and try againt later."
+                        NSLocalizedString("accessDeniedMessage", comment: "This app won't work without access rights to your calendar events. Please grant this app access rights in the system settings and try againt later.")
                     ),
                 AppAction.setShowAlert(true)
             ]
@@ -124,10 +124,10 @@ struct EventEnvironment {
         case .restricted:
             // The user cannot change this app’s authorization status, possibly due to active restrictions such as parental controls being in place.
             result = [
-                AppAction.setAlertTitle("Restricted Access"),
+                AppAction.setAlertTitle(NSLocalizedString("restrictedAccess", comment: "Restricted Access")),
                 AppAction
                     .setAlertMessage(
-                        "You are in restricted mode which means you cannot grant this app access rights to your calendar events. Please try again later."
+                        NSLocalizedString("restrictedAccessMessage", comment: "You are in restricted mode which means you cannot grant this app access rights to your calendar events. Please try again later.")
                     ),
                 AppAction.setShowAlert(true)
             ]
@@ -321,7 +321,7 @@ struct EventEnvironment {
                     promise(.success(actions))
                 } catch {
                     let actions: [AppAction] = [
-                        .setEventErrorMessage("An error occurred while saving a new event."),
+                        .setEventErrorMessage(NSLocalizedString("errorSaving", comment: "An error occurred while saving a new event.")),
                         .setShowError(true)
                     ]
                     promise(.success(actions))
@@ -352,7 +352,7 @@ struct EventEnvironment {
                     promise(.success(actions))
                 } catch {
                     let actions: [AppAction] = [
-                        .setEventErrorMessage("An error occurred while updating an existing event."),
+                        .setEventErrorMessage(NSLocalizedString("errorUpdating", comment: "An error occurred while updating an existing event.")),
                         .setShowError(true)
                     ]
                     promise(.success(actions))
@@ -382,7 +382,7 @@ struct EventEnvironment {
                     promise(.success(actions))
                 } catch {
                     let actions: [AppAction] = [
-                        .setEventErrorMessage("An error occurred while deleting an existing event."),
+                        .setEventErrorMessage(NSLocalizedString("errorDeleting", comment: "An error occurred while deleting an existing event.")),
                         .setShowError(true)
                     ]
                     promise(.success(actions))

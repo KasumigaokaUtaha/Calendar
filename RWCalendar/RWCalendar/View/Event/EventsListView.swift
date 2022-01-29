@@ -43,6 +43,7 @@ struct EventLabel: View {
             Spacer()
             HStack {
                 if isAllDay(self.event) {
+
                     Text(NSLocalizedString("All day", comment: "All day"))
                         .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
 
@@ -100,12 +101,14 @@ struct EventsListView: View {
                     }
 
                 } else {
+
                     Text(NSLocalizedString("No events", comment: "No events"))
                         .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
                 }
             } else {
                 Text(NSLocalizedString("No events", comment: "No events"))
                     .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
+
             }
         }
     }

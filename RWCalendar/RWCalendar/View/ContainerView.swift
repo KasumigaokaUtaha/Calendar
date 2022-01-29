@@ -41,32 +41,32 @@ struct ContainerView<Content, T>: View where Content: View, T: View {
             Button {
                 store.send(.open(.year))
             } label: {
-                Text("Year")
+                Text(NSLocalizedString("year", comment: "Year"))
                 Image(systemName: "calendar")
             }
             Button {
                 store.send(.open(.month))
             } label: {
-                Text("Month")
+                Text(NSLocalizedString("month", comment: "Month"))
                 Image(systemName: "calendar")
             }
             Button {
                 store.send(.open(.week))
             } label: {
-                Text("Week")
+                Text(NSLocalizedString("week", comment: "Week"))
                 Image(systemName: "calendar")
             }
             Button {
                 store.send(.open(.day))
             } label: {
-                Text("Day")
+                Text(NSLocalizedString("day", comment: "Day"))
                 Image(systemName: "calendar")
             }
             Divider()
             Button {
                 store.send(.open(.settings))
             } label: {
-                Text("Settings")
+                Text(NSLocalizedString("settings", comment: "Settings"))
                 Image(systemName: "gear")
             }
         } label: {

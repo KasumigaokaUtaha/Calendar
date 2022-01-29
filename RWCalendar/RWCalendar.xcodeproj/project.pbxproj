@@ -41,6 +41,9 @@
 		8539346296312E1DDA056756 /* EventsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A010C0D631630A69103D95 /* EventsListView.swift */; };
 		8D191667BEE1C47B921CB779 /* RWPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364D0D1C6A047E7A2D5F253F /* RWPageView.swift */; };
 		9832A6EB63284D63458D20F4 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E8ABB9277DD0C9007487E1 /* Event.swift */; };
+		A11125AD27A4B2960027B1F1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A11125A527A4B2960027B1F1 /* Localizable.strings */; };
+		A11125AE27A4B2960027B1F1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A11125A827A4B2960027B1F1 /* Localizable.strings */; };
+		A11125AF27A4B2960027B1F1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A11125AB27A4B2960027B1F1 /* Localizable.strings */; };
 		A151E70B279E142B004E6655 /* SourceSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A151E70A279E142B004E6655 /* SourceSelectionView.swift */; };
 		A151E70D279ECD87004E6655 /* CalendarSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A151E70C279ECD87004E6655 /* CalendarSelectionView.swift */; };
 		A18260991C5CB8C0F0708576 /* DayToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F81D88F0896F189BEBB7D3 /* DayToolbarView.swift */; };
@@ -116,6 +119,9 @@
 		62E8ABBD277DD0DE007487E1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7082EAADED849AD5806FB8CF /* Tab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tab.swift; sourceTree = "<group>"; };
 		916F1E6D89E6D6F197D15CF9 /* ContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerView.swift; sourceTree = "<group>"; };
+		A11125A627A4B2960027B1F1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
+		A11125A927A4B2960027B1F1 /* zh */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh; path = Localizable.strings; sourceTree = "<group>"; };
+		A11125AC27A4B2960027B1F1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = Localizable.strings; sourceTree = "<group>"; };
 		A151E70A279E142B004E6655 /* SourceSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceSelectionView.swift; sourceTree = "<group>"; };
 		A151E70C279ECD87004E6655 /* CalendarSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarSelectionView.swift; sourceTree = "<group>"; };
 		A1B4A5B4278B53C400D8716F /* ButtonModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonModifier.swift; sourceTree = "<group>"; };
@@ -202,6 +208,7 @@
 		62E8AB54277DCF70007487E1 /* RWCalendar */ = {
 			isa = PBXGroup;
 			children = (
+				A11125A327A4AD6F0027B1F1 /* Localization */,
 				62E8ABA7277DD046007487E1 /* App */,
 				62E8ABAB277DD063007487E1 /* DataFlow */,
 				A1B4A5B3278B535400D8716F /* Helpers */,
@@ -289,6 +296,40 @@
 				6268EC6127A1EBE300916D1B /* MultiplePickerView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		A11125A327A4AD6F0027B1F1 /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				A11125AA27A4B2960027B1F1 /* de.lproj */,
+				A11125A427A4B2960027B1F1 /* en.lproj */,
+				A11125A727A4B2960027B1F1 /* zh.lproj */,
+			);
+			path = Localization;
+			sourceTree = "<group>";
+		};
+		A11125A427A4B2960027B1F1 /* en.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				A11125A527A4B2960027B1F1 /* Localizable.strings */,
+			);
+			path = en.lproj;
+			sourceTree = "<group>";
+		};
+		A11125A727A4B2960027B1F1 /* zh.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				A11125A827A4B2960027B1F1 /* Localizable.strings */,
+			);
+			path = zh.lproj;
+			sourceTree = "<group>";
+		};
+		A11125AA27A4B2960027B1F1 /* de.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				A11125AB27A4B2960027B1F1 /* Localizable.strings */,
+			);
+			path = de.lproj;
 			sourceTree = "<group>";
 		};
 		A1B4A5B3278B535400D8716F /* Helpers */ = {
@@ -423,7 +464,9 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				de,
 				Base,
+				zh,
 			);
 			mainGroup = 62E8AB49277DCF70007487E1;
 			productRefGroup = 62E8AB53277DCF70007487E1 /* Products */;
@@ -442,7 +485,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A11125AE27A4B2960027B1F1 /* Localizable.strings in Resources */,
+				A11125AF27A4B2960027B1F1 /* Localizable.strings in Resources */,
 				A1B4A5C2278B555500D8716F /* ThemeColors.xcassets in Resources */,
+				A11125AD27A4B2960027B1F1 /* Localizable.strings in Resources */,
 				62E8AB5D277DCF72007487E1 /* Preview Assets.xcassets in Resources */,
 				62E8AB5A277DCF72007487E1 /* Assets.xcassets in Resources */,
 			);
@@ -571,6 +617,33 @@
 		};
 /* End PBXTargetDependency section */
 
+/* Begin PBXVariantGroup section */
+		A11125A527A4B2960027B1F1 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A11125A627A4B2960027B1F1 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		A11125A827A4B2960027B1F1 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A11125A927A4B2960027B1F1 /* zh */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		A11125AB27A4B2960027B1F1 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A11125AC27A4B2960027B1F1 /* de */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
 		62E8AB74277DCF72007487E1 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -698,7 +771,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"RWCalendar/Preview Content\"";
-				DEVELOPMENT_TEAM = 743R7M7GS9;
+				DEVELOPMENT_TEAM = 35HU5T69RA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RWCalendar/Info.plist;
