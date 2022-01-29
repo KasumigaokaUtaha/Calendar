@@ -92,12 +92,6 @@ struct DayToolbarView: View {
                 Image(systemName: "calendar")
             }
             Button {
-                store.send(.open(.week))
-            } label: {
-                Text("Week")
-                Image(systemName: "calendar")
-            }
-            Button {
                 store.send(.open(.day))
             } label: {
                 Text("Day")
