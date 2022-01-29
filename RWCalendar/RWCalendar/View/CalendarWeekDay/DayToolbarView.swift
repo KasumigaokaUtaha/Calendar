@@ -29,15 +29,16 @@ struct DayToolbarView: View {
                     makeButton()
                 }
                 
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    DayAddEvent()
+                }
                 ToolbarItem(placement: .navigationBarTrailing){
                     Button {
                         showSearchBar.toggle()
                     } label: {
                         Image(systemName: "magnifyingglass")
                     }
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    DayAddEvent()
                 }
             }.sheet(isPresented: $showSearchBar) {
                 EventSearchView(isPresented: $showSearchBar)
