@@ -14,6 +14,18 @@ extension Sequence where Element == String {
     }
 }
 
+extension Date {
+    func getMonthDate() -> [Date] {
+        let range = Calendar.current.range(of: .day, in: .month, for: self)!
+
+        let starter = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: self))!
+
+        return range.compactMap { day -> Date in
+            Calendar.current.date(byAdding: .day, value: day - 1, to: starter)!
+        }
+    }
+}
+
 extension Data {
     func toStringArray() -> [String]? {
         try? JSONSerialization.jsonObject(with: self, options: []) as? [String]

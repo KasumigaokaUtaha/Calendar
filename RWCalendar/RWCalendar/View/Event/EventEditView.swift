@@ -81,7 +81,7 @@ struct EventEditView: View {
                         showLocationSelectionView = true
                     } label: {
                         HStack {
-                            Text(NSLocalizedString("location", comment:"Location"))
+                            Text(NSLocalizedString("location", comment: "Location"))
                                 .foregroundColor(Color.secondary)
                             Spacer()
                             Image(systemName: "map")
@@ -128,7 +128,10 @@ struct EventEditView: View {
                         .actionSheet(isPresented: $showConfirmationForDelete) {
                             ActionSheet(
                                 title: Text(NSLocalizedString("deleteEventMessage", comment: "Delete this event")),
-                                message: Text(NSLocalizedString("removeEventMessage", comment: "This event will be remove")),
+                                message: Text(NSLocalizedString(
+                                    "removeEventMessage",
+                                    comment: "This event will be remove"
+                                )),
                                 buttons: [
                                     .cancel(),
                                     .destructive(
@@ -138,7 +141,7 @@ struct EventEditView: View {
                                             store.send(.setSelectedEvent(nil))
                                             self.presentationMode.wrappedValue.dismiss()
                                         }
-                                    ),
+                                    )
                                 ]
                             )
                         }
@@ -197,7 +200,6 @@ struct EventEditView: View {
             Text("Monthly").tag(EKRecurrenceFrequency?.some(.monthly))
             Text("Yearly").tag(EKRecurrenceFrequency?.some(.yearly))
         }
-        
     }
 
     func makeToolbar() -> some ToolbarContent {
@@ -208,8 +210,14 @@ struct EventEditView: View {
                 }
                 .actionSheet(isPresented: $showActionSheetForCancel) {
                     ActionSheet(
-                        title: Text(NSLocalizedString("cancelChangesMessage", comment: "Cancel your changes on this event")),
-                        message: Text(NSLocalizedString("abortChangesMessage", comment: "Your changes will be aborted")),
+                        title: Text(NSLocalizedString(
+                            "cancelChangesMessage",
+                            comment: "Cancel your changes on this event"
+                        )),
+                        message: Text(NSLocalizedString(
+                            "abortChangesMessage",
+                            comment: "Your changes will be aborted"
+                        )),
                         buttons: [
                             .cancel(),
                             .destructive(
@@ -217,13 +225,16 @@ struct EventEditView: View {
                                 action: {
                                     self.presentationMode.wrappedValue.dismiss()
                                 }
-                            ),
+                            )
                         ]
                     )
                 }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(event != nil ? NSLocalizedString("save", comment: "Save") : NSLocalizedString("add", comment: "Add")) {
+                Button(
+                    event != nil ? NSLocalizedString("save", comment: "Save") :
+                        NSLocalizedString("add", comment: "Add")
+                ) {
                     let newEvent = Event(
                         title: title,
                         startDate: startDate,
@@ -233,7 +244,11 @@ struct EventEditView: View {
                         notes: notes,
                         reminderTime: reminderTime,
                         eventIdentifier: event?.eventIdentifier,
-                        recurrenceRule: recurr != nil ? EKRecurrenceRule(recurrenceWith: recurr!, interval: 1, end: nil) : nil
+                        recurrenceRule: recurr != nil ? EKRecurrenceRule(
+                            recurrenceWith: recurr!,
+                            interval: 1,
+                            end: nil
+                        ) : nil
                     )
 
                     if event != nil {

@@ -8,9 +8,6 @@ import EventKit
 import Foundation
 import SwiftUI
 
-let days: [String] = Calendar.current.shortWeekdaySymbols
-let dateArray = Array(repeating: GridItem(.flexible(minimum: 20)), count: 7)
-
 struct TrueMonthView: View {
     @Binding var curDate: Date
     @State private var offset: CGSize = .zero
@@ -19,6 +16,13 @@ struct TrueMonthView: View {
     @State private var showEventMenu = false
     @State private var showSearchBar = false
 
+    let days: [String] = Calendar.current.shortWeekdaySymbols
+    let dateArray = Array(repeating: GridItem(.flexible(minimum: 20)), count: 7)
+
+    /// The month view contains a navigation bar on the top with a menu button, jump-to-today button, current month and year, event button and a search button
+    /// The body contains week symbol and dates in current month
+    /// The events of the day will be displayed if a day is clicked
+    /// User can swith month by scrolling left or right
     var body: some View {
         NavigationView {
             ScrollView {
@@ -38,12 +42,11 @@ struct TrueMonthView: View {
                     ForEach(RWCalendar.getDate(date: curDate)) { value in
                         DateView(value: value)
                             .background(
-                                Rectangle()
-                                    .strokeBorder(lineWidth: 0.8)
+                                RoundedRectangle(cornerRadius: 8)
                                     .background(Color(customizationData.selectedTheme.foregroundColor))
                                     .opacity(
                                         Calendar.current.isDate(value.date, inSameDayAs: curDate) && value
-                                            .day != 0 ? 0.5 : 0
+                                            .day != 0 ? 0.1 : 0
                                     )
                                     .padding(.horizontal, 8)
                             )
@@ -103,7 +106,7 @@ struct TrueMonthView: View {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button {
                         showEventMenu.toggle()
-                        
+
                     } label: {
                         Image(systemName: "plus")
                     }
@@ -121,19 +124,6 @@ struct TrueMonthView: View {
         }
         .sheet(isPresented: $showSearchBar) {
             EventSearchView(isPresented: $showSearchBar)
-        }
-    }
-
-    var Font: UIFont {
-        if
-            let font = UIFont(
-                name: customizationData.savedFontStyle,
-                size: CGFloat(customizationData.savedFontSize)
-            )
-        {
-            return font
-        } else {
-            return UIFont.systemFont(ofSize: 15)
         }
     }
 }
@@ -183,11 +173,13 @@ extension TrueMonthView {
         }
     }
 
+    /// update the month and corresponding events when changing month
     func updateMonth() {
         store.send(.setSelectedDate(curDate))
         store.send(.loadEventsForMonth(at: curDate))
     }
 
+    /// menu that allow users switch between year, month, day and setting
     func makeMenu() -> some View {
         Menu {
             Button {
@@ -220,6 +212,7 @@ extension TrueMonthView {
         }
     }
 
+    /// check if the input date has any events
     func checkEvent(date: Date) -> Bool {
         let key = RWDate(date: date, calendar: store.state.calendar)
         guard let eventIDs = store.state.dateToEventIDs[key] else {
@@ -229,6 +222,7 @@ extension TrueMonthView {
         return eventIDs.count > 0
     }
 
+    /// subview for all days with in the current displaying month
     @ViewBuilder
     func DateView(value: DateData) -> some View {
         VStack(spacing: 2) {
@@ -238,11 +232,13 @@ extension TrueMonthView {
                     .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
                     .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
                     .background(
-                        Rectangle()
-                            .strokeBorder(lineWidth: 0.8)
-                            .background(Color(customizationData.selectedTheme.foregroundColor))
+                        RoundedRectangle(cornerRadius: 8)
+                            .background(
+                                isToday(date: value.date) ?
+                                    Color(customizationData.selectedTheme.foregroundColor) : Color.clear
+                            )
                             .opacity(
-                                isToday(date: value.date) ? 0.5 : 0
+                                isToday(date: value.date) ? 0.1 : 0
                             )
                             .padding(.horizontal, 8)
                     )
@@ -250,7 +246,7 @@ extension TrueMonthView {
                 Circle()
                     .fill(
                         checkEvent(date: value.date) ?
-                            Color(customizationData.selectedTheme.foregroundColor) : Color.white
+                            Color(customizationData.selectedTheme.foregroundColor) : Color.clear
                     )
                     .opacity(
                         checkEvent(date: value.date) ?
