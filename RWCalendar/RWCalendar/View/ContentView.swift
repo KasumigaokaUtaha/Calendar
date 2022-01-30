@@ -70,6 +70,7 @@ struct ContentView: View {
                 .onAppear {
                     store.send(.setSelectedDate(dateForMonth()))
                 }
+
         case .day:
             CompactCalendarDayView()
         case .settings:
@@ -98,8 +99,8 @@ struct ContentView: View {
     }
 }
 
+/// get the components of the selected date
 extension ContentView {
-    // get the components of the selected date
     func dateForMonth() -> Date {
         var comp = DateComponents()
         comp.month = store.state.selectedMonth

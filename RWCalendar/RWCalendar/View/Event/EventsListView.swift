@@ -22,6 +22,7 @@ struct EventLabel: View {
         dateFormatter.dateFormat = "MMM d, HH:mm"
     }
 
+    /// check if the event is an all-day event
     func isAllDay(_ event: Event) -> Bool {
         let calendar = Calendar.current
         let startTimeHour = calendar.component(.hour, from: event.startDate)
@@ -32,6 +33,7 @@ struct EventLabel: View {
             .state.selectedDay
     }
 
+    /// the event label view display brief information(title, start and end date) about the event.
     var body: some View {
         VStack(alignment: .leading) {
             Text(event.title)
@@ -41,7 +43,6 @@ struct EventLabel: View {
             Spacer()
             HStack {
                 if isAllDay(self.event) {
-
                     Text(NSLocalizedString("All day", comment: "All day"))
                         .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
 
@@ -58,6 +59,7 @@ struct EventLabel: View {
     }
 }
 
+/// Display a list of events in month view.
 struct EventsListView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
     @EnvironmentObject var customizationData: CustomizationData
@@ -99,14 +101,12 @@ struct EventsListView: View {
                     }
 
                 } else {
-
                     Text(NSLocalizedString("No events", comment: "No events"))
                         .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
                 }
             } else {
                 Text(NSLocalizedString("No events", comment: "No events"))
                     .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
-
             }
         }
     }
