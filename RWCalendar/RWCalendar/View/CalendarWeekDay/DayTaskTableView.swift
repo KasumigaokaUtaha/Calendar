@@ -22,6 +22,7 @@ struct Line: Shape {
 struct DayTaskTableView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
     @State private var showMiniEventList = false
+    @EnvironmentObject var customizationData: CustomizationData
     private var threeColumnGrid = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
 
     // get the events ids from the selected date
@@ -182,6 +183,8 @@ struct DayTaskTableView: View {
                 ForEach(taskCard.events.indices, id: \.self) { id in
                     let event = taskCard.events[id]
                     Text("\(event.title)")
+                        .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
+                        .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
                         .frame(width: getFrameWidth(geo: geo, taskCard: taskCard), height: 20, alignment: .topLeading)
                         .background(RoundedRectangle(cornerRadius: 4).fill(Color(cgColor: event.calendar.cgColor))
                         )
