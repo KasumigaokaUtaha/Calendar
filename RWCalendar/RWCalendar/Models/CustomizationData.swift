@@ -7,16 +7,15 @@
 
 import SwiftUI
 
+/// Store the user customization preference and update when changed
 class CustomizationData: ObservableObject {
     @Published var selectedTheme: Theme = Theme0()
 
-    // Store the user customization preference
     @AppStorage("savedThemeChoice") var savedThemeChoice = 0 {
         didSet {
             updateTheme()
         }
     }
-
     @AppStorage("savedFontSize") var savedFontSize = 17
     @AppStorage("savedFontStyle") var savedFontStyle = "Times New Roman"
     @AppStorage("savedAppIcon") var savedAppIcon = "Default" {

@@ -23,8 +23,7 @@
 
 
 ## Xinhao Qiu 394247
-- Implementation of the setting view
-- Implementation of dark mode, theme selection, and App icon selection
+- Implementation of the setting view, including calendar selection, dark mode, theme selection, and App icon selection
 - Implementation of localization with 3 languages
 
 
