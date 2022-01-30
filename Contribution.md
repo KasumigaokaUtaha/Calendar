@@ -2,7 +2,8 @@
 
 
 ## Baichao Ye 414963 
-
+- Implementation of the day View
+- Implementation of the task table in the day view
 
 
 

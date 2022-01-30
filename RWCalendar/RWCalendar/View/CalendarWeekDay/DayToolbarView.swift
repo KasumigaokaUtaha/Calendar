@@ -92,7 +92,7 @@ struct DayToolbarView: View {
             store.send(.setSelectedYear(year))
             store.send(.setSelectedDate(Date()))
         } label: {
-            Text("Today")
+            Text(NSLocalizedString("today", comment: "Today"))
         }
     }
     

@@ -185,7 +185,7 @@ struct DayTaskTableView: View {
                     Text("\(event.title)")
                         .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
                         .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
-                        .frame(width: getFrameWidth(geo: geo, taskCard: taskCard), height: 20, alignment: .topLeading)
+                        .frame(width: getFrameWidth(geo: geo, taskCard: taskCard), height: CGFloat(customizationData.savedFontSize), alignment: .topLeading)
                         .background(RoundedRectangle(cornerRadius: 4).fill(Color(cgColor: event.calendar.cgColor))
                         )
                         .frame(width: getFrameWidth(geo: geo, taskCard: taskCard), height: getViewHeigt(event: event), alignment: .topLeading)
