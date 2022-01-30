@@ -228,9 +228,9 @@ extension Util {
     ) -> Event? {
         guard
             let nextStartDate = calendar
-                .date(from: calendar.dateComponents([.year, .month, .day], from: nextStartDate)),
+            .date(from: calendar.dateComponents([.year, .month, .day], from: nextStartDate)),
             let startDate = calendar
-                .date(from: calendar.dateComponents([.year, .month, .day], from: startEvent.startDate)),
+            .date(from: calendar.dateComponents([.year, .month, .day], from: startEvent.startDate)),
             startDate <= nextStartDate,
             rule.interval > 0
         else {
@@ -310,23 +310,22 @@ extension Date {
             Calendar.current.date(byAdding: .day, value: day - 1, to: starter)!
         }
     }
-    
-    
+
     func getWeekDate(currentWeek: Int) -> [Date] {
         // the local calendar
-        let calendar = Calendar.current
-        
-        let range = 1...7
-        
+        var calendar = Calendar.current
+        calendar.locale = Locale.autoupdatingCurrent
+
+        let range = 0 ... 6
+
         // getting the start Date
-        
-        var startDay = calendar.date(from: Calendar.current.dateComponents([.weekOfYear, .yearForWeekOfYear], from: self))!
-        startDay = calendar.date(byAdding: .hour, value: 2, to: startDay) ?? Date()
+
+        var startDay = calendar.date(from: calendar.dateComponents([.weekOfYear, .yearForWeekOfYear, .day, .month], from: self))!
         startDay = calendar.date(byAdding: .weekOfYear, value: currentWeek, to: startDay)!
         // get date...
-        
+
         return range.compactMap { weekday -> Date in
-            calendar.date(byAdding: .day, value: weekday - 1, to: startDay) ?? Date()
+            calendar.date(byAdding: .day, value: weekday, to: startDay) ?? Date()
         }
     }
 }

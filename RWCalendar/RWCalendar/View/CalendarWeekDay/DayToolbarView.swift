@@ -83,9 +83,10 @@ struct DayToolbarView: View {
         Button {
             currentWeek = 0
             selectedDate = Date()
-            let day = Calendar.current.component(.day, from: Date())
-            let month = Calendar.current.component(.month, from: Date())
-            let year = Calendar.current.component(.year, from: Date())
+            let calendar = store.state.calendar
+            let day = calendar.component(.day, from: Date())
+            let month = calendar.component(.month, from: Date())
+            let year = calendar.component(.year, from: Date())
             store.send(.setSelectedDay(day))
             store.send(.setSelectedMonth(month))
             store.send(.setSelectedYear(year))
@@ -100,7 +101,7 @@ struct DayToolbarView: View {
             let d = extractDate(currentWeek: currentWeek)[$0]
             Button(String(d.day)) {
                 let date = d.date
-                let calendar = Calendar.current
+                let calendar = store.state.calendar
                 store.send(.setSelectedYear(calendar.component(.year, from: date)))
                 store.send(.setSelectedMonth(calendar.component(.month, from: date)))
                 store.send(.setSelectedDay(calendar.component(.day, from: date)))
@@ -139,7 +140,7 @@ struct DayToolbarView: View {
 
     // to check the date and mark the selected date
     func isSameDayToSelectedDay(date1: Date) -> Bool {
-        let calendar = Calendar.current
+        let calendar = store.state.calendar
         var dc = DateComponents()
         dc.year = store.state.selectedYear
         dc.month = store.state.selectedMonth
@@ -152,7 +153,7 @@ struct DayToolbarView: View {
     func extractDate(currentWeek: Int) -> [DayData] {
         let days = store.state.currentDate.getWeekDate(currentWeek: currentWeek)
         
-        let calendar = Calendar.current
+        let calendar = store.state.calendar
         
         return days.compactMap { date -> DayData in
             let day = calendar.component(.day, from: date)
@@ -166,7 +167,7 @@ struct DayToolbarView: View {
     func getToolBarData(date: Date) -> String {
         let df = DateFormatter()
         df.dateFormat = "MMM yyyy"
-        let calendar = Calendar.current
+        let calendar = store.state.calendar
         let d = calendar.date(byAdding: .weekOfYear, value: currentWeek, to: date)!
         return df.string(from: d)
     }
