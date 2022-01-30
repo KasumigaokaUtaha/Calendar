@@ -13,7 +13,9 @@ struct DayToolbarView: View {
     @Binding var currentWeek: Int
     @State private var offset: CGSize = .zero
     @State var selectedDate: Date = .init()
-    @State var showSearchBar = false
+
+    @State var showSearchBar: Bool = false
+    @EnvironmentObject var customizationData: CustomizationData
     var weekDays: [String] {
         store.state.calendar.shortWeekdaySymbols
     }
@@ -82,9 +84,10 @@ struct DayToolbarView: View {
         Button {
             currentWeek = 0
             selectedDate = Date()
-            let day = Calendar.current.component(.day, from: Date())
-            let month = Calendar.current.component(.month, from: Date())
-            let year = Calendar.current.component(.year, from: Date())
+            let calendar = store.state.calendar
+            let day = calendar.component(.day, from: Date())
+            let month = calendar.component(.month, from: Date())
+            let year = calendar.component(.year, from: Date())
             store.send(.setSelectedDay(day))
             store.send(.setSelectedMonth(month))
             store.send(.setSelectedYear(year))
@@ -99,7 +102,7 @@ struct DayToolbarView: View {
             let d = extractDate(currentWeek: currentWeek)[$0]
             Button(String(d.day)) {
                 let date = d.date
-                let calendar = Calendar.current
+                let calendar = store.state.calendar
                 store.send(.setSelectedYear(calendar.component(.year, from: date)))
                 store.send(.setSelectedMonth(calendar.component(.month, from: date)))
                 store.send(.setSelectedDay(calendar.component(.day, from: date)))
@@ -139,7 +142,7 @@ struct DayToolbarView: View {
 
     // to check the date and mark the selected date
     func isSameDayToSelectedDay(date1: Date) -> Bool {
-        let calendar = Calendar.current
+        let calendar = store.state.calendar
         var dc = DateComponents()
         dc.year = store.state.selectedYear
         dc.month = store.state.selectedMonth
@@ -152,8 +155,9 @@ struct DayToolbarView: View {
     func extractDate(currentWeek: Int) -> [DayData] {
         let days = store.state.currentDate.getWeekDate(currentWeek: currentWeek)
 
-        let calendar = Calendar.current
-
+        
+        let calendar = store.state.calendar
+        
         return days.compactMap { date -> DayData in
             let day = calendar.component(.day, from: date)
             let week = calendar.component(.weekOfYear, from: date)
@@ -166,7 +170,7 @@ struct DayToolbarView: View {
     func getToolBarData(date: Date) -> String {
         let df = DateFormatter()
         df.dateFormat = "MMM yyyy"
-        let calendar = Calendar.current
+        let calendar = store.state.calendar
         let d = calendar.date(byAdding: .weekOfYear, value: currentWeek, to: date)!
         return df.string(from: d)
     }
@@ -179,14 +183,18 @@ extension DayToolbarView {
                 HStack {
                     ForEach(0 ... 6, id: \.self) { day in
                         Text(weekDays[day])
-                            .font(.callout)
-                            .fontWeight(.semibold)
+                            .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
+                            .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
+//                            .font(.callout)
+//                            .fontWeight(.semibold)
                             .frame(maxWidth: .infinity)
                         // *******
                     }
                 }.frame(maxWidth: .infinity)
                 HStack {
                     getWeekFrame(currentWeek: currentWeek)
+                        .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
+                        .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
                         .offset(x: offset.width)
                         .frame(maxWidth: .infinity)
                 }
@@ -212,11 +220,12 @@ extension DayToolbarView {
                     }
             )
 
+            
             HStack(spacing: 0) {
                 Text("  ")
                 Text(" Week:\(getDate()[2]) ")
-                    .font(.footnote)
-                    .foregroundColor(.blue)
+                    .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
+                    .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
                     .frame(height: 20)
                     .background(RoundedRectangle(cornerRadius: 4).fill(.yellow))
                 Spacer()
