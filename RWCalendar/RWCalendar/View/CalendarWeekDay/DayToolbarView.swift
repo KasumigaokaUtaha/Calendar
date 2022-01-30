@@ -13,9 +13,9 @@ struct DayToolbarView: View {
     @Binding var currentWeek: Int
     @State private var offset: CGSize = .zero
     @State var selectedDate: Date = .init()
-    @State var showSearchBar:Bool = false
+    @State var showSearchBar = false
     var weekDays: [String] {
-        return store.state.calendar.shortWeekdaySymbols
+        store.state.calendar.shortWeekdaySymbols
     }
 
     var body: some View {
@@ -28,12 +28,11 @@ struct DayToolbarView: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     makeButton()
                 }
-                
-                
+
                 ToolbarItem(placement: .navigationBarTrailing) {
                     DayAddEvent()
                 }
-                ToolbarItem(placement: .navigationBarTrailing){
+                ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         showSearchBar.toggle()
                     } label: {
@@ -94,9 +93,9 @@ struct DayToolbarView: View {
             Text("Today")
         }
     }
-    
+
     func getWeekFrame(currentWeek: Int) -> some View {
-        ForEach(0...6, id: \.self) {
+        ForEach(0 ... 6, id: \.self) {
             let d = extractDate(currentWeek: currentWeek)[$0]
             Button(String(d.day)) {
                 let date = d.date
@@ -107,33 +106,34 @@ struct DayToolbarView: View {
                 store.send(.setSelectedDate(date))
             }
             .buttonStyle(StaticButtonStyle())
-            .background(Circle()
-                .fill(Color.red)
-                .opacity(isSameDayToSelectedDay(date1: d.date) ? 1 : 0)
-                .frame(width: 25, height: 25)
+            .background(
+                Circle()
+                    .fill(Color.red)
+                    .opacity(isSameDayToSelectedDay(date1: d.date) ? 1 : 0)
+                    .frame(width: 25, height: 25)
             )
         }.onAppear {
             store.send(.loadEventsForMonth(at: store.state.selectedDate ?? Date()))
         }
     }
-    
+
     // get the month, year, week
     func getDate() -> [String] {
         let formatter = DateFormatter()
         formatter.dateFormat = "YYYY MMM"
-        
+
         let calendar = store.state.calendar
         var d = store.state.currentDate
         d = calendar.date(byAdding: .weekOfYear, value: currentWeek, to: d)!
-        
+
         let MonthAndYear = formatter.string(from: d)
-        
+
         // date[0]: years... date[1]: month ... date[2]: weeksnumber of year
         var date = MonthAndYear.components(separatedBy: " ")
-        
+
         let weekOfYear = calendar.component(.weekOfYear, from: d)
         date.append(String(weekOfYear))
-        
+
         return date
     }
 
@@ -144,20 +144,20 @@ struct DayToolbarView: View {
         dc.year = store.state.selectedYear
         dc.month = store.state.selectedMonth
         dc.day = store.state.selectedDay
-        
+
         return calendar.isDate(date1, inSameDayAs: store.state.selectedDate!)
     }
-    
+
     // accoding the current week number of the year get the corresponding dates list (for 7 days)
     func extractDate(currentWeek: Int) -> [DayData] {
         let days = store.state.currentDate.getWeekDate(currentWeek: currentWeek)
-        
+
         let calendar = Calendar.current
-        
+
         return days.compactMap { date -> DayData in
             let day = calendar.component(.day, from: date)
             let week = calendar.component(.weekOfYear, from: date)
-            
+
             return DayData(day: day, date: date, weekday: Weekday(week, calendar: Calendar.current) ?? Weekday.monday)
         }
     }
@@ -173,13 +173,11 @@ struct DayToolbarView: View {
 }
 
 extension DayToolbarView {
-    
-    
     var DayDataView: some View {
-        VStack(spacing:5){
+        VStack(spacing: 5) {
             VStack(spacing: 0) {
                 HStack {
-                    ForEach(0...6, id: \.self) { day in
+                    ForEach(0 ... 6, id: \.self) { day in
                         Text(weekDays[day])
                             .font(.callout)
                             .fontWeight(.semibold)
@@ -204,7 +202,7 @@ extension DayToolbarView {
                             withAnimation {
                                 self.currentWeek += 1
                             }
-                            
+
                         } else if $0.startLocation.x < $0.location.x - 20 {
                             withAnimation {
                                 self.currentWeek -= 1
@@ -213,18 +211,18 @@ extension DayToolbarView {
                         self.offset = .zero
                     }
             )
-            
-            HStack(spacing:0){
+
+            HStack(spacing: 0) {
                 Text("  ")
                 Text(" Week:\(getDate()[2]) ")
                     .font(.footnote)
                     .foregroundColor(.blue)
-                    .frame(height:20)
+                    .frame(height: 20)
                     .background(RoundedRectangle(cornerRadius: 4).fill(.yellow))
                 Spacer()
-            }.frame(height:10)
+            }.frame(height: 10)
         }
-        
+
         .navigationTitle(getToolBarData(date: store.state.currentDate))
     }
 }

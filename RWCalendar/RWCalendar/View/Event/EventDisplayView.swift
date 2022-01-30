@@ -84,7 +84,6 @@ struct EventDisplayView: View {
             }
 
             ToolbarItem(placement: .navigationBarTrailing) {
-
                 if self.event != nil {
                     Button {
                         displayEditView.toggle()
@@ -92,7 +91,6 @@ struct EventDisplayView: View {
                         Text(NSLocalizedString("edit", comment: "Edit"))
                     }
                 }
-
             }
         }
     }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CompactCalendarDayView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
-    @State var currentWeek: Int = 0
+    @State var currentWeek = 0
     var body: some View {
         NavigationView {
             VStack {
@@ -36,7 +36,7 @@ struct CompactCalendarDayView_Previews: PreviewProvider {
         reducer: appReducer,
         environment: AppEnvironment()
     )
-    
+
     static var previews: some View {
         CompactCalendarDayView()
             .environmentObject(store)

@@ -106,7 +106,7 @@ struct TrueMonthView: View {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button {
                         showEventMenu.toggle()
-                        
+
                     } label: {
                         Image(systemName: "plus")
                     }
@@ -233,7 +233,10 @@ extension TrueMonthView {
                     .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
                     .background(
                         RoundedRectangle(cornerRadius: 8)
-                            .background(isToday(date: value.date) ? Color.primary : Color.clear)
+                            .background(
+                                isToday(date: value.date) ?
+                                    Color(customizationData.selectedTheme.foregroundColor) : Color.clear
+                            )
                             .opacity(
                                 isToday(date: value.date) ? 0.1 : 0
                             )
@@ -243,7 +246,7 @@ extension TrueMonthView {
                 Circle()
                     .fill(
                         checkEvent(date: value.date) ?
-                            Color(customizationData.selectedTheme.foregroundColor) : Color.white
+                            Color(customizationData.selectedTheme.foregroundColor) : Color.clear
                     )
                     .opacity(
                         checkEvent(date: value.date) ?

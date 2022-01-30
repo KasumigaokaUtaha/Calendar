@@ -141,7 +141,7 @@ struct EventEditView: View {
                                             store.send(.setSelectedEvent(nil))
                                             self.presentationMode.wrappedValue.dismiss()
                                         }
-                                    ),
+                                    )
                                 ]
                             )
                         }
@@ -200,7 +200,6 @@ struct EventEditView: View {
             Text("Monthly").tag(EKRecurrenceFrequency?.some(.monthly))
             Text("Yearly").tag(EKRecurrenceFrequency?.some(.yearly))
         }
-        
     }
 
     func makeToolbar() -> some ToolbarContent {
@@ -226,7 +225,7 @@ struct EventEditView: View {
                                 action: {
                                     self.presentationMode.wrappedValue.dismiss()
                                 }
-                            ),
+                            )
                         ]
                     )
                 }
@@ -245,7 +244,11 @@ struct EventEditView: View {
                         notes: notes,
                         reminderTime: reminderTime,
                         eventIdentifier: event?.eventIdentifier,
-                        recurrenceRule: recurr != nil ? EKRecurrenceRule(recurrenceWith: recurr!, interval: 1, end: nil) : nil
+                        recurrenceRule: recurr != nil ? EKRecurrenceRule(
+                            recurrenceWith: recurr!,
+                            interval: 1,
+                            end: nil
+                        ) : nil
                     )
 
                     if event != nil {
