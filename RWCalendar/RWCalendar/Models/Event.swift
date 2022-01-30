@@ -8,7 +8,7 @@
 import EventKit
 import Foundation
 
-struct Event {
+struct Event: Hashable {
     var title: String
     var startDate: Date
     var endDate: Date
@@ -17,6 +17,11 @@ struct Event {
     var notes: String?
     var alarms: [EKAlarm]?
     var eventIdentifier: String?
+    var recurrenceRule: EKRecurrenceRule?
+
+    var hasRecurrenceRule: Bool {
+        recurrenceRule != nil
+    }
 
     var reminderTime: ReminderTime? {
         get {
@@ -46,7 +51,8 @@ struct Event {
         url: String?,
         notes: String?,
         reminderTime: ReminderTime?,
-        eventIdentifier: String?
+        eventIdentifier: String?,
+        recurrenceRule: EKRecurrenceRule?
     ) {
         self.title = title
         self.startDate = startDate
@@ -55,6 +61,7 @@ struct Event {
         self.url = url
         self.notes = notes
         self.eventIdentifier = eventIdentifier
+        self.recurrenceRule = recurrenceRule
 
         if let time = reminderTime {
             alarms = [.init(relativeOffset: time.rawValue)]
@@ -72,6 +79,10 @@ struct Event {
         notes = ekEvent.notes
         alarms = ekEvent.alarms
         eventIdentifier = ekEvent.eventIdentifier
+
+        if let recurrenceRules = ekEvent.recurrenceRules, recurrenceRules.count > 0 {
+            recurrenceRule = recurrenceRules[0]
+        }
     }
 }
 
@@ -94,21 +105,21 @@ enum ReminderTime: TimeInterval, CaseIterable, Identifiable {
 
         switch self {
         case .zeroMinute:
-            text = "At time of event"
+            text = NSLocalizedString("zeroMinute", comment: "At time of event")
         case .oneMinute:
-            text = "1 minute before"
+            text = NSLocalizedString("oneMinute", comment: "1 minute before")
         case .twoMinutes:
-            text = "2 minutes before"
+            text = NSLocalizedString("twoMinute", comment: "2 minutes before")
         case .fiveMinutes:
-            text = "5 minutes before"
+            text = NSLocalizedString("fiveMinute", comment: "5 minutes before")
         case .tenMinutes:
-            text = "10 minutes before"
+            text = NSLocalizedString("tenMinute", comment: "10 minutes before")
         case .fiveteenMinutes:
-            text = "15 minutes before"
+            text = NSLocalizedString("fifteenMinute", comment: "15 minutes before")
         case .thirtyMinutes:
-            text = "30 minutes before"
+            text = NSLocalizedString("thirtyMinute", comment: "30 minutes before")
         case .oneHour:
-            text = "1 hour before"
+            text = NSLocalizedString("oneHour", comment: "1 hour before")
         }
 
         return text

@@ -10,6 +10,7 @@ import SwiftUI
 /// A container view that consists of a navigation view and a custom content view
 struct ContainerView<Content, T>: View where Content: View, T: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
+    @EnvironmentObject var customizationData: CustomizationData
 
     var content: () -> Content
     var makeNavigationBarButton: () -> T
@@ -40,32 +41,26 @@ struct ContainerView<Content, T>: View where Content: View, T: View {
             Button {
                 store.send(.open(.year))
             } label: {
-                Text("Year")
+                Text(NSLocalizedString("year", comment: "Year"))
                 Image(systemName: "calendar")
             }
             Button {
                 store.send(.open(.month))
             } label: {
-                Text("Month")
-                Image(systemName: "calendar")
-            }
-            Button {
-                store.send(.open(.week))
-            } label: {
-                Text("Week")
+                Text(NSLocalizedString("month", comment: "Month"))
                 Image(systemName: "calendar")
             }
             Button {
                 store.send(.open(.day))
             } label: {
-                Text("Day")
+                Text(NSLocalizedString("day", comment: "Day"))
                 Image(systemName: "calendar")
             }
             Divider()
             Button {
                 store.send(.open(.settings))
             } label: {
-                Text("Settings")
+                Text(NSLocalizedString("settings", comment: "Settings"))
                 Image(systemName: "gear")
             }
         } label: {

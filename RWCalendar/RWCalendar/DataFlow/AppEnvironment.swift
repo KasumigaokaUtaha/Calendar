@@ -58,10 +58,14 @@ struct EventEnvironment {
                 eventStore.requestAccess(to: entityType) { granted, error in
                     guard error == nil else {
                         let actions = [
-                            AppAction.setAlertTitle("Request Access Failed"),
+                            AppAction
+                                .setAlertTitle(NSLocalizedString("requestAccess", comment: "Request Access Failed")),
                             AppAction
                                 .setEventErrorMessage(
-                                    "Some internal errors happened. Please send an email with the log to our support email address."
+                                    NSLocalizedString(
+                                        "requestAccessMessage",
+                                        comment: "Some internal errors happened. Please send an email with the log to our support email address."
+                                    )
                                 ),
                             AppAction.setShowError(true)
                         ]
@@ -72,10 +76,13 @@ struct EventEnvironment {
                     let actions: [AppAction]
                     if !granted {
                         actions = [
-                            AppAction.setAlertTitle("Access Denied"),
+                            AppAction.setAlertTitle(NSLocalizedString("accessDenied", comment: "Access Denied")),
                             AppAction
                                 .setAlertMessage(
-                                    "This app won't work without access rights to your calendar events. Please grant this app access rights in the system settings and try againt later."
+                                    NSLocalizedString(
+                                        "accessDeniedMessage",
+                                        comment: "This app won't work without access rights to your calendar events. Please grant this app access rights in the system settings and try againt later."
+                                    )
                                 ),
                             AppAction.setShowAlert(true)
                         ]
@@ -107,10 +114,13 @@ struct EventEnvironment {
         case .denied:
             // The user explicitly denied access to the service for the app.
             result = [
-                AppAction.setAlertTitle("Access denied"),
+                AppAction.setAlertTitle(NSLocalizedString("accessDenied", comment: "Access denied")),
                 AppAction
                     .setAlertMessage(
-                        "This app won't work without access rights to your calendar events. Please grant this app access rights in the system settings and try againt later."
+                        NSLocalizedString(
+                            "accessDeniedMessage",
+                            comment: "This app won't work without access rights to your calendar events. Please grant this app access rights in the system settings and try againt later."
+                        )
                     ),
                 AppAction.setShowAlert(true)
             ]
@@ -124,10 +134,13 @@ struct EventEnvironment {
         case .restricted:
             // The user cannot change this app’s authorization status, possibly due to active restrictions such as parental controls being in place.
             result = [
-                AppAction.setAlertTitle("Restricted Access"),
+                AppAction.setAlertTitle(NSLocalizedString("restrictedAccess", comment: "Restricted Access")),
                 AppAction
                     .setAlertMessage(
-                        "You are in restricted mode which means you cannot grant this app access rights to your calendar events. Please try again later."
+                        NSLocalizedString(
+                            "restrictedAccessMessage",
+                            comment: "You are in restricted mode which means you cannot grant this app access rights to your calendar events. Please try again later."
+                        )
                     ),
                 AppAction.setShowAlert(true)
             ]
@@ -163,71 +176,150 @@ struct EventEnvironment {
         }
     }
 
-    /// Returns a dictionary from calendar source to array of calendar.
-    func getSourceToCalendars(for _: EKEntityType = .event) -> [EKSource: [EKCalendar]] {
-        var result: [EKSource: [EKCalendar]] = [:]
-
-        for source in eventStore.sources {
-            result.updateValue(Array(source.calendars(for: .event)), forKey: source)
+    /// Returns all calendar sources.
+    func getAllSources() -> AnyPublisher<AppAction, Never> {
+        makeActions {
+            Future { promise in
+                let sources = eventStore.sources
+                    .sorted(by: { $0.title.localizedStandardCompare($1.title) == .orderedAscending })
+                let actions: [AppAction] = [.setAllSources(sources)]
+                promise(.success(actions))
+            }
         }
+    }
 
-        return result
+    /// Returns a dictionary from calendar source to array of calendar.
+    func getSourceToCalendars(for entityType: EKEntityType = .event) -> AnyPublisher<AppAction, Never> {
+        makeActions {
+            Future { promise in
+                var result: [EKSource: [EKCalendar]] = [:]
+                for source in eventStore.sources {
+                    result.updateValue(Array(source.calendars(for: entityType)), forKey: source)
+                }
+
+                let actions: [AppAction] = [.setSourceToCalendars(result)]
+                promise(.success(actions))
+            }
+        }
     }
 
     /// Returns a dictionary from calendar source title to array of sorted calendar titles.
-    func getSourceTitleToCalendarTitles(for entityType: EKEntityType = .event) -> [String: [String]] {
-        var result: [String: [String]] = [:]
+    func getSourceTitleToCalendarTitles(for entityType: EKEntityType = .event) -> AnyPublisher<AppAction, Never> {
+        makeActions {
+            Future { promise in
+                var result: [String: [String]] = [:]
+                for source in eventStore.sources {
+                    let calendarTitles = source.calendars(for: entityType).map(\.title)
+                    result.updateValue(
+                        calendarTitles.sorted { $0.localizedStandardCompare($1) == .orderedAscending },
+                        forKey: source.title
+                    )
+                }
 
-        for source in eventStore.sources {
-            let calendarTitles = source.calendars(for: entityType).map(\.title)
-            result.updateValue(
-                calendarTitles.sorted { $0.localizedStandardCompare($1) == .orderedAscending },
-                forKey: source.title
-            )
+                let actions: [AppAction] = [.setSourceTitleToCalendarTitles(result)]
+                promise(.success(actions))
+            }
         }
-
-        return result
     }
 
-    private func eventsMatching(withStart start: Date, end: Date, calendars: [EKCalendar]?) -> [Event] {
-        let predicate = eventStore.predicateForEvents(withStart: start, end: end, calendars: calendars)
-        return eventStore.events(matching: predicate).map { .init(ekEvent: $0) }
+    private func addEventsMatching(
+        withStart start: Date,
+        end: Date,
+        calendars: [EKCalendar]?
+    ) -> AnyPublisher<AppAction, Never> {
+        makeActions {
+            Future { promise in
+                let predicate = eventStore.predicateForEvents(withStart: start, end: end, calendars: calendars)
+                let events: [Event] = eventStore.events(matching: predicate).map { .init(ekEvent: $0) }
+
+                let actions: [AppAction] = events.map { event in .updateEventInLocalStore(event) }
+
+                promise(.success(actions))
+            }
+        }
     }
 
-    /// Returns all events in the given EKCalendars that fall in the given date.
-    func getEventsForDay(_ day: Date, calendar: Calendar, with activatedCalendars: [EKCalendar]?) -> [Event] {
+    /// Adds all events in the given EKCalendars that fall in the given date.
+    func addEventsForDay(
+        _ day: Date,
+        calendar: Calendar,
+        with activatedCalendars: [EKCalendar]?
+    ) -> AnyPublisher<AppAction, Never> {
         guard
             let startOfDay = Util.startOfDay(day, calendar: calendar),
             let endOfDay = Util.endOfDay(day, calendar: calendar)
         else {
-            return []
+            return Just(AppAction.empty).eraseToAnyPublisher()
         }
 
-        return eventsMatching(withStart: startOfDay, end: endOfDay, calendars: activatedCalendars)
+        return addEventsMatching(withStart: startOfDay, end: endOfDay, calendars: activatedCalendars)
     }
 
-    /// Returns all events in the given EKCalendars that fall in the week of the given date.
-    func getEventsForWeek(date: Date, calendar: Calendar, with activatedCalendars: [EKCalendar]?) -> [Event] {
+    /// Adds all events in the given EKCalendars that fall in the week of the given date.
+    func addEventsForWeek(
+        date: Date,
+        calendar: Calendar,
+        with activatedCalendars: [EKCalendar]?
+    ) -> AnyPublisher<AppAction, Never> {
         guard
             let startOfWeek = Util.startOfWeek(date: date, calendar: calendar),
             let endOfWeek = Util.endOfWeek(date: date, calendar: calendar)
         else {
-            return []
+            return Just(AppAction.empty).eraseToAnyPublisher()
         }
 
-        return eventsMatching(withStart: startOfWeek, end: endOfWeek, calendars: activatedCalendars)
+        return addEventsMatching(withStart: startOfWeek, end: endOfWeek, calendars: activatedCalendars)
     }
 
-    /// Returns all events in the given EKCalendars that fall in the month of the given date.
-    func getEventsForMonth(date: Date, calendar: Calendar, with activatedCalendars: [EKCalendar]?) -> [Event] {
+    /// Adds all events in the given EKCalendars that fall in the month of the given date.
+    func addEventsForMonth(
+        date: Date,
+        calendar: Calendar,
+        with activatedCalendars: [EKCalendar]?
+    ) -> AnyPublisher<AppAction, Never> {
         guard
             let startOfMonth = Util.startOfMonth(date: date, calendar: calendar),
             let endOfMonth = Util.endOfMonth(date: date, calendar: calendar)
         else {
-            return []
+            return Just(AppAction.empty).eraseToAnyPublisher()
         }
 
-        return eventsMatching(withStart: startOfMonth, end: endOfMonth, calendars: activatedCalendars)
+        return addEventsMatching(withStart: startOfMonth, end: endOfMonth, calendars: activatedCalendars)
+    }
+
+    /// Adds all events in the given EKCalendars that fall in the year of the given date.
+    func addEventsForYear(
+        date: Date,
+        calendar: Calendar,
+        with activatedCalendars: [EKCalendar]?
+    ) -> AnyPublisher<AppAction, Never> {
+        guard
+            let startOfYear = Util.startOfYear(date: date, calendar: calendar),
+            let endOfYear = Util.endOfYear(date: date, calendar: calendar)
+        else {
+            return Just(AppAction.empty).eraseToAnyPublisher()
+        }
+
+        return addEventsMatching(withStart: startOfYear, end: endOfYear, calendars: activatedCalendars)
+    }
+
+    func searchEventsByName(str: String, events: [Event]) -> AnyPublisher<AppAction, Never> {
+        makeActions {
+            Future { promise in
+                var keyArray = str.components(separatedBy: " ")
+                for i in keyArray.indices {
+                    keyArray[i] = keyArray[i].trimmingCharacters(in: .whitespacesAndNewlines)
+                }
+                var result: [Event] = events
+                for key in keyArray {
+                    result = events.filter { event in
+                        event.title.localizedCaseInsensitiveContains(key)
+                    }
+                }
+                let actions: [AppAction] = [.setSearchResult(result)]
+                promise(.success(actions))
+            }
+        }
     }
 
     /// Add the given event to the default EventStore and directly commit the changes.
@@ -238,11 +330,14 @@ struct EventEnvironment {
 
                 do {
                     try eventStore.save(newEvent, span: .thisEvent, commit: true)
-                    let actions: [AppAction] = [.empty]
+                    let actions: [AppAction] = [.addEventToLocalStore(.init(ekEvent: newEvent))]
                     promise(.success(actions))
                 } catch {
                     let actions: [AppAction] = [
-                        .setEventErrorMessage("An error occurred while saving a new event."),
+                        .setEventErrorMessage(NSLocalizedString(
+                            "errorSaving",
+                            comment: "An error occurred while saving a new event."
+                        )),
                         .setShowError(true)
                     ]
                     promise(.success(actions))
@@ -266,11 +361,17 @@ struct EventEnvironment {
 
                 do {
                     try eventStore.save(event, span: .thisEvent, commit: true)
-                    let actions: [AppAction] = [.empty]
+                    let actions: [AppAction] = [
+                        .updateEventInLocalStore(.init(ekEvent: event)),
+                        .updateEventInSearchResult(newEvent)
+                    ]
                     promise(.success(actions))
                 } catch {
                     let actions: [AppAction] = [
-                        .setEventErrorMessage("An error occurred while updating an existing event."),
+                        .setEventErrorMessage(NSLocalizedString(
+                            "errorUpdating",
+                            comment: "An error occurred while updating an existing event."
+                        )),
                         .setShowError(true)
                     ]
                     promise(.success(actions))
@@ -293,11 +394,17 @@ struct EventEnvironment {
 
                 do {
                     try eventStore.remove(targetEvent, span: .thisEvent, commit: true)
-                    let actions: [AppAction] = [.empty]
+                    let actions: [AppAction] = [
+                        .removeEventFromLocalStore(.init(ekEvent: targetEvent)),
+                        .removeEventFromSearchResult(event)
+                    ]
                     promise(.success(actions))
                 } catch {
                     let actions: [AppAction] = [
-                        .setEventErrorMessage("An error occurred while deleting an existing event."),
+                        .setEventErrorMessage(NSLocalizedString(
+                            "errorDeleting",
+                            comment: "An error occurred while deleting an existing event."
+                        )),
                         .setShowError(true)
                     ]
                     promise(.success(actions))

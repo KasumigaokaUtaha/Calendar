@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
+    @EnvironmentObject var customizationData: CustomizationData
+
     @Environment(\.openURL) var openURL
 
     @State var showAlert = false
@@ -17,7 +19,7 @@ struct ContentView: View {
         if #available(iOS 15, *) {
             makeContent()
                 .alert(store.state.alertTitle, isPresented: $showAlert) {
-                    Button("Settings", action: makeOpenSettingsAction)
+                    Button(NSLocalizedString("settings", comment: "Settings"), action: makeOpenSettingsAction)
                     Button("OK", role: .cancel) {
                         store.send(.setShowAlert(false))
                     }
@@ -35,7 +37,7 @@ struct ContentView: View {
                     Alert(
                         title: Text(store.state.alertTitle),
                         message: Text(store.state.alertMessage),
-                        primaryButton: .default(Text("Settings")) {
+                        primaryButton: .default(Text(NSLocalizedString("settings", comment: "Settings"))) {
                             makeOpenSettingsAction()
                         },
                         secondaryButton: .default(Text("OK")) {
@@ -60,66 +62,27 @@ struct ContentView: View {
                 Button {
                     store.send(.setScrollToToday(withAnimation: true))
                 } label: {
-                    Text("Today")
+                    Text(NSLocalizedString("today", comment: "Today"))
                 }
             }
         case .month:
-            ContainerView {
-                // TODO: replace with actual view
-                Text("Month")
-                    .navigationTitle(String(format: "%d %d", store.state.selectedYear, store.state.selectedMonth))
-            } makeNavigationBarButton: {
-                Button {
-                    store.send(.setScrollToToday(withAnimation: true))
-                } label: {
-                    Text("Today")
+            MonthHome(curDate: dateForMonth())
+                .onAppear {
+                    store.send(.setSelectedDate(dateForMonth()))
                 }
-            }
-        case .week:
-            ContainerView {
-                // TODO: replace with actual view
-                Text("Week")
-            } makeNavigationBarButton: {
-                Button {
-                    store.send(.setScrollToToday(withAnimation: true))
-                } label: {
-                    Text("Today")
-                }
-            }
-        case .day:
-            ContainerView {
-                // TODO: replace with actual view
-                Text("day")
-            } makeNavigationBarButton: {
-                Button {
-                    store.send(.setScrollToToday(withAnimation: true))
-                } label: {
-                    Text("Today")
-                }
-            }
 
+        case .day:
+            CompactCalendarDayView()
         case .settings:
             ContainerView {
-                // TODO: replace with actual view
-                Text("settings")
-            } makeNavigationBarButton: {
-                Button {
-                    store.send(.setScrollToToday(withAnimation: true))
-                } label: {
-                    Text("Today")
-                }
-            }
+                SettingView()
+                    .navigationTitle(Text(NSLocalizedString("settings", comment: "Settings")))
+                    .background(Color(customizationData.selectedTheme.backgroundColor).edgesIgnoringSafeArea(.all))
+                    .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
+                    .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
 
-        case .onboarding:
-            ContainerView {
-                // TODO: replace with actual view
-                Text("onboarding")
             } makeNavigationBarButton: {
-                Button {
-                    store.send(.open(.year))
-                } label: {
-                    Text("Done")
-                }
+                Text("")
             }
         }
     }
@@ -133,6 +96,20 @@ struct ContentView: View {
         }
 
         openURL(settingsURL)
+    }
+}
+
+/// get the components of the selected date
+extension ContentView {
+    func dateForMonth() -> Date {
+        var comp = DateComponents()
+        comp.month = store.state.selectedMonth
+        comp.year = store.state.selectedYear
+
+        let calendar = Calendar.current
+        let date = calendar.date(from: comp)
+
+        return date ?? Date()
     }
 }
 

@@ -11,8 +11,6 @@ import Foundation
 enum Tab: String {
     case year
     case month
-    case week
     case day
     case settings
-    case onboarding
 }

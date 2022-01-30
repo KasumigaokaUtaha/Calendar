@@ -131,37 +131,163 @@ func appReducer(
         state.selectedYear = year
     case let .setSelectedMonth(month):
         state.selectedMonth = month
+    case let .setSelectedDay(day):
+        state.selectedDay = day
+    case let .setSelectedDate(date):
+        state.selectedDate = date
     case let .setSelectedEvent(event):
         state.selectedEvent = event
+    case let .loadEventsForYear(date):
+        return environment.event.addEventsForYear(date: date, calendar: state.calendar, with: state.activatedCalendars)
+    case let .loadEventsForMonth(date):
+        return environment.event.addEventsForMonth(date: date, calendar: state.calendar, with: state.activatedCalendars)
+    case let .loadEventsForWeek(date):
+        return environment.event.addEventsForWeek(date: date, calendar: state.calendar, with: state.activatedCalendars)
+    case let .loadEventsForDay(date):
+        return environment.event.addEventsForDay(date, calendar: state.calendar, with: state.activatedCalendars)
     case let .addEvent(newEvent):
         return environment.event.addEvent(newEvent)
     case let .updateEvent(newEvent):
         return environment.event.updateEvent(with: newEvent)
     case let .removeEvent(event):
         return environment.event.removeEvent(event)
+    case let .addEventToLocalStore(event),
+         let .removeEventFromLocalStore(event):
+        guard
+            event.endDate >= event.startDate,
+            let eventIdentifier = event.eventIdentifier,
+            let startDate = state.calendar
+                .date(from: state.calendar.dateComponents([.year, .month, .day], from: event.startDate))
+        else {
+            return nil
+        }
+
+        let dateCount = state.calendar.numberOfDaysBetween(from: event.startDate, to: event.endDate)
+        let dates = (0 ... dateCount)
+            .compactMap { offset in state.calendar.date(byAdding: .day, value: offset, to: startDate) }
+        let keys: [RWDate] = dates.map { .init(date: $0, calendar: state.calendar) }
+
+        switch action {
+        case .addEventToLocalStore:
+            for key in keys {
+                if !state.dateToEventIDs.keys.contains(key) {
+                    state.dateToEventIDs[key] = []
+                }
+
+                var values = state.dateToEventIDs[key]!
+                values.append(eventIdentifier)
+                state.dateToEventIDs.updateValue(values, forKey: key)
+            }
+
+            if !state.eventIDToEvent.keys.contains(eventIdentifier) {
+                state.eventIDToEvent.updateValue(event, forKey: eventIdentifier)
+            } else {
+                // Log non unique event identifier
+            }
+
+            if !state.allEventIDs.contains(eventIdentifier) {
+                state.allEventIDs.append(eventIdentifier)
+            } else {
+                // Log non unique event identifier
+            }
+
+            if event.hasRecurrenceRule, !state.recurringEventIDs.contains(eventIdentifier) {
+                state.recurringEventIDs.append(eventIdentifier)
+            }
+        case .removeEventFromLocalStore:
+            for key in keys {
+                guard
+                    state.dateToEventIDs.keys.contains(key),
+                    let index = state.dateToEventIDs[key]!.firstIndex(of: eventIdentifier)
+                else {
+                    continue
+                }
+
+                var values = state.dateToEventIDs[key]!
+                values.remove(at: index)
+                state.dateToEventIDs.updateValue(values, forKey: key)
+            }
+
+            state.eventIDToEvent.removeValue(forKey: eventIdentifier)
+            if let index = state.allEventIDs.firstIndex(of: eventIdentifier) {
+                state.allEventIDs.remove(at: index)
+            }
+            if event.hasRecurrenceRule, let index = state.recurringEventIDs.firstIndex(of: eventIdentifier) {
+                state.recurringEventIDs.remove(at: index)
+            }
+        default:
+            fatalError()
+        }
+    case let .updateEventInLocalStore(event):
+        return [
+            AppAction.removeEventFromLocalStore(event),
+            AppAction.addEventToLocalStore(event)
+        ]
+        .publisher
+        .flatMap { action in Just(action) }
+        .eraseToAnyPublisher()
+    case let .removeEventFromSearchResult(eventToRemove):
+        state.searchResult = state.searchResult.filter { event -> Bool in
+            event.eventIdentifier != eventToRemove.eventIdentifier
+        }
+    case let .updateEventInSearchResult(eventToUpdate):
+        for i in state.searchResult.indices {
+            if state.searchResult[i].eventIdentifier == eventToUpdate.eventIdentifier {
+                state.searchResult[i] = eventToUpdate
+            }
+        }
     case .loadAppStorageProperties:
-        state.activatedCalendars = state.storedActivatedCalendars.toStringArray() ?? []
-    case let .setActivatedCalendars(names):
-        state.activatedCalendars = names
+        state.activatedCalendarNames = state.storedActivatedCalendarNames.toStringArray() ?? []
+    case let .setActivatedCalendars(calendars):
+        state.activatedCalendars = calendars
+    case let .setActivatedCalendarNames(names):
+        state.activatedCalendarNames = names
         if let data = names.toData() {
-            state.storedActivatedCalendars = data
+            state.storedActivatedCalendarNames = data
+        }
+
+        // remove all events in deactivated calendars
+        var newAllEventIDs: [String] = []
+        var removeEventIDs: [String] = []
+
+        for eventID in state.allEventIDs {
+            if let event = state.eventIDToEvent[eventID] {
+                if state.activatedCalendarNames.contains(event.calendar.title) {
+                    newAllEventIDs.append(eventID)
+                } else {
+                    removeEventIDs.append(eventID)
+                }
+            }
+        }
+
+        state.allEventIDs = newAllEventIDs
+        state.recurringEventIDs = state.recurringEventIDs.filter { eventID in
+            state.allEventIDs.contains(eventID)
+        }
+
+        for key in state.dateToEventIDs.keys {
+            var values = state.dateToEventIDs[key]!
+            values = values.filter { eventID in
+                state.allEventIDs.contains(eventID)
+            }
+            state.dateToEventIDs.updateValue(values, forKey: key)
         }
     case let .activateCalendar(name):
-        guard !state.activatedCalendars.contains(name) else {
+        guard !state.activatedCalendarNames.contains(name) else {
             return nil
         }
 
-        let allActivatedCalendars = state.activatedCalendars + [name]
-        return Just(AppAction.setActivatedCalendars(allActivatedCalendars))
+        let allActivatedCalendars = state.activatedCalendarNames + [name]
+        return Just(AppAction.setActivatedCalendarNames(allActivatedCalendars))
             .eraseToAnyPublisher()
     case let .deactivateCalendar(name):
-        guard let index = state.activatedCalendars.firstIndex(of: name) else {
+        guard let index = state.activatedCalendarNames.firstIndex(of: name) else {
             return nil
         }
 
-        var allActivatedCalendars = state.activatedCalendars
+        var allActivatedCalendars = state.activatedCalendarNames
         allActivatedCalendars.remove(at: index)
-        return Just(AppAction.setActivatedCalendars(allActivatedCalendars))
+        return Just(AppAction.setActivatedCalendarNames(allActivatedCalendars))
             .eraseToAnyPublisher()
     case let .loadDefaultCalendar(entityType):
         return environment.event.getDefaultCalendar(for: entityType)
@@ -176,6 +302,24 @@ func appReducer(
         }
     case let .requestAccess(entityType):
         return environment.event.requestAccess(to: entityType)
+    case .loadAllSources:
+        return environment.event.getAllSources()
+    case let .setAllSources(sources):
+        state.allSources = sources
+    case let .loadSourceToCalendars(entityType):
+        return environment.event.getSourceToCalendars(for: entityType)
+    case let .setSourceToCalendars(values):
+        state.sourceAndCalendars = values
+    case let .loadSourceTitleToCalendarTitles(entityType):
+        return environment.event.getSourceTitleToCalendarTitles(for: entityType)
+    case let .setSourceTitleToCalendarTitles(values):
+        state.sourceTitleAndCalendarTitles = values
+    case let .setSearchResult(searchResult):
+        state.searchResult = searchResult
+    case let .loadSearchResult(str):
+        return environment.event.searchEventsByName(str: str, events: Array(state.eventIDToEvent.values))
+            .subscribe(on: environment.backgroundQueue)
+            .eraseToAnyPublisher()
     }
     return nil
 }

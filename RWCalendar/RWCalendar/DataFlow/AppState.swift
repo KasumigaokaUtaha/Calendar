@@ -42,14 +42,28 @@ struct AppState {
     var errorMessage: String
     var alertMessage: String
 
+    var selectedDate: Date? = Date()
+
     // MARK: - Year Specific States
 
     /// The currently selected year
     ///
     /// This value may be used when navigating from year view to other views to provide
     /// additional information
-    var selectedYear: Int
-    var selectedMonth: Int
+    @AppStorage("selectedYear")
+    var selectedYear: Int = Calendar.current.component(.year, from: Date())
+    /// The currently selected month
+    ///
+    /// This value may be used when navigating from year view to other views to provide
+    /// additional information
+    @AppStorage("selectedMonth")
+    var selectedMonth: Int = Calendar.current.component(.month, from: Date())
+    /// The currently selected day
+    ///
+    /// This value may be used when navigating from year view to other views to provide
+    /// additional information
+    @AppStorage("selectedDay")
+    var selectedDay: Int = Calendar.current.component(.day, from: Date())
 
     // MARK: - Route States
 
@@ -62,15 +76,24 @@ struct AppState {
     // MARK: - Event States
 
     var selectedEvent: Event?
-    var currentEvent: Event?
-    var eventList: [Event]
 
-    @AppStorage("activatedCalendars")
-    var storedActivatedCalendars = Data([])
-    var activatedCalendars: [String]
+    var dateToEventIDs: [RWDate: [String]]
+    var eventIDToEvent: [String: Event]
+    var allEventIDs: [String]
+    var recurringEventIDs: [String]
+
+    var allSources: [EKSource]
+    var sourceAndCalendars: [EKSource: [EKCalendar]]
+    var sourceTitleAndCalendarTitles: [String: [String]]
+
+    @AppStorage("activatedCalendarNames")
+    var storedActivatedCalendarNames = Data([])
+    var activatedCalendarNames: [String]
+    var activatedCalendars: [EKCalendar]
 
     var defaultEventCalendar: EKCalendar!
     var defaultReminderCalendar: EKCalendar!
+    var searchResult: [Event]
 
     init() {
         years = [:]
@@ -89,12 +112,29 @@ struct AppState {
 
         scrollToToday = false
         isScrollToTodayAnimated = false
-        currentEvent = nil
         showError = false
         errorMessage = ""
-        eventList = []
-        selectedYear = currentYear
-        selectedMonth = calendar.component(.month, from: currentDate)
+        dateToEventIDs = [:]
+        eventIDToEvent = [:]
+        allEventIDs = []
+        recurringEventIDs = []
+
+        allSources = []
+        sourceAndCalendars = [:]
+        sourceTitleAndCalendarTitles = [:]
+
+        activatedCalendarNames = []
         activatedCalendars = []
+
+        searchResult = []
+
+        if currentYear < 1970 {
+            var component = DateComponents()
+            component.year = 1970
+            component.month = 1
+            component.day = 1
+            currentDate = calendar.date(from: component)!
+            currentYear = calendar.component(.year, from: currentDate)
+        }
     }
 }

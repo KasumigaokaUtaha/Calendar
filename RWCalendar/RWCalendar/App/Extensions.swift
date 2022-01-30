@@ -14,9 +14,31 @@ extension Sequence where Element == String {
     }
 }
 
+extension Date {
+    func getMonthDate() -> [Date] {
+        let range = Calendar.current.range(of: .day, in: .month, for: self)!
+
+        let starter = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: self))!
+
+        return range.compactMap { day -> Date in
+            Calendar.current.date(byAdding: .day, value: day - 1, to: starter)!
+        }
+    }
+}
+
 extension Data {
     func toStringArray() -> [String]? {
         try? JSONSerialization.jsonObject(with: self, options: []) as? [String]
+    }
+}
+
+extension Calendar {
+    func numberOfDaysBetween(from start: Date, to end: Date) -> Int {
+        let startDate = startOfDay(for: start)
+        let endDate = startOfDay(for: end)
+        let numberOfDays = dateComponents([.day], from: startDate, to: endDate)
+
+        return numberOfDays.day!
     }
 }
 
@@ -31,6 +53,9 @@ extension EKEvent {
         url = event.url != nil ? URL(string: event.url!) : nil
         notes = event.notes
         alarms = event.alarms
+        if let recurrenceRule = event.recurrenceRule {
+            recurrenceRules = [recurrenceRule]
+        }
     }
 
     func update(with event: Event) {
@@ -41,5 +66,10 @@ extension EKEvent {
         url = event.url != nil ? URL(string: event.url!) : nil
         notes = event.notes
         alarms = event.alarms
+        if let recurrenceRule = event.recurrenceRule {
+            recurrenceRules = [recurrenceRule]
+        } else {
+            recurrenceRules = nil
+        }
     }
 }

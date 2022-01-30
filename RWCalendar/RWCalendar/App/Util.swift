@@ -4,6 +4,7 @@
 //
 //  Created by Kasumigaoka Utaha on 27.12.21.
 //
+import EventKit
 import Foundation
 
 enum Util {
@@ -100,6 +101,24 @@ enum Util {
         }
 
         return monthEnd
+    }
+
+    static func startOfYear(date: Date, calendar: Calendar) -> Date? {
+        let yearStartComponents = calendar.dateComponents([.year], from: date)
+
+        return calendar.date(from: yearStartComponents)
+    }
+
+    static func endOfYear(date: Date, calendar: Calendar) -> Date? {
+        guard
+            let yearStart = startOfYear(date: date, calendar: calendar),
+            let nextYearStart = calendar.date(byAdding: .year, value: 1, to: yearStart),
+            let yearEnd = calendar.date(byAdding: .second, value: -1, to: nextYearStart)
+        else {
+            return nil
+        }
+
+        return yearEnd
     }
 
     static func lastDayIn(year: Int, month: Int, calendar: Calendar) -> Date? {
@@ -199,23 +218,107 @@ enum Util {
     }
 }
 
-/*
-  Helping functions that used for TrueMonthView
- ********************************************************************************/
+extension Util {
+    /// Only implements the basic recurrence rule
+    static func nextRecurringEvent(
+        for startEvent: Event,
+        at nextStartDate: Date,
+        with rule: EKRecurrenceRule,
+        calendar: Calendar
+    ) -> Event? {
+        guard
+            let nextStartDate = calendar
+            .date(from: calendar.dateComponents([.year, .month, .day], from: nextStartDate)),
+            let startDate = calendar
+            .date(from: calendar.dateComponents([.year, .month, .day], from: startEvent.startDate)),
+            startDate <= nextStartDate,
+            rule.interval > 0
+        else {
+            return nil
+        }
+
+        let daysBetweenStartAndNextStartDate = calendar.numberOfDaysBetween(
+            from: startEvent.startDate,
+            to: nextStartDate
+        )
+        let daysBetweenStartAndEndDate = calendar.numberOfDaysBetween(
+            from: startEvent.startDate,
+            to: startEvent.endDate
+        )
+
+        var nextDate = startDate
+        while nextDate <= nextStartDate {
+            if calendar.isDate(nextStartDate, inSameDayAs: nextDate) {
+                guard
+                    let nextStartDateTime = calendar.date(
+                        byAdding: .day,
+                        value: daysBetweenStartAndNextStartDate,
+                        to: startEvent.startDate
+                    ),
+                    let nextEndDate = calendar.date(byAdding: .day, value: daysBetweenStartAndEndDate, to: nextDate),
+                    let nextEndDateTime = calendar.date(
+                        byAdding: .day,
+                        value: calendar.numberOfDaysBetween(from: startEvent.endDate, to: nextEndDate),
+                        to: startEvent.endDate
+                    )
+                else {
+                    return nil
+                }
+
+                var nextEvent = startEvent
+                nextEvent.startDate = nextStartDateTime
+                nextEvent.endDate = nextEndDateTime
+
+                return nextEvent
+            }
+
+            // apply the basic recurrence rule to compute next date
+            var nextDateOpt: Date?
+            switch rule.frequency {
+            case .daily:
+                nextDateOpt = calendar.date(byAdding: .day, value: rule.interval, to: nextDate)
+            case .weekly:
+                nextDateOpt = calendar.date(byAdding: .day, value: rule.interval * 7, to: nextDate)
+            case .monthly:
+                nextDateOpt = calendar.date(byAdding: .month, value: rule.interval, to: nextDate)
+            case .yearly:
+                nextDateOpt = calendar.date(byAdding: .year, value: rule.interval, to: nextDate)
+            @unknown default:
+                fatalError()
+            }
+
+            guard nextDateOpt != nil else {
+                return nil
+            }
+            nextDate = nextDateOpt!
+        }
+        return nil
+    }
+}
 
 extension Date {
-    func getMonthDate() -> [Date] {
-        let range = Calendar.current.range(of: .day, in: .month, for: self)!
 
-        let starter = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: self))!
 
-        return range.compactMap { day -> Date in
-            Calendar.current.date(byAdding: .day, value: day - 1, to: starter)!
+    func getWeekDate(currentWeek: Int) -> [Date] {
+        // the local calendar
+        var calendar = Calendar.current
+        calendar.locale = Locale.autoupdatingCurrent
+
+        let range = 0 ... 6
+
+        // getting the start Date
+
+        var startDay = calendar.date(from: calendar.dateComponents([.weekOfYear, .yearForWeekOfYear, .day, .month], from: self))!
+        startDay = calendar.date(byAdding: .weekOfYear, value: currentWeek, to: startDay)!
+        // get date...
+
+        return range.compactMap { weekday -> Date in
+            calendar.date(byAdding: .day, value: weekday, to: startDay) ?? Date()
         }
     }
 }
 
-// convert year and month to string
+/// convert year and month to string
 func dateToString(date: Date) -> [String] {
     let month = Calendar.current.component(.month, from: date) - 1
     let year = Calendar.current.component(.year, from: date)
@@ -223,19 +326,14 @@ func dateToString(date: Date) -> [String] {
     return ["\(year)", Calendar.current.shortMonthSymbols[month]]
 }
 
-// check if the input date is today
+/// check if the input date is today
 func isToday(date: Date) -> Bool {
     Calendar.current.isDateInToday(date)
 }
 
-// return current month based on the int value
-func getCurMonth(value: Int) -> Date {
-    Calendar.current.date(byAdding: .month, value: value, to: Date())!
-}
-
-// get all the date in a month for display
-func getDate(value: Int) -> [DateData] {
-    var days = getCurMonth(value: value).getMonthDate().compactMap { date -> DateData in
+/// get all the date in a month for display
+func getDate(date: Date) -> [DateData] {
+    var days = date.getMonthDate().compactMap { date -> DateData in
 
         let day = Calendar.current.component(.day, from: date)
 
@@ -245,13 +343,9 @@ func getDate(value: Int) -> [DateData] {
     let firstWeek = Calendar.current.component(.weekday, from: days.first!.date)
 
     for _ in 0 ..< firstWeek - 1 {
-        // offset: set extra dates as 0
+        /// offset: set extra dates as 0
         days.insert(DateData(day: 0, date: Date()), at: 0)
     }
 
     return days
 }
-
-/*
- Helping functions that used for TrueMonthView
- ******************************************************************************/

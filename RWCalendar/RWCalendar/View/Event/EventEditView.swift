@@ -11,6 +11,7 @@ import SwiftUI
 /// A view for creating, editing, and deleting calendar events.
 struct EventEditView: View {
     @EnvironmentObject var store: AppStore<AppState, AppAction, AppEnvironment>
+    @Environment(\.presentationMode) var presentationMode
 
     @State var title: String
     // TODO: var location
@@ -20,8 +21,12 @@ struct EventEditView: View {
     @State private var reminderTime: ReminderTime?
     @State private var url: String
     @State private var notes: String
+    @State private var recurr: EKRecurrenceFrequency?
 
     @State private var showLocationSelectionView = false
+
+    @State private var showActionSheetForCancel = false
+    @State private var showConfirmationForDelete = false
 
     private let event: Event?
     private let navigationTitle: String
@@ -29,10 +34,10 @@ struct EventEditView: View {
     init(_ event: Event?, defaultEventCalendar: EKCalendar) {
         if let event = event {
             self.event = event
-            navigationTitle = "Edit Event"
+            navigationTitle = NSLocalizedString("event_edit", comment: "Edit Event")
         } else {
             self.event = nil
-            navigationTitle = "Add Event"
+            navigationTitle = NSLocalizedString("event_add", comment: "Add Event")
         }
 
         _title = State(initialValue: event?.title ?? "")
@@ -42,6 +47,26 @@ struct EventEditView: View {
         _reminderTime = State(initialValue: event?.reminderTime)
         _url = State(initialValue: event?.url ?? "")
         _notes = State(initialValue: event?.notes ?? "")
+        _recurr = State(initialValue: event?.recurrenceRule?.frequency)
+    }
+
+    init(_ event: Event?, defaultEventCalendar: EKCalendar, date: Date?) {
+        if let event = event {
+            self.event = event
+            navigationTitle = NSLocalizedString("event_edit", comment: "Edit Event")
+        } else {
+            self.event = nil
+            navigationTitle = NSLocalizedString("event_add", comment: "Add Event")
+        }
+
+        _startDate = State(initialValue: date ?? Date())
+        _endDate = State(initialValue: date ?? Date())
+        _title = State(initialValue: event?.title ?? "")
+        _calendar = State(initialValue: event?.calendar ?? defaultEventCalendar)
+        _reminderTime = State(initialValue: event?.reminderTime)
+        _url = State(initialValue: event?.url ?? "")
+        _notes = State(initialValue: event?.notes ?? "")
+        _recurr = State(initialValue: event?.recurrenceRule?.frequency)
     }
 
     var body: some View {
@@ -49,14 +74,14 @@ struct EventEditView: View {
             Form {
                 Section {
                     TextField(
-                        "Title",
+                        NSLocalizedString("title", comment: "Title"),
                         text: $title
                     )
                     Button {
                         showLocationSelectionView = true
                     } label: {
                         HStack {
-                            Text("Location")
+                            Text(NSLocalizedString("location", comment: "Location"))
                                 .foregroundColor(Color.secondary)
                             Spacer()
                             Image(systemName: "map")
@@ -65,17 +90,17 @@ struct EventEditView: View {
                 }
                 Section {
                     DatePicker(
-                        "Start",
+                        NSLocalizedString("startDate", comment: "Start Date"),
                         selection: $startDate,
                         displayedComponents: [.date, .hourAndMinute]
                     )
                     DatePicker(
-                        "End",
+                        NSLocalizedString("endDate", comment: "End"),
                         selection: $endDate,
                         displayedComponents: [.date, .hourAndMinute]
                     )
-                    Picker("Remind", selection: $reminderTime) {
-                        Text("None")
+                    Picker(NSLocalizedString("remind", comment: "Remind"), selection: $reminderTime) {
+                        Text(NSLocalizedString("none", comment: "None"))
                             .tag(ReminderTime?.none)
                         ForEach(ReminderTime.allCases) { time in
                             Text(time.description)
@@ -84,23 +109,41 @@ struct EventEditView: View {
                     }
                 }
                 Section {
-                    // TODO: Add picker to select calendar
-                    // Picker("Calendar", selection: $)
+                    makeCalendarPicker()
                 }
                 Section {
-                    TextField("URL", text: $url)
+                    TextField(NSLocalizedString("url", comment: "URL"), text: $url)
                         .keyboardType(.URL)
                     TextEditor(text: $notes)
                 }
                 if event != nil {
                     Section {
                         Button {
-                            // TODO: present an action sheet to confirm this action
-                            store.send(.removeEvent(event!))
+                            showConfirmationForDelete.toggle()
                         } label: {
-                            Text("Delete")
+                            Text(NSLocalizedString("delete", comment: "Delete"))
                                 .foregroundColor(Color.red)
                                 .frame(maxWidth: .infinity, alignment: .center)
+                        }
+                        .actionSheet(isPresented: $showConfirmationForDelete) {
+                            ActionSheet(
+                                title: Text(NSLocalizedString("deleteEventMessage", comment: "Delete this event")),
+                                message: Text(NSLocalizedString(
+                                    "removeEventMessage",
+                                    comment: "This event will be remove"
+                                )),
+                                buttons: [
+                                    .cancel(),
+                                    .destructive(
+                                        Text(NSLocalizedString("delete", comment: "Delete")),
+                                        action: {
+                                            store.send(.removeEvent(event!))
+                                            store.send(.setSelectedEvent(nil))
+                                            self.presentationMode.wrappedValue.dismiss()
+                                        }
+                                    )
+                                ]
+                            )
                         }
                     }
                 }
@@ -117,21 +160,81 @@ struct EventEditView: View {
             .toolbar {
                 makeToolbar()
             }
-            .navigationTitle("Update Event")
+            .navigationTitle(navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
         }
         .navigationViewStyle(.stack)
     }
 
+    func makeCalendarPicker() -> some View {
+        NavigationLink {
+            MultiplePickerView(
+                selection: $calendar,
+                pickerModels: store.state.allSources.map { source -> PickerModel<EKCalendar> in
+                    PickerModel(
+                        values: store.state.sourceAndCalendars[source]!
+                            .reduce([String: EKCalendar]()) { result, calendar in
+                                var result = result
+                                result.updateValue(calendar, forKey: calendar.title)
+                                return result
+                            },
+                        headerTitle: source.title
+                    )
+                }
+            )
+        } label: {
+            HStack {
+                Text(NSLocalizedString("event_Calendar", comment: "Calendar"))
+                Spacer()
+                Text("\(calendar.title)")
+                    .foregroundColor(Color.secondary)
+            }
+        }
+    }
+
+    func makeEventRecurrencePicker() -> some View {
+        Picker("Recurrence Rule", selection: $recurr) {
+            Text("Never").tag(EKRecurrenceFrequency?.none)
+            Text("Daily").tag(EKRecurrenceFrequency?.some(.daily))
+            Text("Weekly").tag(EKRecurrenceFrequency?.some(.weekly))
+            Text("Monthly").tag(EKRecurrenceFrequency?.some(.monthly))
+            Text("Yearly").tag(EKRecurrenceFrequency?.some(.yearly))
+        }
+    }
+
     func makeToolbar() -> some ToolbarContent {
         Group {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button("Cancel") {
-                    // TODO: Present action sheet to confirm this action before dismissing this view
+                Button(NSLocalizedString("cancel", comment: "Cancel")) {
+                    showActionSheetForCancel = true
+                }
+                .actionSheet(isPresented: $showActionSheetForCancel) {
+                    ActionSheet(
+                        title: Text(NSLocalizedString(
+                            "cancelChangesMessage",
+                            comment: "Cancel your changes on this event"
+                        )),
+                        message: Text(NSLocalizedString(
+                            "abortChangesMessage",
+                            comment: "Your changes will be aborted"
+                        )),
+                        buttons: [
+                            .cancel(),
+                            .destructive(
+                                Text(NSLocalizedString("abortChanges", comment: "Abort changes")),
+                                action: {
+                                    self.presentationMode.wrappedValue.dismiss()
+                                }
+                            )
+                        ]
+                    )
                 }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(event != nil ? "Save" : "Add") {
+                Button(
+                    event != nil ? NSLocalizedString("save", comment: "Save") :
+                        NSLocalizedString("add", comment: "Add")
+                ) {
                     let newEvent = Event(
                         title: title,
                         startDate: startDate,
@@ -140,15 +243,22 @@ struct EventEditView: View {
                         url: url,
                         notes: notes,
                         reminderTime: reminderTime,
-                        eventIdentifier: event?.eventIdentifier
+                        eventIdentifier: event?.eventIdentifier,
+                        recurrenceRule: recurr != nil ? EKRecurrenceRule(
+                            recurrenceWith: recurr!,
+                            interval: 1,
+                            end: nil
+                        ) : nil
                     )
 
                     if event != nil {
                         store.send(.updateEvent(with: newEvent))
+                        store.send(.setSelectedEvent(newEvent))
                     } else {
                         store.send(.addEvent(newEvent))
+                        store.send(.setSelectedEvent(newEvent))
                     }
-                    // TODO: Dismiss this view
+                    self.presentationMode.wrappedValue.dismiss()
                 }
                 .disabled(endDate < startDate)
             }
