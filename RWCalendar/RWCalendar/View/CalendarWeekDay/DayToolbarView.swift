@@ -13,7 +13,8 @@ struct DayToolbarView: View {
     @Binding var currentWeek: Int
     @State private var offset: CGSize = .zero
     @State var selectedDate: Date = .init()
-    @State var showSearchBar:Bool = false
+    @State var showSearchBar: Bool = false
+    @EnvironmentObject var customizationData: CustomizationData
     var weekDays: [String] {
         return store.state.calendar.shortWeekdaySymbols
     }
@@ -29,11 +30,10 @@ struct DayToolbarView: View {
                     makeButton()
                 }
                 
-                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     DayAddEvent()
                 }
-                ToolbarItem(placement: .navigationBarTrailing){
+                ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         showSearchBar.toggle()
                     } label: {
@@ -174,22 +174,24 @@ struct DayToolbarView: View {
 }
 
 extension DayToolbarView {
-    
-    
     var DayDataView: some View {
-        VStack(spacing:5){
+        VStack(spacing: 5) {
             VStack(spacing: 0) {
                 HStack {
                     ForEach(0...6, id: \.self) { day in
                         Text(weekDays[day])
-                            .font(.callout)
-                            .fontWeight(.semibold)
+                            .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
+                            .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
+//                            .font(.callout)
+//                            .fontWeight(.semibold)
                             .frame(maxWidth: .infinity)
                         // *******
                     }
                 }.frame(maxWidth: .infinity)
                 HStack {
                     getWeekFrame(currentWeek: currentWeek)
+                        .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
+                        .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
                         .offset(x: offset.width)
                         .frame(maxWidth: .infinity)
                 }
@@ -215,15 +217,15 @@ extension DayToolbarView {
                     }
             )
             
-            HStack(spacing:0){
+            HStack(spacing: 0) {
                 Text("  ")
                 Text(" Week:\(getDate()[2]) ")
-                    .font(.footnote)
-                    .foregroundColor(.blue)
-                    .frame(height:20)
+                    .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
+                    .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
+                    .frame(height: 20)
                     .background(RoundedRectangle(cornerRadius: 4).fill(.yellow))
                 Spacer()
-            }.frame(height:10)
+            }.frame(height: 10)
         }
         
         .navigationTitle(getToolBarData(date: store.state.currentDate))
