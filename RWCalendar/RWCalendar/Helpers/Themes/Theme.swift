@@ -7,8 +7,7 @@
 
 import UIKit
 
-// Define the base theme protocol
-
+/// Define the base theme protocol
 protocol Theme {
     var backgroundColor: UIColor { get } // background color
     var foregroundColor: UIColor { get } // text color

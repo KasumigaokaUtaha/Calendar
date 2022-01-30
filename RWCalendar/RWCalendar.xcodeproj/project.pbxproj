@@ -58,7 +58,6 @@
 		A1B4A5E0278C8EE700D8716F /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B4A5DC278C8EE700D8716F /* SettingView.swift */; };
 		A1B4A5E1278C8EE700D8716F /* IconSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B4A5DD278C8EE700D8716F /* IconSelectionView.swift */; };
 		A1B4A5E2278C8EE700D8716F /* ThemeSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B4A5DE278C8EE700D8716F /* ThemeSelectionView.swift */; };
-		A1B4A5E62791FCE000D8716F /* SyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B4A5E52791FCE000D8716F /* SyncView.swift */; };
 		A9CB8D9B11EEE5394CDE01EF /* TrueMonthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1206E93BAF656AB759D4A668 /* TrueMonthView.swift */; };
 /* End PBXBuildFile section */
 
@@ -132,7 +131,6 @@
 		A1B4A5DC278C8EE700D8716F /* SettingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		A1B4A5DD278C8EE700D8716F /* IconSelectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IconSelectionView.swift; sourceTree = "<group>"; };
 		A1B4A5DE278C8EE700D8716F /* ThemeSelectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeSelectionView.swift; sourceTree = "<group>"; };
-		A1B4A5E52791FCE000D8716F /* SyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncView.swift; sourceTree = "<group>"; };
 		A616505D23B5A2E626AD377F /* CompactCalendarDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactCalendarDayView.swift; sourceTree = "<group>"; };
 		E2F81D88F0896F189BEBB7D3 /* DayToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayToolbarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -355,7 +353,6 @@
 			isa = PBXGroup;
 			children = (
 				A1B4A5DD278C8EE700D8716F /* IconSelectionView.swift */,
-				A1B4A5E52791FCE000D8716F /* SyncView.swift */,
 				A1B4A5DC278C8EE700D8716F /* SettingView.swift */,
 				A1B4A5DE278C8EE700D8716F /* ThemeSelectionView.swift */,
 				A151E70A279E142B004E6655 /* SourceSelectionView.swift */,
@@ -524,7 +521,8 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\n";
+			shellScript = "
+";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -543,7 +541,6 @@
 				A151E70B279E142B004E6655 /* SourceSelectionView.swift in Sources */,
 				62E8ABB6277DD0B0007487E1 /* AppReducer.swift in Sources */,
 				62E8ABBC277DD0D0007487E1 /* DateData.swift in Sources */,
-				A1B4A5E62791FCE000D8716F /* SyncView.swift in Sources */,
 				A1B4A5BA278B546200D8716F /* CustomizationData.swift in Sources */,
 				62E8ABB0277DD099007487E1 /* AppStore.swift in Sources */,
 				62E8ABB8277DD0BE007487E1 /* AppEnvironment.swift in Sources */,

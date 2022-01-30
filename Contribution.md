@@ -23,12 +23,8 @@
 
 
 ## Xinhao Qiu 394247
-
-
-
-
-
-## Yao Yao 414991
+- Implementation of the setting view, including calendar selection, dark mode, theme selection, and App icon selection
+- Implementation of localization with 3 languages
 
 
 

@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// A self-defined button modifier with filled color and rounded corner
 struct FilledRoundedCornerButtonStyle: ButtonStyle {
     var font: Font = .body
     var padding: CGFloat = 10
