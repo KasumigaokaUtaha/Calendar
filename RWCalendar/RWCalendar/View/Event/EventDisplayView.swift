@@ -57,7 +57,7 @@ struct EventDisplayView: View {
                     }
                     Spacer()
                 } else {
-                    Text("No event selected")
+                    Text(NSLocalizedString("noEventSelected", comment: "No event selected"))
                         .foregroundColor(Color.gray)
                 }
             }
