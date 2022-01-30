@@ -51,26 +51,26 @@ struct DayToolbarView: View {
             Button {
                 store.send(.open(.year))
             } label: {
-                Text("Year")
+                Text(NSLocalizedString("year", comment: "Year"))
                 Image(systemName: "calendar")
             }
             Button {
                 store.send(.open(.month))
             } label: {
-                Text("Month")
+                Text(NSLocalizedString("month", comment: "Month"))
                 Image(systemName: "calendar")
             }
             Button {
                 store.send(.open(.day))
             } label: {
-                Text("Day")
+                Text(NSLocalizedString("day", comment: "Day"))
                 Image(systemName: "calendar")
             }
             Divider()
             Button {
                 store.send(.open(.settings))
             } label: {
-                Text("Settings")
+                Text(NSLocalizedString("settings", comment: "Settings"))
                 Image(systemName: "gear")
             }
         } label: {
@@ -92,7 +92,7 @@ struct DayToolbarView: View {
             store.send(.setSelectedYear(year))
             store.send(.setSelectedDate(Date()))
         } label: {
-            Text("Today")
+            Text(NSLocalizedString("today", comment: "Today"))
         }
     }
     
@@ -219,7 +219,7 @@ extension DayToolbarView {
             
             HStack(spacing: 0) {
                 Text("  ")
-                Text(" Week:\(getDate()[2]) ")
+                Text(" " + NSLocalizedString("week", comment: "Week") + ":\(getDate()[2]) ")
                     .foregroundColor(Color(customizationData.selectedTheme.foregroundColor))
                     .font(.custom(customizationData.savedFontStyle, size: CGFloat(customizationData.savedFontSize)))
                     .frame(height: 20)

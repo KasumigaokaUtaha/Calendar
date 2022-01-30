@@ -42,6 +42,7 @@ struct CalendarSelectionView_Previews: PreviewProvider {
     }
 }
 
+/// Multi-picker
 struct MultipleSelectionRow: View {
     var title: String
     var isSelected: Bool

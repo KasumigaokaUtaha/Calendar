@@ -13,11 +13,6 @@ struct SettingView: View {
 
     @State private var iconName = NSLocalizedString("icon_default", comment:"Default Icon")
 
-    // Change background color for setting view
-//    init() {
-//        UITableView.appearance().backgroundColor = .clear
-//    }
-
     var body: some View {
         Form {
             Section(header: Text(NSLocalizedString("settings_sectionCalendarSettings", comment: "Section: Calendar Settings"))) {
@@ -81,7 +76,6 @@ struct SettingView: View {
                 }
             }
         }
-//        .background(Color(customizationData.selectedTheme.backgroundColor))
     }
 }
 

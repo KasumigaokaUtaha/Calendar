@@ -7,8 +7,7 @@
 
 import UIKit
 
-// Define the structure for different themes
-
+/// Define the structure for different themes
 struct Theme0: Theme {
     var backgroundColor = UIColor(named: "DefaultBackground")!
     var foregroundColor = UIColor(named: "DefaultForeground")!

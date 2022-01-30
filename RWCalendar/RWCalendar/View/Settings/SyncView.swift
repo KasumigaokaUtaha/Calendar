@@ -5,7 +5,7 @@
 //  Created by 邱昕昊 on 2022/1/14.
 //
 
-// For the reference for creating events and synchronize with iCloud
+/// For the reference for creating events and synchronize with iCloud
 
 import EventKit
 import SwiftUI

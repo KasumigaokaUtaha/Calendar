@@ -7,8 +7,7 @@
 
 import Foundation
 
-// Enumerate the available themes and provide theme-geter interface
-
+/// Enumerate the available themes and provide theme-geter interface
 enum ThemeManager {
     static let themes: [Theme] = [Theme0(), Theme1(), Theme2()]
 
