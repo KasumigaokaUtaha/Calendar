@@ -315,14 +315,15 @@ extension Date {
         // the local calendar
         var calendar = Calendar.current
         calendar.locale = Locale.autoupdatingCurrent
-
+        // set the first date of week always sunday
+        calendar.firstWeekday = 1
         let range = 0 ... 6
 
-        // getting the start Date
+        // getting the start Date of the week
 
-        var startDay = calendar.date(from: calendar.dateComponents([.weekOfYear, .yearForWeekOfYear, .day, .month], from: self))!
+        var startDay = calendar.date(from: calendar.dateComponents([.weekOfYear, .yearForWeekOfYear], from: self))!
         startDay = calendar.date(byAdding: .weekOfYear, value: currentWeek, to: startDay)!
-        // get date...
+        // get dates of whole week
 
         return range.compactMap { weekday -> Date in
             calendar.date(byAdding: .day, value: weekday, to: startDay) ?? Date()

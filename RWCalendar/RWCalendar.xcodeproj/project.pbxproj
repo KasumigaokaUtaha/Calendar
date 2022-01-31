@@ -84,6 +84,7 @@
 		1206E93BAF656AB759D4A668 /* TrueMonthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrueMonthView.swift; sourceTree = "<group>"; };
 		12A010C0D631630A69103D95 /* EventsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsListView.swift; sourceTree = "<group>"; };
 		12DDCD9027A4936500E6BB32 /* MenuModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuModifier.swift; sourceTree = "<group>"; };
+		17267CC727A76B48008CF7A8 /* test.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = test.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		183957203A57BF5D477E043D /* EventEditView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventEditView.swift; sourceTree = "<group>"; };
 		364D0D1C6A047E7A2D5F253F /* RWPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RWPageView.swift; sourceTree = "<group>"; };
 		498EE4D9BD1AF359D5A4D00C /* DayTaskTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayTaskTableView.swift; sourceTree = "<group>"; };
@@ -252,6 +253,7 @@
 				62E8AB55277DCF70007487E1 /* RWCalendarApp.swift */,
 				62E8AB59277DCF72007487E1 /* Assets.xcassets */,
 				62E8ABA8277DD057007487E1 /* Util.swift */,
+				17267CC727A76B48008CF7A8 /* test.playground */,
 				5FCBCF82599F2CA3F7F4D14B /* Extensions.swift */,
 			);
 			path = App;
@@ -527,7 +529,8 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\n";
+			shellScript = "
+";
 		};
 /* End PBXShellScriptBuildPhase section */
 
