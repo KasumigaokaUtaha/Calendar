@@ -228,9 +228,9 @@ extension Util {
     ) -> Event? {
         guard
             let nextStartDate = calendar
-            .date(from: calendar.dateComponents([.year, .month, .day], from: nextStartDate)),
+                .date(from: calendar.dateComponents([.year, .month, .day], from: nextStartDate)),
             let startDate = calendar
-            .date(from: calendar.dateComponents([.year, .month, .day], from: startEvent.startDate)),
+                .date(from: calendar.dateComponents([.year, .month, .day], from: startEvent.startDate)),
             startDate <= nextStartDate,
             rule.interval > 0
         else {
@@ -297,8 +297,6 @@ extension Util {
 }
 
 extension Date {
-
-
     func getWeekDate(currentWeek: Int) -> [Date] {
         // the local calendar
         var calendar = Calendar.current
@@ -341,9 +339,9 @@ func getDate(date: Date) -> [DateData] {
         return DateData(day: day, date: date)
     }
 
-    let firstWeek = Calendar.current.component(.weekday, from: days.first!.date)
+    let firstWeek = Calendar.current.component(.weekday, from: days.first!.date) - 1
 
-    for _ in 0 ..< firstWeek - 1 {
+    for _ in 0 ..< firstWeek {
         /// offset: set extra dates as 0
         days.insert(DateData(day: 0, date: Date()), at: 0)
     }

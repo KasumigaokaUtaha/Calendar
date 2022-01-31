@@ -16,11 +16,13 @@ extension Sequence where Element == String {
 
 extension Date {
     func getMonthDate() -> [Date] {
-        let range = Calendar.current.range(of: .day, in: .month, for: self)!
+        let monthDate = Calendar.current.range(of: .day, in: .month, for: self)!
 
-        let starter = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: self))!
+        let component = Calendar.current.dateComponents([.year, .month], from: self)
 
-        return range.compactMap { day -> Date in
+        let starter = Calendar.current.date(from: component) ?? Date()
+
+        return monthDate.compactMap { day -> Date in
             Calendar.current.date(byAdding: .day, value: day - 1, to: starter)!
         }
     }
